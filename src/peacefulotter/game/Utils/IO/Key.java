@@ -2,6 +2,8 @@ package peacefulotter.game.Utils.IO;
 
 import peacefulotter.game.Utils.Listener.ListenedObject;
 
+import java.sql.SQLOutput;
+
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
 public class Key
@@ -24,8 +26,8 @@ public class Key
     public void update( long window )
     {
         boolean isKeyDown = isKeyDown( window );
-        if ( isKeyDown != isKeyPressed.get() )
-            isKeyPressed.set( isKeyDown( window ) );
+        if ( isKeyDown != isKeyPressed.get() ) {
+            isKeyPressed.set( isKeyDown ); }
         if ( isKeyDown )
             exec();
     }

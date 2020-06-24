@@ -30,12 +30,11 @@ public class ListenedObject<T>
    */
   public void set( T newAttr )
   {
+    attr = newAttr;
     if ( !listeners.isEmpty() )
     {
       listeners.forEach( ( listener ) -> listener.actionPerformed( this, newAttr ) );
     }
-
-    attr = newAttr;
   }
 
   /**

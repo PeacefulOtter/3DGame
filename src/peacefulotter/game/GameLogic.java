@@ -78,7 +78,6 @@ public class GameLogic
             framesCounter += passedTime;
             if ( framesCounter >= Time.SECOND )
             {
-                System.out.println(frames);
                 frames = 0;
                 framesCounter = 0;
             }
@@ -88,7 +87,6 @@ public class GameLogic
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-
                 game.inputs( currentWindow );
                 game.update();
             }

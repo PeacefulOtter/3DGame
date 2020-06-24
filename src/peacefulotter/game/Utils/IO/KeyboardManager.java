@@ -16,16 +16,14 @@ public class KeyboardManager
 
     public KeyboardManager()
     {
-        keys.add( new Key( GLFW_KEY_UP, () -> {
-            System.out.println("heeree");
-        } ) );
+        keys.add( new Key( GLFW_KEY_UP, () -> { } ) );
 
         for ( Key k : keys )
         {
             k.getIsKeyPressed().addListener( ( ( observable, newValue ) -> {
-                System.out.println( k.getKeyCode() + " " + newValue );
+                //System.out.println( k.getKeyCode() + " " + newValue );
                 if ( newValue ) { downKeys.add( k ); }
-                else { upKeys.add( k ); }
+                else { upKeys.add( k ); downKeys.remove( k ); }
             } ) );
         }
     }
