@@ -25,7 +25,7 @@ public class GameLogic
     {
         this.window = window;
         currentWindow = window.getWindow();
-        game = new Game();
+        game = new Game( currentWindow );
     }
 
     public void start()
@@ -87,7 +87,7 @@ public class GameLogic
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-                game.inputs( currentWindow );
+
                 game.update();
             }
 

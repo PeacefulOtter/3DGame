@@ -1,18 +1,12 @@
 package peacefulotter.game;
 
-import peacefulotter.game.Utils.IO.KeyboardManager;
+import peacefulotter.game.Utils.IO.Input;
 
 public class Game
 {
-    private final KeyboardManager keyboardManager = new KeyboardManager();
-
-    public Game()
+    public Game( long window )
     {
-    }
-
-    public void inputs( long window )
-    {
-        keyboardManager.update( window );
+        Input.initInputs( window );
     }
 
     public void update()

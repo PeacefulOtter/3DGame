@@ -1,6 +1,6 @@
 package peacefulotter.game.Utils.IO;
 
-public interface KeyExecutable
+public interface Executable
 {
     void exec();
 }
