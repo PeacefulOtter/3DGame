@@ -3,6 +3,7 @@ package peacefulotter.game;
 
 import org.lwjgl.opengl.GL;
 import peacefulotter.game.Display.Window;
+import peacefulotter.game.Utils.RenderUtil;
 import peacefulotter.game.Utils.Time;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -23,6 +24,7 @@ public class GameLogic
 
     public GameLogic( Window window )
     {
+        RenderUtil.initGraphics();
         this.window = window;
         currentWindow = window.getWindow();
         game = new Game( currentWindow );
@@ -111,6 +113,7 @@ public class GameLogic
 
     private void render()
     {
+        RenderUtil.clearScreen();
         game.render();
     }
 

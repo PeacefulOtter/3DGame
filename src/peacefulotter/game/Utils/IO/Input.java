@@ -1,5 +1,7 @@
 package peacefulotter.game.Utils.IO;
 
+import peacefulotter.game.Maths.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +22,17 @@ public class Input
     private static int mousePrimaryState = GLFW_RELEASE;
     private static int mouseSecondaryState = GLFW_RELEASE;
 
+    private static Vector2f mousePosition = new Vector2f( 0, 0 );
+
     public static void initInputs( long window )
+    {
+        initKeyCallbacks( window );
+        initMouseButtonsCallbacks( window );
+        initCursorCallback( window );
+    }
+
+
+    private static void initKeyCallbacks( long window )
     {
         keys.add( new Key( GLFW_KEY_UP, () -> {
         } ) );
@@ -37,8 +49,11 @@ public class Input
                 }
             }
         } );
+    }
 
 
+    private static void initMouseButtonsCallbacks( long window )
+    {
         mouseButtons.add( new Key( MOUSE_PRIMARY, () -> {
             System.out.println( "primary pressed" );
         } ) );
@@ -65,6 +80,15 @@ public class Input
                     k.exec();
                 }
             }
+        } );
+    }
+
+
+    private static void initCursorCallback( long window )
+    {
+        glfwSetCursorPosCallback( window, ( wd, xpos, ypos ) -> {
+            mousePosition.setX( (float) xpos );
+            mousePosition.setY( (float) ypos );
         } );
     }
 }
