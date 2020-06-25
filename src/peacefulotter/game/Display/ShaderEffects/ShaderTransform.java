@@ -5,31 +5,35 @@ import peacefulotter.game.Maths.Vector3f;
 
 public class ShaderTransform
 {
-    private Vector3f translation;
+    private STranslation translation = new STranslation();
+    private SRotation rotation = new SRotation();
 
-    public ShaderTransform()
+    public Matrix4f getTransformMatrix()
     {
-        translation = new Vector3f( 0, 0, 0 );
+        return translation.getTranslationMatrix().mul( rotation.getRotationMatrix() );
     }
 
-    public Vector3f getTranslation()
+    public ShaderTransform setTranslation( float x, float y, float z )
     {
-        return translation;
+        translation.setTranslation( x, y , z );
+        return this;
     }
 
-    public void setTranslation(Vector3f translation)
+    public ShaderTransform setTranslation( Vector3f vector )
     {
-        this.translation = translation;
+        translation.setTranslation( vector );
+        return this;
     }
 
-    public void setTranslation( float x, float y, float z )
+    public ShaderTransform setRotation( float x, float y, float z )
     {
-        translation = new Vector3f( x, y, z );
+        rotation.setRotation( x, y , z );
+        return this;
     }
 
-    public Matrix4f getTransformation()
+    public ShaderTransform setRotation( Vector3f vector )
     {
-        Matrix4f translation = new Matrix4f();
-        return translation;
+        rotation.setRotation( vector );
+        return this;
     }
 }
