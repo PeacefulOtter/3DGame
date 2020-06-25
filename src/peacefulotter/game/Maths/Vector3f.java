@@ -2,50 +2,50 @@ package peacefulotter.game.Maths;
 
 public class Vector3f
 {
-    private double x, y, z;
+    private float x, y, z;
 
-    public Vector3f(double x, double y, double z )
+    public Vector3f( float x, float y, float z )
     {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public double getX() { return x; }
-    public void setX( double x ) { this.x = x; }
+    public float getX() { return x; }
+    public void setX( float x ) { this.x = x; }
 
-    public double getY() { return y; }
-    public void setY( double y ) { this.y = y; }
+    public float getY() { return y; }
+    public void setY( float y ) { this.y = y; }
 
-    public double getZ() { return z; }
-    public void setZ( double z ) { this.z = z; }
+    public float getZ() { return z; }
+    public void setZ( float z ) { this.z = z; }
 
-    public double length()
+    public float length()
     {
-        return Math.sqrt( BMaths.square( x ) + BMaths.square( y ) + BMaths.square( z ) );
+        return (float) Math.sqrt( BMaths.square( x ) + BMaths.square( y ) + BMaths.square( z ) );
     }
 
-    public double dot( Vector3f other )
+    public float dot( Vector3f other )
     {
         return x * other.getX() + y * other.getY() + z * other.getZ();
     }
 
     public Vector3f cross( Vector3f other )
     {
-        double x_ = y * other.getZ() - z * other.getY();
-        double y_ = z * other.getX() - x * other.getZ();
-        double z_ = x * other.getY() - y * other.getX();
+        float x_ = y * other.getZ() - z * other.getY();
+        float y_ = z * other.getX() - x * other.getZ();
+        float z_ = x * other.getY() - y * other.getX();
 
         return new Vector3f( x_, y_, z_ );
     }
 
     public Vector3f normalize()
     {
-        double length = length();
+        float length = length();
         return new Vector3f( x / length, y / length, z / length );
     }
 
-    public Vector3f rotate( double angleDeg )
+    public Vector3f rotate( float angleDeg )
     {
         return null;
     }

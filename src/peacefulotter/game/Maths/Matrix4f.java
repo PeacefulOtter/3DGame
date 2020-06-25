@@ -3,11 +3,11 @@ package peacefulotter.game.Maths;
 public class Matrix4f
 {
     private static final int MATRIX_SIZE = 4;
-    private double m[][];
+    private float m[][];
 
     public Matrix4f()
     {
-        this.m = new double[ MATRIX_SIZE ][ MATRIX_SIZE ];
+        this.m = new float[ MATRIX_SIZE ][ MATRIX_SIZE ];
     }
 
     public Matrix4f initIdentity()
@@ -17,15 +17,20 @@ public class Matrix4f
         return this;
     }
 
-    public double[][] getM() { return m; }
-    public void setM( double[][] other ) { m = other; }
+    public Matrix4f initTranslation( float x, float y, float z )
+    {
+        return this;
+    }
 
-    public double getAt( int x, int y )
+    public float[][] getM() { return m; }
+    public void setM( float[][] other ) { m = other; }
+
+    public float getAt( int x, int y )
     {
         return m[ x ][ y ];
     }
 
-    public void setAt( int x, int y, double value )
+    public void setAt( int x, int y, float value )
     {
         m[ x ][ y ] = value;
     }
@@ -37,7 +42,7 @@ public class Matrix4f
         {
             for ( int j = 0; j < MATRIX_SIZE; j++ )
             {
-                double value = 0;
+                float value = 0;
                 for ( int k = 0; k < MATRIX_SIZE; k++ )
                 {
                     value += getAt( i, k ) * other.getAt( k, j );

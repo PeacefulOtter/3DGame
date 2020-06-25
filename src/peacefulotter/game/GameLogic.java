@@ -25,6 +25,7 @@ public class GameLogic
     public GameLogic( Window window )
     {
         RenderUtil.initGraphics();
+        // System.out.println(glGetString(GL_VERSION));
         this.window = window;
         currentWindow = window.getWindow();
         game = new Game( currentWindow );
@@ -68,8 +69,6 @@ public class GameLogic
                 return;
             }
             GL.createCapabilities();
-            glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glfwSwapBuffers(currentWindow);
             glfwPollEvents();
 

@@ -2,42 +2,42 @@ package peacefulotter.game.Maths;
 
 public class Vector2f
 {
-    private double x, y;
+    private float x, y;
 
-    public Vector2f( double x, double y )
+    public Vector2f( float x, float y )
     {
         this.x = x;
         this.y = y;
     }
 
-    public double getX() { return x; }
-    public double getY() { return y; }
+    public float getX() { return x; }
+    public float getY() { return y; }
 
-    public void setX( double newX ) { x = newX; }
-    public void setY( double newY ) { y = newY; }
+    public void setX( float newX ) { x = newX; }
+    public void setY( float newY ) { y = newY; }
 
-    public double length()
+    public float length()
     {
-        return Math.sqrt( BMaths.square( x ) + BMaths.square( y ) );
+        return (float) Math.sqrt( BMaths.square( x ) + BMaths.square( y ) );
     }
 
-    public double dot( Vector2f other )
+    public float dot( Vector2f other )
     {
         return x * other.getX() + y * other.getY();
     }
 
     public Vector2f normalize()
     {
-        double length = length();
+        float length = length();
         return new Vector2f( x / length, y / length );
     }
 
-    public Vector2f rotate( double angleDeg )
+    public Vector2f rotate( float angleDeg )
     {
         double rad = Math.toRadians( angleDeg );
         double cos = Math.cos( rad );
         double sin = Math.sin( rad );
-        return new Vector2f(x * cos - y * sin, x * sin + y * cos );
+        return new Vector2f( (float) (x * cos - y * sin), (float) (x * sin + y * cos) );
     }
 
     public Vector2f add( Vector2f other )
