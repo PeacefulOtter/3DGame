@@ -1,10 +1,11 @@
 package peacefulotter.game;
 
-import org.lwjgl.system.windows.INPUT;
 import peacefulotter.game.Display.Camera;
+import peacefulotter.game.Display.Graphics.Material;
 import peacefulotter.game.Display.Graphics.Mesh;
 import peacefulotter.game.Display.Graphics.Texture;
 import peacefulotter.game.Display.Graphics.Vertex;
+import peacefulotter.game.Display.Shaders.BasicShader;
 import peacefulotter.game.Display.Shaders.Shader;
 import peacefulotter.game.Display.Shaders.ShaderTransform;
 import peacefulotter.game.Display.Window;
@@ -26,15 +27,17 @@ public class Game
     private Shader shader;
     private ShaderTransform transform;
     private Camera camera;
-    private Texture texture;
+    private Material material;
 
     public Game( Window window  )
     {
         Input.initInputs( window.getWindow() );
         this.window = window;
         mesh = new Mesh(); // new ResourceLoader().loadMesh( "cube.obj" );
-        texture = new ResourceLoader().loadTexture( "test.png" );
-        shader = new Shader();
+
+        material = new Material( new ResourceLoader().loadTexture( "test.png" ),
+                new Vector3f( 0, 1, 1 ) );
+
         transform = new ShaderTransform();
         transform.setProjection( 70f, window.WIDTH, window.HEIGHT, 0.1f, 1000f );
         camera = new Camera();
@@ -52,11 +55,7 @@ public class Game
                                     0, 2, 3 };
         mesh.addVertices( vertices, indices );
 
-        shader.addVertexShader( new ResourceLoader().loadShader( "basicVertex.vs" ) );
-        shader.addFragmentShader( new ResourceLoader().loadShader( "basicFragment.fs" ) );
-        shader.compileShader();
-
-        shader.addUniform( "transform" );
+        shader = new BasicShader();
 
         initCameraMovement();
     }
@@ -64,29 +63,29 @@ public class Game
     private void initCameraMovement()
     {
         Input.addKeyCallback( GLFW_KEY_W, () -> {
-            camera.move( camera.getForward(), 0.4f );
+            camera.move( camera.getForward(), 0.02f );
         } );
         Input.addKeyCallback( GLFW_KEY_D, () -> {
-            camera.move( camera.getRight(), 0.4f );
+            camera.move( camera.getRight(), 0.02f );
         } );
         Input.addKeyCallback( GLFW_KEY_S, () -> {
-            camera.move( camera.getForward(), -0.4f );
+            camera.move( camera.getForward(), -0.02f );
         } );
         Input.addKeyCallback( GLFW_KEY_A, () -> {
-            camera.move( camera.getLeft(), 0.4f );
+            camera.move( camera.getLeft(), 0.02f );
         } );
 
         Input.addKeyCallback( GLFW_KEY_UP, () -> {
-            camera.rotateX( -2f );
+            camera.rotateX( -0.5f );
         } );
         Input.addKeyCallback( GLFW_KEY_RIGHT, () -> {
-            camera.rotateY( 2f );
+            camera.rotateY( 0.5f );
         } );
         Input.addKeyCallback( GLFW_KEY_DOWN, () -> {
-            camera.rotateX( 2f );
+            camera.rotateX( 0.5f );
         } );
         Input.addKeyCallback( GLFW_KEY_LEFT, () -> {
-            camera.rotateY( -2f );
+            camera.rotateY( -0.5f );
         } );
 
         Input.addMouseCallback( MOUSE_PRIMARY, () -> { } );
@@ -103,7 +102,7 @@ public class Game
         temp += 0.001;
         cosTemp = (float)Math.cos( temp );
         sinTemp = (float)Math.sin( temp );
-
+        Input.execInputs();
         camera.update( new Vector2f( window.WIDTH / 2, window.HEIGHT / 2 ) );
     }
 
@@ -114,8 +113,8 @@ public class Game
         transform.setTranslation( 0, 0, 5 );
                 //.setRotation(0, sinTemp * 180, 0 );
                 //  .setScale( 0.5f, 0.5f, 0.5f );
-        shader.setUniformMatrix( "transform", transform.getProjectedTransformationMatrix() );
-        texture.bind();
+        shader.bind();
+        shader.updateUniforms( transform.getTransformationMatrix(), transform.getProjectedTransformationMatrix(), material );
         mesh.draw();
     }
 }

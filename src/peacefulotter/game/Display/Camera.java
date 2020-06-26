@@ -33,7 +33,6 @@ public class Camera
         Vector2f deltaPos = Input.getMousePosition().sub( centerPosition );
         rotateY( deltaPos.getX() * 0.0005f );
         rotateX( deltaPos.getY() * 0.0005f );
-        System.out.println( deltaPos );
     }
 
     public void move( Vector3f direction, float amount )

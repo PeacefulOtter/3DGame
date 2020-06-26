@@ -7,7 +7,6 @@ import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-
 public class Input
 {
     public static final int MOUSE_PRIMARY = 0;
@@ -20,6 +19,7 @@ public class Input
     public static final int MOUSE_PRESSED = 1;
 
     private static final List<Key> keys = new ArrayList<>();
+    private static final List<Key> keysPressed = new ArrayList<>();
     private static final List<Key> mouseButtons = new ArrayList<>();
 
     private static int mousePrimaryState = GLFW_RELEASE;
@@ -34,6 +34,13 @@ public class Input
         initCursorCallback( window );
     }
 
+    public static void execInputs()
+    {
+        for ( Key k : keysPressed )
+        {
+            k.exec();
+        }
+    }
 
     public static void addKeyCallback( int keyCode, IOExecutable executable )
     {
@@ -42,16 +49,16 @@ public class Input
 
     private static void initKeyCallbacks( long window )
     {
-        glfwSetKeyCallback( window, ( wd, key, scancode, action, mods ) -> {
-            if ( action == GLFW_PRESS || action == GLFW_REPEAT )
+        glfwSetKeyCallback( window, ( wd, key, scancode, action, mods ) ->
+        {
+            for ( Key k : keys )
             {
-                for ( Key k : keys )
+                if ( k.getKeyCode() == key )
                 {
-                    if ( k.getKeyCode() == key )
-                    {
-                        System.out.println(k.getKeyCode());
-                        k.exec();
-                    }
+                    if ( action == GLFW_PRESS || action == GLFW_REPEAT )
+                        keysPressed.add( k );
+                    else
+                        keysPressed.remove( k );
                 }
             }
         } );
@@ -70,7 +77,12 @@ public class Input
             {
                 if ( k.getKeyCode() == button )
                 {
-                    if ( button == MOUSE_PRIMARY ) { mousePrimaryState = action; }
+                    if ( button == MOUSE_PRIMARY )
+                    {
+                        mousePrimaryState = action;
+                        int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
+                        glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
+                    }
                     else if ( button == MOUSE_SECONDARY ) { mouseSecondaryState = action; }
                     k.exec();
                 }
