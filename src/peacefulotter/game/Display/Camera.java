@@ -1,6 +1,8 @@
 package peacefulotter.game.Display;
 
+import peacefulotter.game.Maths.Vector2f;
 import peacefulotter.game.Maths.Vector3f;
+import peacefulotter.game.Utils.IO.Input;
 
 public class Camera
 {
@@ -24,6 +26,16 @@ public class Camera
         this.upward = upward.normalize();
     }
 
+    public void update( Vector2f centerPosition )
+    {
+        if ( Input.getMousePrimaryState() == Input.MOUSE_RELEASED ) return;
+
+        Vector2f deltaPos = Input.getMousePosition().sub( centerPosition );
+        rotateY( deltaPos.getX() * 0.0005f );
+        rotateX( deltaPos.getY() * 0.0005f );
+        System.out.println( deltaPos );
+    }
+
     public void move( Vector3f direction, float amount )
     {
         position = position.add( direction.mul( amount ) );
@@ -32,14 +44,14 @@ public class Camera
     public void rotateX( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        forward.rotate( angle, horAxis ).normalize();
+        forward = forward.rotate( angle, horAxis ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 
     public void rotateY( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        forward.rotate( angle, Y_AXIS ).normalize();
+        forward = forward.rotate( angle, Y_AXIS ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 

@@ -63,9 +63,8 @@ public class Vector3f
         // reminder :             Q = (  D*sin(angle/2), w*cos(angle/2) )
         //              conjugate Q = ( -D*sin(angle/2), w*cos(angle/2) )
         Quaternion w = rotation.mul( this ).mul( conjugate ); // Q*V*Q(conjugate)
-        x = w.getX(); y = w.getY(); z = w.getZ();
 
-        return this;
+        return new Vector3f( w.getX(), w.getY(), w.getZ() );
     }
 
     public Vector3f add( Vector3f other )
@@ -107,6 +106,9 @@ public class Vector3f
     {
         return new Vector3f( x / r, y / r, z / r );
     }
+
+    public Vector3f abs() { return new Vector3f( Math.abs( x ), Math.abs( y ), Math.abs( z ) ); }
+
     @Override
     public String toString()
     {

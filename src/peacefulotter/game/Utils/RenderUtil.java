@@ -27,7 +27,7 @@ public class RenderUtil
         glCullFace( GL_BACK );
         glEnable( GL_CULL_FACE );
         glEnable( GL_DEPTH_TEST );
-
+        glEnable( GL_TEXTURE_2D );
         glEnable( GL_FRAMEBUFFER_SRGB );
     }
 
@@ -44,10 +44,13 @@ public class RenderUtil
         FloatBuffer buffer = createFloatBuffer( vertices.length * Vertex.SIZE );
         for ( int i = 0; i < vertices.length; i++ )
         {
-            Vector3f pos = vertices[ i ].getPos();
+            Vertex v = vertices[ i ];
+            Vector3f pos = v.getPos();
             buffer.put( pos.getX() );
             buffer.put( pos.getY() );
             buffer.put( pos.getZ() );
+            buffer.put( v.getTextureCoordinates().getX() );
+            buffer.put( v.getTextureCoordinates().getY() );
         }
         buffer.flip();
         return buffer;
@@ -82,5 +85,22 @@ public class RenderUtil
         buffer.put( indices );
         buffer.flip();
         return buffer;
+    }
+
+
+    public static void setTextures( boolean enable )
+    {
+        if ( enable ) { glEnable( GL_TEXTURE_2D ); }
+        else { glDisable( GL_TEXTURE_2D ); }
+    }
+
+    public static void unbindTextures()
+    {
+        glBindTexture( GL_TEXTURE_2D, 0 );
+    }
+
+    public static void setClearColor( Vector3f color )
+    {
+        glClearColor( color.getX(), color.getY(), color.getZ(), 1 );
     }
 }

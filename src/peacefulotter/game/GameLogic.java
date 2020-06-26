@@ -22,13 +22,14 @@ public class GameLogic
 
     private boolean isRunning = false;
 
-    public GameLogic( Window window )
+    public GameLogic( String winName, int winWidth, int winHeight )
     {
+        window = new Window( winName, winWidth, winHeight );
         RenderUtil.initGraphics();
         // System.out.println(glGetString(GL_VERSION));
         this.window = window;
         currentWindow = window.getWindow();
-        game = new Game( currentWindow, window.getWindowWidth(), window.getWindowHeight() );
+        game = new Game( window );
     }
 
     public void start()

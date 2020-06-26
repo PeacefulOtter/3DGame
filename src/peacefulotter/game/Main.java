@@ -10,8 +10,7 @@ public class Main
 
     public static void main( String[] args )
     {
-        Window window = new Window( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
-        GameLogic logic = new GameLogic( window );
+        GameLogic logic = new GameLogic( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
         logic.start();
     }
 

@@ -79,6 +79,9 @@ public class Vector2f
     {
         return new Vector2f( x / r, y / r );
     }
+
+    public Vector2f abs() { return new Vector2f( Math.abs( x ), Math.abs( y ) ); }
+
     @Override
     public String toString()
     {

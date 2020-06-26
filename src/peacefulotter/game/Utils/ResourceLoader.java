@@ -1,16 +1,21 @@
 package peacefulotter.game.Utils;
 
 import peacefulotter.game.Display.Graphics.Mesh;
+import peacefulotter.game.Display.Graphics.Texture;
 import peacefulotter.game.Display.Graphics.Vertex;
 import peacefulotter.game.Maths.Vector3f;
 
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.util.*;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class ResourceLoader
 {
     private static final String SHADER_PATH = "/shaders/";
     private static final String MODELS_PATH = "/models/";
+    private static final String TEXTURES_PATH = "/textures/";
 
     private InputStream resourceStream( String resourceName )
     {
@@ -37,10 +42,9 @@ public class ResourceLoader
         return sj.toString();
     }
 
-    private List<Integer> indicesAddAt( List<Integer> indices, int index, String[] split )
+    private void indicesAddAt( List<Integer> indices, int index, String[] split )
     {
         indices.add( Integer.parseInt( split[ index ].split( "/" )[ 0 ] ) - 1 );
-        return indices;
     }
 
     public Mesh loadMesh( String fileName )
@@ -99,5 +103,33 @@ public class ResourceLoader
                 Arrays.copyOf( vertices.toArray(), vertices.size(), Vertex[].class ),
                 Util.toIntArray( indices ) );
         return mesh;
+    }
+
+    public Texture loadTexture( String fileName )
+    {
+        int id = 0;
+
+        try ( InputStream in = resourceStream( TEXTURES_PATH + fileName ) ) {
+            PNGDecoder decoder = new PNGDecoder( in );
+            // assuming RGB here but should allow for RGB and RGBA (changing wall.png to RGBA will crash this!)
+            ByteBuffer buffer = ByteBuffer.allocateDirect( 3 * decoder.getWidth() * decoder.getHeight() );
+            decoder.decode( buffer, decoder.getWidth() * 3, PNGDecoder.Format.RGB );
+            buffer.flip();
+
+            id = glGenTextures();
+
+            glBindTexture( GL_TEXTURE_2D, id );
+            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, decoder.getWidth(), decoder.getHeight(), 0,
+                    GL_RGB, GL_UNSIGNED_BYTE, buffer );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+        }
+        catch( IOException e )
+        {
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+
+        return new Texture( id );
     }
 }

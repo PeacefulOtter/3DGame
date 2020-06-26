@@ -1,14 +1,15 @@
 #version 130
 
 in vec3 position;
+in vec2 textureCoord;
 
-out vec4 color;
+out vec2 textCoord;
 
-uniform float uniformFloat;
 uniform mat4 transform;
+
 
 void main()
 {
-	color = vec4(clamp(position, 0.0, uniformFloat), 1.0);
 	gl_Position = transform * vec4(position, 1.0);
+	textCoord = textureCoord;
 }
