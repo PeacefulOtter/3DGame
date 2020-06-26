@@ -1,10 +1,13 @@
 package peacefulotter.game.Display.ShaderEffects;
 
+import peacefulotter.game.Display.Camera;
 import peacefulotter.game.Maths.Matrix4f;
 import peacefulotter.game.Maths.Vector3f;
 
 public class ShaderTransform
 {
+    private Camera camera;
+
     private STranslation translation = new STranslation();
     private SRotation rotation = new SRotation();
     private SScale scale = new SScale();
@@ -21,7 +24,10 @@ public class ShaderTransform
     public Matrix4f getProjectedTransformationMatrix()
     {
         Matrix4f projectionMatrix = projection.getProjectionMatrix();
-        return projectionMatrix.mul( getTransformationMatrix() );
+        Matrix4f cameraRotation = new Matrix4f().initCamera( camera.getForward(), camera.getUpward() );
+        Vector3f cameraPos = camera.getPosition();
+        Matrix4f cameraTranslation = new Matrix4f().initTranslation( -cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ() );
+        return projectionMatrix.mul( cameraRotation.mul( cameraTranslation.mul( getTransformationMatrix() ) ) );
     }
 
     public ShaderTransform setTranslation( float x, float y, float z )
@@ -65,4 +71,7 @@ public class ShaderTransform
         projection.setProjection( fov, width, height, zNear, zFar );
         return this;
     }
+
+    public Camera getCamera() { return camera; }
+    public void setCamera( Camera camera ) { this.camera = camera; }
 }

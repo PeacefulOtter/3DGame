@@ -87,6 +87,27 @@ public class Matrix4f
         return this;
     }
 
+    public Matrix4f initCamera( Vector3f forward, Vector3f upward )
+    {
+        Vector3f f = forward.normalize();
+        Vector3f r = upward.normalize().cross( f );
+        Vector3f u = f.cross( r );
+
+        initIdentity();
+
+        m[ 0 ][ 0 ] = r.getX();
+        m[ 0 ][ 1 ] = r.getY();
+        m[ 0 ][ 2 ] = r.getZ();
+        m[ 1 ][ 0 ] = u.getX();
+        m[ 1 ][ 1 ] = u.getY();
+        m[ 1 ][ 2 ] = u.getZ();
+        m[ 2 ][ 0 ] = f.getX();
+        m[ 2 ][ 1 ] = f.getY();
+        m[ 2 ][ 2 ] = f.getZ();
+
+        return this;
+    }
+
     public float[][] getM() { return m; }
     public void setM( float[][] other ) { m = other; }
 

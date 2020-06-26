@@ -45,9 +45,27 @@ public class Vector3f
         return new Vector3f( x / length, y / length, z / length );
     }
 
-    public Vector3f rotate( float angleDeg )
+    public Vector3f rotate( float angleDeg, Vector3f axis )
     {
-        return null;
+        double halfRadAngle = Math.toRadians( angleDeg / 2 );
+        float cosHalfAngle = (float) Math.cos( halfRadAngle );
+        float sinHalfAngle = (float) Math.sin( halfRadAngle );
+
+        Quaternion rotation = new Quaternion(
+                axis.getX() * sinHalfAngle,
+                axis.getY() * sinHalfAngle,
+                axis.getZ() * sinHalfAngle,
+                cosHalfAngle
+        );
+        Quaternion conjugate = rotation.conjugate();
+        // were using the conjugate to get rid of the imaginary values
+        // and keep the full rotation
+        // reminder :             Q = (  D*sin(angle/2), w*cos(angle/2) )
+        //              conjugate Q = ( -D*sin(angle/2), w*cos(angle/2) )
+        Quaternion w = rotation.mul( this ).mul( conjugate ); // Q*V*Q(conjugate)
+        x = w.getX(); y = w.getY(); z = w.getZ();
+
+        return this;
     }
 
     public Vector3f add( Vector3f other )

@@ -1,5 +1,6 @@
 package peacefulotter.game;
 
+import peacefulotter.game.Display.Camera;
 import peacefulotter.game.Display.Mesh;
 import peacefulotter.game.Display.Shader;
 import peacefulotter.game.Display.ShaderEffects.ShaderTransform;
@@ -11,6 +12,7 @@ public class Game
     private Mesh mesh;
     private Shader shader;
     private ShaderTransform transform;
+    private Camera camera;
 
     public Game( long window, int wWidth, int wHeight )
     {
@@ -19,6 +21,8 @@ public class Game
         shader = new Shader();
         transform = new ShaderTransform();
         transform.setProjection( 70f, wWidth, wHeight, 0.1f, 1000f );
+        camera = new Camera();
+        transform.setCamera( camera );
 
         /*Vertex[] vertices = new Vertex[] {
                 new Vertex( new Vector3f( -1, -1, 0 ) ),
