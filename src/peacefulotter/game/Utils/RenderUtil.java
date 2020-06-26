@@ -7,6 +7,7 @@ import peacefulotter.game.Maths.Matrix4f;
 import peacefulotter.game.Maths.Vector3f;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -30,6 +31,9 @@ public class RenderUtil
         glEnable( GL_FRAMEBUFFER_SRGB );
     }
 
+    /*
+            FLOAT BUFFER
+     */
     public static FloatBuffer createFloatBuffer( int size )
     {
         return BufferUtils.createFloatBuffer( size );
@@ -59,6 +63,23 @@ public class RenderUtil
                 buffer.put( matrix.getAt( i, j ) );
             }
         }
+        buffer.flip();
+        return buffer;
+    }
+
+
+    /*
+                INT BUFFER
+     */
+    public static IntBuffer createIntBuffer( int size )
+    {
+        return BufferUtils.createIntBuffer( size );
+    }
+
+    public static IntBuffer createFlippedBuffer( int... indices )
+    {
+        IntBuffer buffer = createIntBuffer( indices.length );
+        buffer.put( indices );
         buffer.flip();
         return buffer;
     }

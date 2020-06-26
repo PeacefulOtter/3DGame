@@ -7,10 +7,21 @@ public class ShaderTransform
 {
     private STranslation translation = new STranslation();
     private SRotation rotation = new SRotation();
+    private SScale scale = new SScale();
+    private SProjection projection = new SProjection();
 
-    public Matrix4f getTransformMatrix()
+    public Matrix4f getTransformationMatrix()
     {
-        return translation.getTranslationMatrix().mul( rotation.getRotationMatrix() );
+        return translation.getTranslationMatrix().mul(
+                rotation.getRotationMatrix().mul(
+                        scale.getScaleMatrix()
+                ) );
+    }
+
+    public Matrix4f getProjectedTransformationMatrix()
+    {
+        Matrix4f projectionMatrix = projection.getProjectionMatrix();
+        return projectionMatrix.mul( getTransformationMatrix() );
     }
 
     public ShaderTransform setTranslation( float x, float y, float z )
@@ -34,6 +45,24 @@ public class ShaderTransform
     public ShaderTransform setRotation( Vector3f vector )
     {
         rotation.setRotation( vector );
+        return this;
+    }
+
+    public ShaderTransform setScale( float x, float y, float z )
+    {
+        scale.setScale( x, y, z );
+        return this;
+    }
+
+    public ShaderTransform setScale( Vector3f vector )
+    {
+        scale.setScale( vector );
+        return this;
+    }
+
+    public ShaderTransform setProjection( float fov, float width, float height, float zNear, float zFar )
+    {
+        projection.setProjection( fov, width, height, zNear, zFar );
         return this;
     }
 }

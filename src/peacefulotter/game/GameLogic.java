@@ -28,7 +28,7 @@ public class GameLogic
         // System.out.println(glGetString(GL_VERSION));
         this.window = window;
         currentWindow = window.getWindow();
-        game = new Game( currentWindow );
+        game = new Game( currentWindow, window.getWindowWidth(), window.getWindowHeight() );
     }
 
     public void start()

@@ -26,6 +26,7 @@ public class Matrix4f
         return this;
     }
 
+    // see : https://en.wikipedia.org/wiki/Rotation_matrix
     public Matrix4f initRotation( float x, float y, float z )
     {
         Matrix4f rotationX = new Matrix4f().initIdentity();
@@ -55,6 +56,33 @@ public class Matrix4f
         rotationZ.m[ 1 ][ 1 ] =  cosZ;
 
         m = rotationZ.mul( rotationY.mul( rotationX ) ).getM();
+
+        return this;
+    }
+
+    public Matrix4f initScale( float x, float y, float z )
+    {
+        initIdentity();
+        m[ 0 ][ 0 ] = x;
+        m[ 1 ][ 1 ] = y;
+        m[ 2 ][ 2 ] = z;
+        return this;
+    }
+
+    public Matrix4f initProjection( float fov, float width, float height, float zNear, float zFar )
+    {
+        initIdentity();
+
+        float aspectRatio = width / height;
+        float invTanHalfFov = 1f / (float) Math.tan( Math.toRadians( fov / 2 ) );
+        float depth = zNear - zFar;
+
+        m[ 0 ][ 0 ] = invTanHalfFov * ( 1f / aspectRatio );
+        m[ 1 ][ 1 ] = invTanHalfFov;
+        m[ 2 ][ 2 ] =  ( -zNear - zFar ) / depth;
+        m[ 2 ][ 3 ] = 2 * zFar * zNear / depth;
+        m[ 3 ][ 2 ] = 1;
+        m[ 3 ][ 3 ] = 0;
 
         return this;
     }

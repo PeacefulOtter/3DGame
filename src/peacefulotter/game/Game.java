@@ -2,10 +2,7 @@ package peacefulotter.game;
 
 import peacefulotter.game.Display.Mesh;
 import peacefulotter.game.Display.Shader;
-import peacefulotter.game.Display.ShaderEffects.STranslation;
 import peacefulotter.game.Display.ShaderEffects.ShaderTransform;
-import peacefulotter.game.Display.Vertex;
-import peacefulotter.game.Maths.Vector3f;
 import peacefulotter.game.Utils.IO.Input;
 import peacefulotter.game.Utils.ResourceLoader;
 
@@ -15,19 +12,25 @@ public class Game
     private Shader shader;
     private ShaderTransform transform;
 
-    public Game( long window )
+    public Game( long window, int wWidth, int wHeight )
     {
         Input.initInputs( window );
-        mesh = new Mesh();
+        mesh = new ResourceLoader().loadMesh( "cube.obj" );
         shader = new Shader();
         transform = new ShaderTransform();
+        transform.setProjection( 70f, wWidth, wHeight, 0.1f, 1000f );
 
-        Vertex[] data = new Vertex[] {
+        /*Vertex[] vertices = new Vertex[] {
                 new Vertex( new Vector3f( -1, -1, 0 ) ),
                 new Vertex( new Vector3f(  0,  1, 0 ) ),
-                new Vertex( new Vector3f(  1, -1, 0 ) )
+                new Vertex( new Vector3f(  1, -1, 0 ) ),
+                new Vertex( new Vector3f(  0, -1, 1 ) )
         };
-        mesh.addVertices( data );
+        int[] indices = new int[] { 0, 1, 3,
+                                    3, 1, 2,
+                                    2, 1, 0,
+                                    0, 2, 3 };
+        mesh.addVertices( vertices, indices );*/
 
         shader.addVertexShader( new ResourceLoader().loadShader( "basicVertex.vs" ) );
         shader.addFragmentShader( new ResourceLoader().loadShader( "basicFragment.fs" ) );
@@ -43,7 +46,7 @@ public class Game
 
     public void update()
     {
-        temp += 0.003;
+        temp += 0.001;
         cosTemp = (float)Math.cos( temp );
         sinTemp = (float)Math.sin( temp );
     }
@@ -51,11 +54,12 @@ public class Game
     public void render()
     {
         shader.bind();
-        shader.setUniformF( "uniformFloat", (float)Math.sin( temp ) );
+        shader.setUniformF( "uniformFloat", 1 );
         transform
-                .setTranslation( cosTemp,  sinTemp, 0 )
-                .setRotation( 0, 0, sinTemp * 180 );
-        shader.setUniformMatrix( "transform", transform.getTransformMatrix() );
+                .setTranslation( 0, 0, 5 )
+                .setRotation(0, sinTemp * 180, 0 );
+                //  .setScale( 0.5f, 0.5f, 0.5f );
+        shader.setUniformMatrix( "transform", transform.getProjectedTransformationMatrix() );
         mesh.draw();
     }
 }
