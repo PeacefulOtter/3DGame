@@ -3,7 +3,9 @@ package peacefulotter.game.Utils.IO;
 import peacefulotter.game.Maths.Vector2f;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -18,8 +20,8 @@ public class Input
     public static final int MOUSE_RELEASED = 0;
     public static final int MOUSE_PRESSED = 1;
 
-    private static final List<Key> keys = new ArrayList<>();
-    private static final List<Key> keysPressed = new ArrayList<>();
+    private static final Set<Key> keys = new HashSet<>();
+    private static final Set<Key> keysPressed = new HashSet<>();
     private static final List<Key> mouseButtons = new ArrayList<>();
 
     private static int mousePrimaryState = GLFW_RELEASE;
@@ -55,6 +57,7 @@ public class Input
             {
                 if ( k.getKeyCode() == key )
                 {
+                    System.out.println(k + " " + action);
                     if ( action == GLFW_PRESS || action == GLFW_REPEAT )
                         keysPressed.add( k );
                     else
