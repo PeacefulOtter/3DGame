@@ -1,4 +1,4 @@
-package peacefulotter.game.Display;
+package peacefulotter.game.Display.Graphics;
 
 import peacefulotter.game.Utils.RenderUtil;
 
@@ -18,7 +18,7 @@ public class Mesh
         size = 0;
     }
 
-    public void addVertices( Vertex[] vertices, int[] indices )
+    public void addVertices(Vertex[] vertices, int[] indices )
     {
         size = indices.length;
 

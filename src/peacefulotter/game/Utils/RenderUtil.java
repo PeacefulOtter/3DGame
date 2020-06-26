@@ -2,7 +2,7 @@ package peacefulotter.game.Utils;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL;
-import peacefulotter.game.Display.Vertex;
+import peacefulotter.game.Display.Graphics.Vertex;
 import peacefulotter.game.Maths.Matrix4f;
 import peacefulotter.game.Maths.Vector3f;
 

@@ -1,7 +1,7 @@
 package peacefulotter.game.Utils;
 
-import peacefulotter.game.Display.Mesh;
-import peacefulotter.game.Display.Vertex;
+import peacefulotter.game.Display.Graphics.Mesh;
+import peacefulotter.game.Display.Graphics.Vertex;
 import peacefulotter.game.Maths.Vector3f;
 
 import java.io.*;

@@ -1,4 +1,4 @@
-package peacefulotter.game.Display;
+package peacefulotter.game.Display.Graphics;
 
 import peacefulotter.game.Maths.Vector3f;
 

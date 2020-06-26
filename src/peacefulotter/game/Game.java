@@ -1,11 +1,14 @@
 package peacefulotter.game;
 
 import peacefulotter.game.Display.Camera;
-import peacefulotter.game.Display.Mesh;
-import peacefulotter.game.Display.Shader;
-import peacefulotter.game.Display.ShaderEffects.ShaderTransform;
+import peacefulotter.game.Display.Graphics.Mesh;
+import peacefulotter.game.Display.Shaders.Shader;
+import peacefulotter.game.Display.Shaders.ShaderTransform;
 import peacefulotter.game.Utils.IO.Input;
 import peacefulotter.game.Utils.ResourceLoader;
+
+import static org.lwjgl.glfw.GLFW.*;
+
 
 public class Game
 {
@@ -42,7 +45,39 @@ public class Game
 
         shader.addUniform( "uniformFloat" );
         shader.addUniform( "transform" );
+
+        initCameraMovement();
     }
+
+    private void initCameraMovement()
+    {
+        Input.addKeyCallback( GLFW_KEY_W, () -> {
+            camera.move( camera.getForward(), 0.2f );
+        } );
+        Input.addKeyCallback( GLFW_KEY_D, () -> {
+            camera.move( camera.getRight(), 0.2f );
+        } );
+        Input.addKeyCallback( GLFW_KEY_S, () -> {
+            camera.move( camera.getForward(), -0.2f );
+        } );
+        Input.addKeyCallback( GLFW_KEY_A, () -> {
+            camera.move( camera.getLeft(), 0.2f );
+        } );
+
+        Input.addKeyCallback( GLFW_KEY_UP, () -> {
+            camera.rotateX( -1f );
+        } );
+        Input.addKeyCallback( GLFW_KEY_RIGHT, () -> {
+            camera.rotateY( 1f );
+        } );
+        Input.addKeyCallback( GLFW_KEY_DOWN, () -> {
+            camera.rotateX( 1f );
+        } );
+        Input.addKeyCallback( GLFW_KEY_LEFT, () -> {
+            camera.rotateY( -1f );
+        } );
+    }
+
 
 
     float temp = 0.0f;
@@ -60,8 +95,8 @@ public class Game
         shader.bind();
         shader.setUniformF( "uniformFloat", 1 );
         transform
-                .setTranslation( 0, 0, 5 )
-                .setRotation(0, sinTemp * 180, 0 );
+                .setTranslation( 0, 0, 5 );
+                //.setRotation(0, sinTemp * 180, 0 );
                 //  .setScale( 0.5f, 0.5f, 0.5f );
         shader.setUniformMatrix( "transform", transform.getProjectedTransformationMatrix() );
         mesh.draw();

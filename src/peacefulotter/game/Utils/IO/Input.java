@@ -32,11 +32,13 @@ public class Input
     }
 
 
+    public static void addKeyCallback( int keyCode, IOExecutable executable )
+    {
+        keys.add( new Key( keyCode, executable ) );
+    }
+
     private static void initKeyCallbacks( long window )
     {
-        keys.add( new Key( GLFW_KEY_UP, () -> {
-        } ) );
-
         glfwSetKeyCallback( window, ( wd, key, scancode, action, mods ) -> {
             if ( action == GLFW_PRESS || action == GLFW_REPEAT )
             {
@@ -52,9 +54,10 @@ public class Input
     }
 
 
-    private static void initMouseButtonsCallbacks( long window )
+    public static void addMouseCallback( int keyCode, IOExecutable executable )
     {
-        mouseButtons.add( new Key( MOUSE_PRIMARY, () -> {
+        mouseButtons.add( new Key( keyCode, executable ) );
+        /*mouseButtons.add( new Key( MOUSE_PRIMARY, () -> {
             System.out.println( "primary pressed" );
         } ) );
         mouseButtons.add( new Key( MOUSE_SECONDARY, () -> {
@@ -68,8 +71,11 @@ public class Input
         } ) );
         mouseButtons.add( new Key( MOUSE_M5, () -> {
             System.out.println( "M5 pressed" );
-        } ) );
+        } ) );*/
+    }
 
+    private static void initMouseButtonsCallbacks( long window )
+    {
         glfwSetMouseButtonCallback( window, ( wd, button, action, mods ) -> {
             for ( Key k : mouseButtons )
             {
@@ -82,7 +88,6 @@ public class Input
             }
         } );
     }
-
 
     private static void initCursorCallback( long window )
     {

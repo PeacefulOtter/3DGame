@@ -29,24 +29,22 @@ public class Camera
         position = position.add( direction.mul( amount ) );
     }
 
-    public void rotateX( )
+    public void rotateX( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        float angle = 0;
         forward.rotate( angle, horAxis ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 
-    public void rotateY()
+    public void rotateY( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        float angle = 0;
         forward.rotate( angle, Y_AXIS ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 
-    public Vector3f getLeft() { return upward.cross( forward ).normalize(); }
-    public Vector3f getRight() { return forward.cross( upward ).normalize(); }
+    public Vector3f getLeft()  { return forward.cross( upward ).normalize(); }
+    public Vector3f getRight() { return upward.cross( forward ).normalize(); }
 
     public Vector3f getPosition() { return position; }
     public void setPosition( Vector3f position ) { this.position = position; }

@@ -3,15 +3,15 @@ package peacefulotter.game.Utils.IO;
 public class Key
 {
     private int keyCode;
-    private Executable executable;
+    private IOExecutable IOExecutable;
 
-    public Key( int keyCode, Executable executable )
+    public Key( int keyCode, IOExecutable IOExecutable)
     {
         this.keyCode = keyCode;
-        this.executable = executable;
+        this.IOExecutable = IOExecutable;
     }
 
-    public void exec() { executable.exec(); }
+    public void exec() { IOExecutable.exec(); }
 
     public int getKeyCode() { return keyCode; }
 }

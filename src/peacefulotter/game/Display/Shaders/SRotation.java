@@ -1,11 +1,11 @@
-package peacefulotter.game.Display.ShaderEffects;
+package peacefulotter.game.Display.Shaders;
 
 import peacefulotter.game.Maths.Matrix4f;
 import peacefulotter.game.Maths.Vector3f;
 
 public class SRotation
 {
-    private Vector3f rotation;
+    private Vector3f rotation = new Vector3f( 0, 0, 0 );
 
     public Matrix4f getRotationMatrix()
     {
