@@ -69,12 +69,11 @@ public class Matrix4f
         return this;
     }
 
-    public Matrix4f initProjection( float fov, float width, float height, float zNear, float zFar )
+    public Matrix4f initPerspective( float fov, float aspectRatio, float zNear, float zFar )
     {
         initIdentity();
 
-        float aspectRatio = width / height;
-        float invTanHalfFov = 1f / (float) Math.tan( Math.toRadians( fov / 2 ) );
+        float invTanHalfFov = 1f / (float) Math.tan( fov / 2 );
         float depth = zNear - zFar;
 
         m[ 0 ][ 0 ] = invTanHalfFov * ( 1f / aspectRatio );
@@ -87,7 +86,7 @@ public class Matrix4f
         return this;
     }
 
-    public Matrix4f initCamera( Vector3f forward, Vector3f upward )
+    public Matrix4f initRotation( Vector3f forward, Vector3f upward )
     {
         Vector3f f = forward.normalize();
         Vector3f r = upward.normalize().cross( f );

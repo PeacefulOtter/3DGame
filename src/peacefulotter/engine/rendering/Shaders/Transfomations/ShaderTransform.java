@@ -1,17 +1,13 @@
 package peacefulotter.engine.rendering.Shaders.Transfomations;
 
-import peacefulotter.engine.rendering.Camera;
 import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.core.Maths.Vector3f;
 
 public class ShaderTransform
 {
-    private static final STranslation translation = new STranslation();
-    private static final SRotation rotation = new SRotation();
-    private static final SScale scale = new SScale();
-    private static final SProjection projection = new SProjection();
-
-    private static Camera camera;
+    private final STranslation translation = new STranslation();
+    private final SRotation rotation = new SRotation();
+    private final SScale scale = new SScale();
 
     public Matrix4f getTransformationMatrix()
     {
@@ -19,15 +15,6 @@ public class ShaderTransform
                 rotation.getRotationMatrix().mul(
                         scale.getScaleMatrix()
                 ) );
-    }
-
-    public Matrix4f getProjectedTransformationMatrix()
-    {
-        Matrix4f projectionMatrix = projection.getProjectionMatrix();
-        Matrix4f cameraRotation = new Matrix4f().initCamera( camera.getForward(), camera.getUpward() );
-        Vector3f cameraPos = camera.getPosition();
-        Matrix4f cameraTranslation = new Matrix4f().initTranslation( -cameraPos.getX(), -cameraPos.getY(), -cameraPos.getZ() );
-        return projectionMatrix.mul( cameraRotation.mul( cameraTranslation.mul( getTransformationMatrix() ) ) );
     }
 
     public ShaderTransform setTranslation( float x, float y, float z )
@@ -66,11 +53,4 @@ public class ShaderTransform
         return this;
     }
 
-    public static void setProjection( float fov, float width, float height, float zNear, float zFar )
-    {
-        projection.setProjection( fov, width, height, zNear, zFar );
-    }
-
-    public static Camera getCamera() { return camera; }
-    public static void setCamera( Camera camera ) { ShaderTransform.camera = camera; }
 }

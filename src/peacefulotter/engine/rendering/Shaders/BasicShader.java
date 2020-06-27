@@ -1,10 +1,12 @@
 package peacefulotter.engine.rendering.Shaders;
 
+import peacefulotter.engine.rendering.Camera;
 import peacefulotter.engine.rendering.Graphics.Material;
 import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.ResourceLoader;
 import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
 public class BasicShader extends Shader
 {
@@ -21,9 +23,13 @@ public class BasicShader extends Shader
         addUniform( "color" );
     }
 
-    public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material )
+    public void updateUniforms( ShaderTransform transform, Material material )
     {
         material.getTexture().bind();
+
+        Camera camera = getRenderingEngine().getCamera();
+        Matrix4f worldMatrix = transform.getTransformationMatrix();
+        Matrix4f projectedMatrix = camera.getViewProjection().mul( worldMatrix );
 
         setUniformMatrix( "transform", projectedMatrix );
         setUniformVector( "color", material.getColor() );

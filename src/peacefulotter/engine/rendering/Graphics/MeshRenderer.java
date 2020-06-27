@@ -22,14 +22,14 @@ public class MeshRenderer implements GameComponent
     public void init() { }
 
     @Override
-    public void update( float deltaTime ) { }
+    public void update() { }
 
     @Override
     public void render( Shader shader )
     {
         ShaderTransform transform = parent.getTransform();
         shader.bind();
-        shader.updateUniforms( transform.getTransformationMatrix(), transform.getProjectedTransformationMatrix(), material );
+        shader.updateUniforms( transform, material );
         mesh.draw();
     }
 }

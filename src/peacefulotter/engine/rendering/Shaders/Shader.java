@@ -1,9 +1,12 @@
 package peacefulotter.engine.rendering.Shaders;
 
+import peacefulotter.engine.rendering.Camera;
 import peacefulotter.engine.rendering.Graphics.Material;
 import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.core.Maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,7 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 abstract public class Shader
 {
+    private RenderingEngine renderingEngine;
     private int program;
     private Map<String, Integer> uniforms;
 
@@ -28,8 +32,7 @@ abstract public class Shader
         uniforms = new HashMap<>();
     }
 
-    public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material, Vector3f position ) {}
-    public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material ) {}
+    public void updateUniforms( ShaderTransform transform, Material material ) {}
 
     public void addUniform( String uniformName )
     {
@@ -124,5 +127,16 @@ abstract public class Shader
     public void bind()
     {
         glUseProgram( program );
+    }
+
+
+    public RenderingEngine getRenderingEngine()
+    {
+        return renderingEngine;
+    }
+
+    public void setRenderingEngine( RenderingEngine renderingEngine )
+    {
+        this.renderingEngine = renderingEngine;
     }
 }

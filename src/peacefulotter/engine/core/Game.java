@@ -5,17 +5,18 @@ import peacefulotter.engine.core.elementary.GameComponent;
 import peacefulotter.engine.core.elementary.GameObject;
 import peacefulotter.engine.core.elementary.Initializable;
 import peacefulotter.engine.core.elementary.Updatable;
+import peacefulotter.engine.rendering.Camera;
 
-abstract public class Game implements Initializable, Updatable
+abstract public class Game implements Updatable
 {
-    private GameObject root;
+    private final GameObject root;
 
     public Game( GameObject root )
     {
         this.root = root;
     }
     public void init() { root.init(); }
-    public void update( float deltaTime ) { root.update( deltaTime ); Input.execInputs(); }
+    public void update() { root.update(); Input.execInputs();  }
 
     abstract public void startEngine();
 

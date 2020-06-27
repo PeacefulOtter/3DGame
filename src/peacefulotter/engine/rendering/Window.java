@@ -12,15 +12,15 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window
 {
-    public final String NAME;
-    public final int WIDTH, HEIGHT;
+    public final String name;
+    public final int width, height;
     private long window;
 
     public Window( String windowName, int windowWidth, int windowHeight )
     {
-        this.NAME   = windowName;
-        this.WIDTH  = windowWidth;
-        this.HEIGHT = windowHeight;
+        this.name   = windowName;
+        this.width  = windowWidth;
+        this.height = windowHeight;
         init();
     }
 
@@ -39,7 +39,7 @@ public class Window
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 
         // Create the window
-        window = glfwCreateWindow( WIDTH, HEIGHT, NAME, NULL, NULL);
+        window = glfwCreateWindow( width, height, name, NULL, NULL);
         if ( window == NULL )
             throw new RuntimeException("Failed to create the GLFW window");
 
@@ -78,5 +78,9 @@ public class Window
     }
 
     public long getWindow() { return window; }
+
+    public int getWidth() { return width; }
+
+    public int getHeight() { return height; }
 
 }

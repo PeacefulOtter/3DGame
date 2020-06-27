@@ -1,11 +1,11 @@
 package peacefulotter.engine.rendering.Shaders;
 
+import peacefulotter.engine.rendering.Camera;
 import peacefulotter.engine.rendering.Graphics.Material;
 import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.ResourceLoader;
-import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
 
 public class PhongShader extends Shader
@@ -67,8 +67,11 @@ public class PhongShader extends Shader
         }
     }
 
-    public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material, Vector3f cameraPos )
+    public void updateUniforms( ShaderTransform transform, Material material )
     {
+        Camera camera = getRenderingEngine().getCamera();
+        Matrix4f worldMatrix = transform.getTransformationMatrix();
+        Matrix4f projectedMatrix = camera.getViewProjection().mul( worldMatrix );
         material.getTexture().bind();
 
         setUniformMatrix( "transformProjected", projectedMatrix );
@@ -77,7 +80,7 @@ public class PhongShader extends Shader
 
         setUniformF( "specularIntensity", material.getSpecularIntensity() );
         setUniformF( "specularExponent", material.getSpecularExponent() );
-        setUniformVector( "eyePos", cameraPos );
+        setUniformVector( "eyePos", camera.getPosition() );
 
         setUniformVector( "ambientLight", ambientLight );
         setUniformDirLight( "dirLight", directionalLight );

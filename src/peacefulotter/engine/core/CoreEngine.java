@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL;
 import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.Window;
 
 import java.util.Objects;
 
@@ -22,17 +23,18 @@ public class CoreEngine
 
     private boolean isRunning = false;
 
-    public CoreEngine( Game game, long currentWindow )
+    public CoreEngine( Game game, Window window )
     {
         this.game = game;
-        this.currentWindow = currentWindow;
-        this.renderingEngine = new RenderingEngine();
+        this.currentWindow = window.getWindow();
+        this.renderingEngine = new RenderingEngine( (float) ( window.getWidth() / window.getHeight() )   );
     }
 
     public void start()
     {
         if ( isRunning ) return;
         game.init();
+        renderingEngine.initCamera();
         isRunning = true;
         run();
     }
@@ -68,11 +70,13 @@ public class CoreEngine
                 return;
             }
             GL.createCapabilities();
-            glfwSwapBuffers(currentWindow);
+            glfwSwapBuffers( currentWindow );
             glfwPollEvents();
 
-            long passedTime = (long) Time.getDeltaNano( lastTime ); // delta between two updates
-            lastTime = Time.getNanoTime();
+            long startTime = Time.getNanoTime(); // delta between two updates
+            long passedTime = startTime - lastTime;
+            lastTime = startTime;
+
             relativeTime += passedTime / (double) Time.SECOND;
 
             framesCounter += passedTime;
@@ -88,7 +92,8 @@ public class CoreEngine
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-                game.update( passedTime );
+                game.update();
+                renderingEngine.updateCamera();
             }
 
             if ( render )

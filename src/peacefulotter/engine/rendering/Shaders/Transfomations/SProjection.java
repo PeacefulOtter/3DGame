@@ -11,8 +11,8 @@ public class SProjection
 
     public Matrix4f getProjectionMatrix()
     {
-        return new Matrix4f().initProjection(
-                fov, screenWidth, screenHeight, zNear, zFar );
+        return new Matrix4f().initPerspective(
+                fov, screenWidth / screenHeight, zNear, zFar );
     }
 
     public void setProjection( float fov, float width, float height, float zNear, float zFar )

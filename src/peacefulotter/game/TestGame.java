@@ -32,33 +32,27 @@ PhongShader.setDirectionalLight( new DirectionalLight(
         new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
  */
 
-public class TestGame extends Game implements Initializable
+public class TestGame extends Game
 {
     private final Window window;
     private final CoreEngine engine;
     private final GameObject root;
-
-    private final Vector2f centerWindow;
-
 
     public TestGame( String winName, int winWidth, int winHeight )
     {
         super( new GameObject( new ShaderTransform() ) );
         root = getRootObject();
         window = new Window( winName, winWidth, winHeight );
-        this.engine = new CoreEngine( this, window.getWindow() );
-        centerWindow = new Vector2f( window.WIDTH / 2f, window.HEIGHT / 2f );
+        this.engine = new CoreEngine( this, window );
     }
 
     public void init()
     {
         Input.initInputs( window.getWindow() );
-        Camera camera = new Camera( centerWindow );
-        root.addChild( camera );
+        // Camera camera = new Camera( centerWindow );
+        // root.addChild();
 
         PhongShader.setAmbientLight( new Vector3f( 0.8f, 0.8f, 0.8f ) );
-        ShaderTransform.setProjection( 70f, window.WIDTH, window.HEIGHT, 0.1f, 1000f );
-        ShaderTransform.setCamera( camera );
 
         float fieldWidth = 10.0f;
         float fieldDepth = 10.0f;

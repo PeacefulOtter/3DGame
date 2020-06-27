@@ -1,5 +1,6 @@
 package peacefulotter.engine.rendering;
 
+import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.core.Maths.Vector2f;
 import peacefulotter.engine.core.Maths.Vector3f;
 import peacefulotter.engine.Utils.IO.Input;
@@ -18,29 +19,25 @@ public class Camera implements GameComponent
 {
     public static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
 
-    private final Vector2f centerWindow;
-
     private Vector3f position;
     private Vector3f forward, upward;
     private GameObject parent;
+    private Matrix4f projection;
 
     private SpotLight spotLight;
 
-    public Camera( Vector2f centerWindow )
+    public Camera( float fov, float aspectRatio, float zNear, float zFar )
     {
-        this(
-                new Vector3f( 0, 0, 0 ),
-                new Vector3f( 0, 0, 1 ),
-                new Vector3f( 0, 1, 0 ),
-                centerWindow );
+        this.position = new Vector3f( 0, 0, 0 );
+        this.forward = new Vector3f( 0, 0, 1 );
+        this.upward = new Vector3f( 0, 1, 0 );
+        this.projection = new Matrix4f().initPerspective( fov, aspectRatio, zNear, zFar );
     }
 
-    public Camera( Vector3f position, Vector3f forward, Vector3f upward, Vector2f centerWindow )
-    {
-        this.position = position;
-        this.forward = forward.normalize();
-        this.upward = upward.normalize();
-        this.centerWindow = centerWindow;
+    public Matrix4f getViewProjection() {
+        Matrix4f cameraRotation = new Matrix4f().initRotation( forward, upward );
+        Matrix4f cameraTranslation = new Matrix4f().initTranslation( -position.getX(), -position.getY(), -position.getZ() );
+        return projection.mul( cameraRotation.mul( cameraTranslation ) );
     }
 
     public void setParent( GameObject parent ) { this.parent = parent; }
@@ -75,16 +72,16 @@ public class Camera implements GameComponent
     }
 
     @Override
-    public void update( float deltaTime )
+    public void update()
     {
         spotLight.getPointLight().setPosition( position );
         spotLight.setDirection( forward );
 
         if ( Input.getMousePrimaryState() == Input.MOUSE_RELEASED ) return;
 
-        Vector2f deltaPos = Input.getMousePosition().sub( centerWindow );
-        rotateY( deltaPos.getX() * deltaTime );
-        rotateX( deltaPos.getY() * deltaTime );
+        // Vector2f deltaPos = Input.getMousePosition().sub( centerWindow );
+        // rotateY( deltaPos.getX() * deltaTime );
+        // rotateX( deltaPos.getY() * deltaTime );
     }
 
     @Override

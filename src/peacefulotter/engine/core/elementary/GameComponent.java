@@ -5,6 +5,6 @@ import peacefulotter.engine.rendering.Shaders.Shader;
 public interface GameComponent
 {
     void init();
-    void update( float deltaTime );
+    void update();
     void render( Shader shader );
 }

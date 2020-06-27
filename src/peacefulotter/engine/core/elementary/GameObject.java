@@ -3,12 +3,12 @@ package peacefulotter.engine.core.elementary;
 import peacefulotter.engine.rendering.Shaders.Shader;
 import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GameObject implements GameComponent
 {
-    private final List<GameComponent> children = new ArrayList<>();
+    private final Set<GameComponent> children = new HashSet<>();
     private final ShaderTransform transform;
 
     public GameObject( ShaderTransform transform )
@@ -27,10 +27,10 @@ public class GameObject implements GameComponent
             child.init();
     }
 
-    public void update( float deltaTime )
+    public void update()
     {
         for ( GameComponent child: children )
-            child.update( deltaTime );
+            child.update();
     }
 
     public void render( Shader shader )
