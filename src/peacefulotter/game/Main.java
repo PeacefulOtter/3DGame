@@ -1,6 +1,6 @@
 package peacefulotter.game;
 
-import peacefulotter.game.Display.Window;
+import peacefulotter.engine.core.Game;
 
 public class Main
 {
@@ -10,8 +10,9 @@ public class Main
 
     public static void main( String[] args )
     {
-        GameLogic logic = new GameLogic( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
-        logic.start();
+        // System.out.println(glGetString(GL_VERSION));
+        Game game = new TestGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
+        game.startEngine();
     }
 
 }
