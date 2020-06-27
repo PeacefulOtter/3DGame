@@ -2,6 +2,7 @@ package peacefulotter.game.Display.Shaders;
 
 import peacefulotter.game.Display.Graphics.Material;
 import peacefulotter.game.Maths.Matrix4f;
+import peacefulotter.game.Maths.Vector3f;
 import peacefulotter.game.Utils.RenderUtil;
 import peacefulotter.game.Utils.ResourceLoader;
 
@@ -20,7 +21,7 @@ public class BasicShader extends Shader
         addUniform( "color" );
     }
 
-    public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material )
+    public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material, Vector3f position)
     {
         if ( material.getTexture() != null )
             material.getTexture().bind();

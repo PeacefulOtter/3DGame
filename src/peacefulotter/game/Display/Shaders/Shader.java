@@ -11,7 +11,7 @@ import java.util.Map;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
-public class Shader
+abstract public class Shader
 {
     private int program;
     private Map<String, Integer> uniforms;
@@ -28,10 +28,7 @@ public class Shader
         uniforms = new HashMap<>();
     }
 
-    public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material )
-    {
-
-    }
+    abstract public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material, Vector3f position);
 
     public void addUniform( String uniformName )
     {

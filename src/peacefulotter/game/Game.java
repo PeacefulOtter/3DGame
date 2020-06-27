@@ -115,7 +115,11 @@ public class Game
                 .setRotation(0, sinTemp * 180, 0 );
                 //  .setScale( 0.5f, 0.5f, 0.5f );
         shader.bind();
-        shader.updateUniforms( transform.getTransformationMatrix(), transform.getProjectedTransformationMatrix(), material );
+        shader.updateUniforms(
+                transform.getTransformationMatrix(),
+                transform.getProjectedTransformationMatrix(),
+                material,
+                camera.getPosition() );
         mesh.draw();
     }
 }
