@@ -86,6 +86,24 @@ public class Matrix4f
         return this;
     }
 
+    public Matrix4f initOrthographic( float left, float right, float bottom, float top, float near, float far )
+    {
+        initIdentity();
+
+        float width  = right - left;
+        float height = top - bottom;
+        float depth  = far - near;
+
+        m[ 0 ][ 0 ] =  2 / width;
+        m[ 1 ][ 1 ] =  2 / height;
+        m[ 2 ][ 2 ] = -2 / depth;
+        m[ 0 ][ 3 ] = -( right + left ) / width;
+        m[ 1 ][ 3 ] = -( top + bottom ) / height;
+        m[ 2 ][ 3 ] = -( far + near )   / depth;
+
+        return this;
+    }
+
     public Matrix4f initRotation( Vector3f forward, Vector3f upward )
     {
         Vector3f f = forward.normalize();

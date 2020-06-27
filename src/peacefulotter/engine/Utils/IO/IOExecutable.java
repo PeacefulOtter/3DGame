@@ -2,5 +2,5 @@ package peacefulotter.engine.Utils.IO;
 
 public interface IOExecutable
 {
-    void exec();
+    void exec( float deltaTime );
 }

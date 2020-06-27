@@ -1,5 +1,6 @@
 package peacefulotter.engine.rendering;
 
+import peacefulotter.engine.Utils.Time;
 import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.core.Maths.Vector2f;
 import peacefulotter.engine.core.Maths.Vector3f;
@@ -45,18 +46,18 @@ public class Camera implements GameComponent
     @Override
     public void init()
     {
-        Input.addKeyCallback( GLFW_KEY_W, () -> move( getForward(), 0.02f ) );
-        Input.addKeyCallback( GLFW_KEY_D, () -> move( getRight(), 0.02f ) );
-        Input.addKeyCallback( GLFW_KEY_S, () -> move( getForward(), -0.02f ) );
-        Input.addKeyCallback( GLFW_KEY_A, () -> move( getLeft(), 0.02f ) );
+        Input.addKeyCallback( GLFW_KEY_W, ( deltaTime ) -> move( getForward(), 0.02f ) );
+        Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(), 0.02f ) );
+        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getForward(), -0.02f ) );
+        Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(), 0.02f ) );
 
-        Input.addKeyCallback( GLFW_KEY_UP, () -> rotateX( -0.5f ) );
-        Input.addKeyCallback( GLFW_KEY_RIGHT, () -> rotateY( 0.5f ) );
-        Input.addKeyCallback( GLFW_KEY_DOWN, () -> rotateX( 0.5f ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT, () -> rotateY( -0.5f ) );
+        Input.addKeyCallback( GLFW_KEY_UP, ( deltaTime ) -> rotateX( -0.5f ) );
+        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY( 0.5f ) );
+        Input.addKeyCallback( GLFW_KEY_DOWN, ( deltaTime ) -> rotateX( 0.5f ) );
+        Input.addKeyCallback( GLFW_KEY_LEFT, ( deltaTime ) -> rotateY( -0.5f ) );
 
-        Input.addMouseCallback( MOUSE_PRIMARY, () -> { } );
-        Input.addMouseCallback( MOUSE_SECONDARY, () -> { } );
+        Input.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> { } );
+        Input.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> { } );
 
         spotLight = new SpotLight(
                 new PointLight(
@@ -72,16 +73,17 @@ public class Camera implements GameComponent
     }
 
     @Override
-    public void update()
+    public void update( float deltaTime )
     {
         spotLight.getPointLight().setPosition( position );
         spotLight.setDirection( forward );
 
         if ( Input.getMousePrimaryState() == Input.MOUSE_RELEASED ) return;
 
-        // Vector2f deltaPos = Input.getMousePosition().sub( centerWindow );
-        // rotateY( deltaPos.getX() * deltaTime );
-        // rotateX( deltaPos.getY() * deltaTime );
+        Vector2f deltaPos = Input.getMousePosition().sub( Window.getCenter() );
+        float angle = deltaTime / 10;
+        rotateY( deltaPos.getX() * angle );
+        rotateX( deltaPos.getY() * angle );
     }
 
     @Override

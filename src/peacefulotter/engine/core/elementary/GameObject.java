@@ -27,10 +27,10 @@ public class GameObject implements GameComponent
             child.init();
     }
 
-    public void update()
+    public void update( float deltaTime )
     {
         for ( GameComponent child: children )
-            child.update();
+            child.update( deltaTime );
     }
 
     public void render( Shader shader )

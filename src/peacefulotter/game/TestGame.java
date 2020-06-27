@@ -34,24 +34,18 @@ PhongShader.setDirectionalLight( new DirectionalLight(
 
 public class TestGame extends Game
 {
-    private final Window window;
-    private final CoreEngine engine;
+    private final CoreEngine coreEngine;
     private final GameObject root;
 
     public TestGame( String winName, int winWidth, int winHeight )
     {
         super( new GameObject( new ShaderTransform() ) );
         root = getRootObject();
-        window = new Window( winName, winWidth, winHeight );
-        this.engine = new CoreEngine( this, window );
+        this.coreEngine = new CoreEngine( this, winName, winWidth, winHeight );
     }
 
     public void init()
     {
-        Input.initInputs( window.getWindow() );
-        // Camera camera = new Camera( centerWindow );
-        // root.addChild();
-
         PhongShader.setAmbientLight( new Vector3f( 0.8f, 0.8f, 0.8f ) );
 
         float fieldWidth = 10.0f;
@@ -81,5 +75,5 @@ public class TestGame extends Game
         super.init();
     }
 
-    public void startEngine() { engine.start(); }
+    public void startEngine() { coreEngine.start(); }
 }

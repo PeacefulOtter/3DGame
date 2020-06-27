@@ -3,6 +3,7 @@ package peacefulotter.engine.rendering;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
+import peacefulotter.engine.core.Maths.Vector2f;
 
 import java.nio.IntBuffer;
 
@@ -13,14 +14,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window
 {
     public final String name;
-    public final int width, height;
+    public static int width, height;
     private long window;
 
     public Window( String windowName, int windowWidth, int windowHeight )
     {
         this.name   = windowName;
-        this.width  = windowWidth;
-        this.height = windowHeight;
+        Window.width  = windowWidth;
+        Window.height = windowHeight;
         init();
     }
 
@@ -82,5 +83,10 @@ public class Window
     public int getWidth() { return width; }
 
     public int getHeight() { return height; }
+
+    public static Vector2f getCenter()
+    {
+        return new Vector2f( width / 2f, height / 2f );
+    }
 
 }

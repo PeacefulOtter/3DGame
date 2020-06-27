@@ -2,6 +2,7 @@ package peacefulotter.engine.core;
 
 
 import org.lwjgl.opengl.GL;
+import peacefulotter.engine.Utils.IO.Input;
 import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
@@ -23,18 +24,21 @@ public class CoreEngine
 
     private boolean isRunning = false;
 
-    public CoreEngine( Game game, Window window )
+    public CoreEngine( Game game, String winName, int winWidth, int winHeight )
     {
         this.game = game;
-        this.currentWindow = window.getWindow();
-        this.renderingEngine = new RenderingEngine( (float) ( window.getWidth() / window.getHeight() )   );
+        this.renderingEngine = new RenderingEngine( winName, winWidth, winHeight  );
+        this.currentWindow = renderingEngine.getCurrentWindow();
     }
 
     public void start()
     {
         if ( isRunning ) return;
+
         game.init();
         renderingEngine.initCamera();
+        Input.initInputs( currentWindow );
+
         isRunning = true;
         run();
     }
@@ -57,9 +61,9 @@ public class CoreEngine
     private void run()
     {
         int frames = 0;
-        int framesCounter = 0;
+        double framesCounter = 0;
 
-        long lastTime = Time.getNanoTime();
+        double lastTime = Time.getNanoTime();
         double relativeTime = 0; // time in seconds since the start
 
         while ( isRunning )
@@ -69,31 +73,33 @@ public class CoreEngine
                 stop();
                 return;
             }
+
             GL.createCapabilities();
             glfwSwapBuffers( currentWindow );
             glfwPollEvents();
 
-            long startTime = Time.getNanoTime(); // delta between two updates
-            long passedTime = startTime - lastTime;
+            boolean render = false;
+
+            double startTime = Time.getNanoTime(); // delta between two updates
+            double passedTime = startTime - lastTime;
             lastTime = startTime;
 
-            relativeTime += passedTime / (double) Time.SECOND;
-
+            relativeTime += passedTime;
             framesCounter += passedTime;
-            if ( framesCounter >= Time.SECOND )
+
+            if ( framesCounter >= 1.0 )
             {
                 System.out.println(frames);
                 frames = 0;
                 framesCounter = 0;
             }
 
-            boolean render = false;
             while( relativeTime > FRAME_TIME )
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-                game.update();
-                renderingEngine.updateCamera();
+                game.update( (float) FRAME_TIME );
+                renderingEngine.updateCamera( (float) FRAME_TIME );
             }
 
             if ( render )

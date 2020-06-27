@@ -9,12 +9,22 @@ import peacefulotter.engine.rendering.Shaders.Shader;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
+/*
+
+    Move camera inside Game class ?
+ */
+
+
 public class RenderingEngine
 {
+    private Window window;
     private Camera camera;
 
-    public RenderingEngine( float aspectRatio )
+    public RenderingEngine( String winName, int winWidth, int winHeight )
     {
+        window = new Window( winName, winWidth, winHeight );
+        camera = new Camera( (float) Math.toRadians( 70.0f ), (float) ( window.getWidth() / window.getHeight() ), 0.01f, 1000f );
+
         GL.createCapabilities();
         glClearColor( 0, 0, 0, 0 );
         glFrontFace( GL_CW );
@@ -23,8 +33,6 @@ public class RenderingEngine
         glEnable( GL_DEPTH_TEST );
         glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
-
-        camera = new Camera(  (float) Math.toRadians( 70.0f ), aspectRatio, 0.1f, 1000f );
     }
 
     public void render( GameObject object )
@@ -37,7 +45,7 @@ public class RenderingEngine
 
     public void initCamera() { camera.init(); }
 
-    public void updateCamera() { camera.update(); }
+    public void updateCamera( float deltaTime ) { camera.update(  deltaTime  ); }
 
     private static void clearScreen()
     {
@@ -59,6 +67,8 @@ public class RenderingEngine
     {
         glClearColor( color.getX(), color.getY(), color.getZ(), 1 );
     }
+
+    public long getCurrentWindow() { return window.getWindow(); }
 
     public Camera getCamera() { return camera; }
     public void setCamera( Camera camera ) { this.camera = camera; }

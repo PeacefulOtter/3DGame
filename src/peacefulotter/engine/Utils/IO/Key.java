@@ -2,8 +2,8 @@ package peacefulotter.engine.Utils.IO;
 
 public class Key
 {
-    private int keyCode;
-    private IOExecutable IOExecutable;
+    private final int keyCode;
+    private final IOExecutable IOExecutable;
 
     public Key( int keyCode, IOExecutable IOExecutable)
     {
@@ -11,7 +11,7 @@ public class Key
         this.IOExecutable = IOExecutable;
     }
 
-    public void exec() { IOExecutable.exec(); }
+    public void exec( float deltaTime ) { IOExecutable.exec( deltaTime ); }
 
     public int getKeyCode() { return keyCode; }
 }

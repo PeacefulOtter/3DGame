@@ -11,15 +11,6 @@ public class Vector3f
         this.z = z;
     }
 
-    public float getX() { return x; }
-    public void setX( float x ) { this.x = x; }
-
-    public float getY() { return y; }
-    public void setY( float y ) { this.y = y; }
-
-    public float getZ() { return z; }
-    public void setZ( float z ) { this.z = z; }
-
     public float length()
     {
         return (float) Math.sqrt( BMaths.square( x ) + BMaths.square( y ) + BMaths.square( z ) );
@@ -112,9 +103,41 @@ public class Vector3f
 
     public Vector3f abs() { return new Vector3f( Math.abs( x ), Math.abs( y ), Math.abs( z ) ); }
 
+    public Vector3f lerp( Vector3f destination, float lerpFactor )
+    {
+        return destination.sub( this ).mul( lerpFactor ).add( this );
+    }
+
+    @Override
+    public boolean equals( Object other )
+    {
+        if ( !( other instanceof Vector3f ) ) return false;
+        Vector3f vec = (Vector3f) other;
+        return  x == vec.getX() &&
+                y == vec.getY() &&
+                z == vec.getZ();
+    }
+
+    public Vector2f getXY() { return new Vector2f( x, y ); }
+    public Vector2f getYZ() { return new Vector2f( y, z ); }
+    public Vector2f getZX() { return new Vector2f( z, x ); }
+    public Vector2f getYX() { return new Vector2f( y, x ); }
+    public Vector2f getZY() { return new Vector2f( z, y ); }
+    public Vector2f getXZ() { return new Vector2f( x, z ); }
+
     @Override
     public String toString()
     {
         return "(" + x + ":" + y + ":" + z + ")";
     }
+
+    public float getX() { return x; }
+    public void setX( float x ) { this.x = x; }
+
+    public float getY() { return y; }
+    public void setY( float y ) { this.y = y; }
+
+    public float getZ() { return z; }
+    public void setZ( float z ) { this.z = z; }
+
 }

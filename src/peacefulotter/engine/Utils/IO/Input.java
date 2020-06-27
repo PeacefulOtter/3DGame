@@ -36,11 +36,11 @@ public class Input
         initCursorCallback( window );
     }
 
-    public static void execInputs()
+    public static void execInputs( float deltaTime )
     {
         for ( Key k : keysPressed )
         {
-            k.exec();
+            k.exec( deltaTime );
         }
     }
 
@@ -86,8 +86,8 @@ public class Input
                         glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
                     }
                     else if ( button == MOUSE_SECONDARY ) { mouseSecondaryState = action; }
-                    k.exec();
                 }
+                // k.exec()
             }
         } );
     }

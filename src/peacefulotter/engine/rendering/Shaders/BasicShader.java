@@ -3,9 +3,7 @@ package peacefulotter.engine.rendering.Shaders;
 import peacefulotter.engine.rendering.Camera;
 import peacefulotter.engine.rendering.Graphics.Material;
 import peacefulotter.engine.core.Maths.Matrix4f;
-import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.ResourceLoader;
-import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
 public class BasicShader extends Shader

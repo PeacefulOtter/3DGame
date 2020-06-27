@@ -55,6 +55,7 @@ public class Vector2f
         return new Vector2f( x - other.getX(), y - other.getY() );
     }
 
+
     public Vector2f sub( float r )
     {
         return new Vector2f( x - r, y - r );
@@ -81,6 +82,24 @@ public class Vector2f
     }
 
     public Vector2f abs() { return new Vector2f( Math.abs( x ), Math.abs( y ) ); }
+
+    public Vector2f lerp( Vector2f destination, float lerpFactor )
+    {
+        return destination.sub( this ).mul( lerpFactor ).add( this );
+    }
+
+    public float cross( Vector2f other )
+    {
+        return x * other.getY() - y * other.getX();
+    }
+
+    @Override
+    public boolean equals( Object other )
+    {
+        if ( !( other instanceof Vector2f ) ) return false;
+        Vector2f vec = (Vector2f) other;
+        return  x == vec.getX() &&
+                y == vec.getY();}
 
     @Override
     public String toString()

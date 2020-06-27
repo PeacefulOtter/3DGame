@@ -1,10 +1,5 @@
 package peacefulotter.engine.core.elementary;
 
-import peacefulotter.engine.rendering.Shaders.Shader;
-
-public interface GameComponent
+public interface GameComponent extends Initializable, Updatable, Renderable
 {
-    void init();
-    void update();
-    void render( Shader shader );
 }

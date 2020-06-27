@@ -22,7 +22,7 @@ public class MeshRenderer implements GameComponent
     public void init() { }
 
     @Override
-    public void update() { }
+    public void update( float delta ) { }
 
     @Override
     public void render( Shader shader )

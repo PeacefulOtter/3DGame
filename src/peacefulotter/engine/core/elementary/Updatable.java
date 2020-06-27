@@ -2,5 +2,5 @@ package peacefulotter.engine.core.elementary;
 
 public interface Updatable
 {
-    void update();
+    void update( float deltaTime );
 }
