@@ -64,6 +64,9 @@ public class Vector3f
         //              conjugate Q = ( -D*sin(angle/2), w*cos(angle/2) )
         Quaternion w = rotation.mul( this ).mul( conjugate ); // Q*V*Q(conjugate)
 
+        if ( w.getY() <= -0.9999 )
+            return new Vector3f( getX(), getY(), getZ() );
+
         return new Vector3f( w.getX(), w.getY(), w.getZ() );
     }
 

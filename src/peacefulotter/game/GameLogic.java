@@ -8,14 +8,12 @@ import peacefulotter.game.Utils.Time;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 
 public class GameLogic
 {
-    private Game game;
-    private Window window;
-    private long currentWindow;
+    private final Game game;
+    private final Window window;
+    private final long currentWindow;
 
     private static final double FRAMES_CAP = 500;
     private static final double FRAME_TIME = 1.0 / FRAMES_CAP;
@@ -24,10 +22,9 @@ public class GameLogic
 
     public GameLogic( String winName, int winWidth, int winHeight )
     {
-        window = new Window( winName, winWidth, winHeight );
+        this.window = new Window( winName, winWidth, winHeight );
         RenderUtil.initGraphics();
         // System.out.println(glGetString(GL_VERSION));
-        this.window = window;
         currentWindow = window.getWindow();
         game = new Game( window );
     }
@@ -80,6 +77,7 @@ public class GameLogic
             framesCounter += passedTime;
             if ( framesCounter >= Time.SECOND )
             {
+                System.out.println(frames);
                 frames = 0;
                 framesCounter = 0;
             }
@@ -115,10 +113,5 @@ public class GameLogic
     {
         RenderUtil.clearScreen();
         game.render();
-    }
-
-    private void cleanUp()
-    {
-
     }
 }

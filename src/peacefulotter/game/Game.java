@@ -13,6 +13,8 @@ import peacefulotter.game.Utils.IO.Input;
 import peacefulotter.game.Utils.RenderUtil;
 import peacefulotter.game.Utils.ResourceLoader;
 
+import java.awt.*;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static peacefulotter.game.Utils.IO.Input.MOUSE_PRIMARY;
 import static peacefulotter.game.Utils.IO.Input.MOUSE_SECONDARY;
@@ -30,12 +32,24 @@ public class Game
 
     PointLight p1 = new PointLight(
             new BaseLight( new Vector3f( 1, 0.5f, 0 ), 5f ),
-            new Attenuation( 0, 0, 1f ),
-            new Vector3f( -2, 0, 3 ) );
+            new Attenuation( 0, 0.3f, 1f ),
+            new Vector3f( -2, 0, 3 ),
+            10 );
     PointLight p2 = new PointLight(
             new BaseLight( new Vector3f( 0, 0.5f, 1 ), 5f ),
-            new Attenuation( 0, 0, 1f ),
-            new Vector3f( 2, 0, 7 ) );
+            new Attenuation( 1, 0.3f, 0 ),
+            new Vector3f( 2, 0, 7 ),
+            10 );
+    SpotLight s1 = new SpotLight(
+            new PointLight(
+                    new BaseLight( new Vector3f( 1, 0.5f, 0 ), 0.8f ),
+                    new Attenuation( 0, 0.1f, 0.02f ),
+                    new Vector3f( -2, 0, 5 ),
+                    30
+            ),
+            new Vector3f( 1, 1, 1 ),
+            0.7f
+    );
 
     public Game( Window window  )
     {
@@ -82,8 +96,8 @@ public class Game
         //PhongShader.setDirectionalLight( new DirectionalLight(
         //        new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
 
-        PhongShader.setPointLights( new PointLight[] { p1, p2 } );
-
+        // PhongShader.setPointLights( new PointLight[] { p1, p2 } );
+        PhongShader.setSpotLights( new SpotLight[] { s1 } );
         initCameraMovement();
     }
 
@@ -133,6 +147,8 @@ public class Game
         p2.setPosition( new Vector3f( 7, 1, 8 * cosTemp + 10.5f ) );
         Input.execInputs();
         camera.update( centerWindow );
+        s1.getPointLight().setPosition( camera.getPosition() );
+        s1.setDirection( camera.getForward() );
     }
 
     public void render()
