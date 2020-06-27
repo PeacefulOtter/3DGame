@@ -10,7 +10,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class RenderUtil
 {
@@ -27,8 +27,9 @@ public class RenderUtil
         glCullFace( GL_BACK );
         glEnable( GL_CULL_FACE );
         glEnable( GL_DEPTH_TEST );
+        glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
-        glEnable( GL_FRAMEBUFFER_SRGB );
+        //glEnable( GL_FRAMEBUFFER_SRGB );
     }
 
     /*

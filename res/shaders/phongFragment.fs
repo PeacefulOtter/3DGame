@@ -1,5 +1,7 @@
 #version 130
 
+const int MAX_POINT_LIGHTS = 4;
+
 in vec2 textCoord;
 in vec3 normalOut;
 in vec3 worldPosOut;
@@ -18,6 +20,21 @@ struct DirectionalLight
 	vec3 direction;
 };
 
+// Quadratic equation which describes how quickly a light fades out
+struct Attenuation
+{
+	float constant;
+	float linear;
+	float exponent;
+};
+
+struct PointLight
+{
+	BaseLight base;
+	Attenuation attenuation;
+	vec3 position;
+};
+
 
 
 uniform vec3 baseColor;
@@ -29,7 +46,7 @@ uniform float specularIntensity;
 uniform float specularExponent;
 
 uniform DirectionalLight dirLight;
-
+uniform PointLight pointLights[MAX_POINT_LIGHTS];
 
 
 vec4 calcLight( BaseLight base, vec3 direction, vec3 normal )
@@ -64,6 +81,22 @@ vec4 calclDirectionalLight( DirectionalLight dirLight, vec3 normal )
 }
 
 
+vec4 calcPointLight( PointLight pointLight, vec3 normal )
+{
+	vec3 lightDirection = worldPosOut - pointLight.position;
+	float distanceToPoint = length( lightDirection );
+	lightDirection = normalize( lightDirection );
+
+	vec4 color = calcLight( pointLight.base, lightDirection, normal );
+	float attenuation = pointLight.attenuation.constant + 
+			    pointLight.attenuation.linear * distanceToPoint + 
+			    pointLight.attenuation.exponent * distanceToPoint * distanceToPoint +
+			    0.0001;
+	
+	return color / attenuation;
+}
+
+
 void main()
 {	
 	vec4 totalLight = vec4( ambientLight, 1 );
@@ -78,7 +111,10 @@ void main()
 	
 	vec3 normal = normalize( normalOut );
 
-	totalLight += calclDirectionalLight( dirLight, normal );	
+	totalLight += calclDirectionalLight( dirLight, normal );
+
+	for (int i = 0; i < MAX_POINT_LIGHTS; i++)
+		totalLight += calcPointLight( pointLights[i], normal );
 
 	fragColor = color * totalLight;	
 }

@@ -55,8 +55,18 @@ public class Game
 
         shader = PhongShader.getInstance();
         PhongShader.setAmbientLight( new Vector3f( 0.1f, 0.1f, 0.1f ) );
-        PhongShader.setDirectionalLight( new DirectionalLight(
-                new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
+        //PhongShader.setDirectionalLight( new DirectionalLight(
+        //        new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
+
+        PointLight p1 = new PointLight(
+                new BaseLight( new Vector3f( 1, 0, 0 ), 0.8f ),
+                new Attenuation( 0, 0, 1 ),
+                new Vector3f( -2, 0, 3 ) );
+        PointLight p2 = new PointLight(
+                new BaseLight( new Vector3f( 0, 0, 1 ), 0.8f ),
+                new Attenuation( 0, 0, 1 ),
+                new Vector3f( 2, 0, 7 ) );
+        PhongShader.setPointLights( new PointLight[] { p1, p2 } );
 
         initCameraMovement();
     }

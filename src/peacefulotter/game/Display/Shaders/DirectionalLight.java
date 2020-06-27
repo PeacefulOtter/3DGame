@@ -13,8 +13,8 @@ public class DirectionalLight
         this.direction = direction.normalize();
     }
 
-    public BaseLight getBase() { return base; }
-    public void setBase( BaseLight base ) { this.base = base; }
+    public BaseLight getBaseLight() { return base; }
+    public void setBaseLight( BaseLight base ) { this.base = base; }
 
     public Vector3f getDirection() { return direction; }
     public void setDirection( Vector3f direction ) { this.direction = direction; }

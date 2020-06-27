@@ -28,7 +28,7 @@ abstract public class Shader
         uniforms = new HashMap<>();
     }
 
-    abstract public void updateUniforms(Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material, Vector3f position);
+    abstract public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material, Vector3f position );
 
     public void addUniform( String uniformName )
     {
@@ -45,7 +45,6 @@ abstract public class Shader
 
     public void setUniformI( String uniformName, int value )
     {
-        System.out.println(uniforms.get(uniformName) + " " + value);
         glUniform1i( uniforms.get( uniformName ), value );
     }
 
