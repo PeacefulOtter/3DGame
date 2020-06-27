@@ -7,7 +7,9 @@ import peacefulotter.game.Utils.ResourceLoader;
 
 public class BasicShader extends Shader
 {
-    public BasicShader()
+    private static BasicShader instance = new BasicShader();
+
+    private BasicShader()
     {
         super();
         addVertexShader( new ResourceLoader().loadShader( "basicVertex.vs" ) );
@@ -27,4 +29,6 @@ public class BasicShader extends Shader
         setUniformMatrix( "transform", projectedMatrix );
         setUniformVector( "color", material.getColor() );
     }
+
+    public static Shader getInstance() { return BasicShader.instance; }
 }

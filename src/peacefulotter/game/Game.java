@@ -3,11 +3,9 @@ package peacefulotter.game;
 import peacefulotter.game.Display.Camera;
 import peacefulotter.game.Display.Graphics.Material;
 import peacefulotter.game.Display.Graphics.Mesh;
-import peacefulotter.game.Display.Graphics.Texture;
 import peacefulotter.game.Display.Graphics.Vertex;
-import peacefulotter.game.Display.Shaders.BasicShader;
-import peacefulotter.game.Display.Shaders.Shader;
-import peacefulotter.game.Display.Shaders.ShaderTransform;
+import peacefulotter.game.Display.Shaders.*;
+import peacefulotter.game.Display.Shaders.Transfomations.ShaderTransform;
 import peacefulotter.game.Display.Window;
 import peacefulotter.game.Maths.Vector2f;
 import peacefulotter.game.Maths.Vector3f;
@@ -36,7 +34,7 @@ public class Game
         mesh = new Mesh(); // new ResourceLoader().loadMesh( "cube.obj" );
 
         material = new Material( new ResourceLoader().loadTexture( "test.png" ),
-                new Vector3f( 0, 1, 1 ) );
+                new Vector3f( 1, 1, 1 ) );
 
         transform = new ShaderTransform();
         transform.setProjection( 70f, window.WIDTH, window.HEIGHT, 0.1f, 1000f );
@@ -53,9 +51,12 @@ public class Game
                                     2, 1, 3,
                                     0, 1, 2,
                                     0, 2, 3 };
-        mesh.addVertices( vertices, indices );
+        mesh.addVertices( vertices, indices, true );
 
-        shader = new BasicShader();
+        shader = PhongShader.getInstance();
+        PhongShader.setAmbientLight( new Vector3f( 0.1f, 0.1f, 0.1f ) );
+        PhongShader.setDirectionalLight( new DirectionalLight(
+                new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
 
         initCameraMovement();
     }
@@ -110,8 +111,8 @@ public class Game
     {
         RenderUtil.setClearColor( camera.getPosition().div( 2048f ).abs() );
         shader.bind();
-        transform.setTranslation( 0, 0, 5 );
-                //.setRotation(0, sinTemp * 180, 0 );
+        transform.setTranslation( sinTemp, 0, 5 )
+                .setRotation(0, sinTemp * 180, 0 );
                 //  .setScale( 0.5f, 0.5f, 0.5f );
         shader.bind();
         shader.updateUniforms( transform.getTransformationMatrix(), transform.getProjectedTransformationMatrix(), material );

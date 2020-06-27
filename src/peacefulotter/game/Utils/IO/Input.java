@@ -57,7 +57,6 @@ public class Input
             {
                 if ( k.getKeyCode() == key )
                 {
-                    System.out.println(k + " " + action);
                     if ( action == GLFW_PRESS || action == GLFW_REPEAT )
                         keysPressed.add( k );
                     else

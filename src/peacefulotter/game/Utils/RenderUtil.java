@@ -41,17 +41,25 @@ public class RenderUtil
 
     public static FloatBuffer createFlippedBuffer( Vertex[] vertices )
     {
-        FloatBuffer buffer = createFloatBuffer( vertices.length * Vertex.SIZE );
-        for ( int i = 0; i < vertices.length; i++ )
+        int verticesLength = vertices.length;
+        FloatBuffer buffer = createFloatBuffer( verticesLength * Vertex.SIZE );
+
+        for ( int i = 0; i < verticesLength; i++ )
         {
             Vertex v = vertices[ i ];
             Vector3f pos = v.getPos();
+            Vector3f normal = v.getNormal();
+
             buffer.put( pos.getX() );
             buffer.put( pos.getY() );
             buffer.put( pos.getZ() );
             buffer.put( v.getTextureCoordinates().getX() );
             buffer.put( v.getTextureCoordinates().getY() );
+            buffer.put( normal.getX() );
+            buffer.put( normal.getY() );
+            buffer.put( normal.getZ() );
         }
+
         buffer.flip();
         return buffer;
     }

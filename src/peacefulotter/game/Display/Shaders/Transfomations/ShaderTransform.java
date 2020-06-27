@@ -1,4 +1,4 @@
-package peacefulotter.game.Display.Shaders;
+package peacefulotter.game.Display.Shaders.Transfomations;
 
 import peacefulotter.game.Display.Camera;
 import peacefulotter.game.Maths.Matrix4f;
