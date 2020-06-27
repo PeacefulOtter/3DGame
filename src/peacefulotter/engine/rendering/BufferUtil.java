@@ -12,26 +12,8 @@ import java.nio.IntBuffer;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
-public class RenderUtil
+public class BufferUtil
 {
-    public static void clearScreen()
-    {
-        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    }
-
-    public static void initGraphics()
-    {
-        GL.createCapabilities();
-        glClearColor( 0, 0, 0, 0 );
-        glFrontFace( GL_CW );
-        glCullFace( GL_BACK );
-        glEnable( GL_CULL_FACE );
-        glEnable( GL_DEPTH_TEST );
-        glEnable( GL_DEPTH_CLAMP );
-        glEnable( GL_TEXTURE_2D );
-        //glEnable( GL_FRAMEBUFFER_SRGB );
-    }
-
     /*
             FLOAT BUFFER
      */
@@ -94,22 +76,5 @@ public class RenderUtil
         buffer.put( indices );
         buffer.flip();
         return buffer;
-    }
-
-
-    public static void setTextures( boolean enable )
-    {
-        if ( enable ) { glEnable( GL_TEXTURE_2D ); }
-        else { glDisable( GL_TEXTURE_2D ); }
-    }
-
-    public static void unbindTextures()
-    {
-        glBindTexture( GL_TEXTURE_2D, 0 );
-    }
-
-    public static void setClearColor( Vector3f color )
-    {
-        glClearColor( color.getX(), color.getY(), color.getZ(), 1 );
     }
 }

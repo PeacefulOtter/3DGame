@@ -2,8 +2,11 @@ package peacefulotter.engine.core;
 
 
 import org.lwjgl.opengl.GL;
-import peacefulotter.engine.rendering.RenderUtil;
+import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.Time;
+import peacefulotter.engine.rendering.RenderingEngine;
+
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -12,6 +15,7 @@ public class CoreEngine
 {
     private final Game game;
     private final long currentWindow;
+    private final RenderingEngine renderingEngine;
 
     private static final double FRAMES_CAP = 500;
     private static final double FRAME_TIME = 1.0 / FRAMES_CAP;
@@ -20,14 +24,14 @@ public class CoreEngine
 
     public CoreEngine( Game game, long currentWindow )
     {
-        this.currentWindow = currentWindow;
         this.game = game;
+        this.currentWindow = currentWindow;
+        this.renderingEngine = new RenderingEngine();
     }
 
     public void start()
     {
         if ( isRunning ) return;
-        RenderUtil.initGraphics();
         game.init();
         isRunning = true;
         run();
@@ -38,12 +42,12 @@ public class CoreEngine
         if ( !isRunning ) return;
 
         // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(currentWindow);
-        glfwDestroyWindow(currentWindow);
+        glfwFreeCallbacks( currentWindow );
+        glfwDestroyWindow( currentWindow );
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull( glfwSetErrorCallback( null ) ).free();
 
         isRunning = false;
     }
@@ -84,13 +88,12 @@ public class CoreEngine
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-
                 game.update( passedTime );
             }
 
             if ( render )
             {
-                render();
+                renderingEngine.render( game.getRootObject() );
                 frames++;
             }
             else
@@ -104,11 +107,5 @@ public class CoreEngine
                 }
             }
         }
-    }
-
-    private void render()
-    {
-        RenderUtil.clearScreen();
-        game.render();
     }
 }

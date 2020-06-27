@@ -3,7 +3,7 @@ package peacefulotter.engine.rendering.Shaders;
 import peacefulotter.engine.rendering.Graphics.Material;
 import peacefulotter.engine.core.Maths.Matrix4f;
 import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.rendering.RenderUtil;
+import peacefulotter.engine.rendering.BufferUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +61,7 @@ abstract public class Shader
 
     public void setUniformMatrix( String uniformName, Matrix4f value )
     {
-        glUniformMatrix4fv( uniforms.get( uniformName ), true, RenderUtil.createFlippedBuffer( value ) );
+        glUniformMatrix4fv( uniforms.get( uniformName ), true, BufferUtil.createFlippedBuffer( value ) );
     }
 
     public void addVertexShader( String text )

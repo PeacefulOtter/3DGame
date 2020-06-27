@@ -5,8 +5,8 @@ import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.Maths.Vector2f;
 import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.core.elementary.GameComponent;
 import peacefulotter.engine.core.elementary.GameObject;
+import peacefulotter.engine.core.elementary.Initializable;
 import peacefulotter.engine.rendering.Camera;
 import peacefulotter.engine.rendering.Graphics.*;
 import peacefulotter.engine.rendering.Shaders.*;
@@ -32,7 +32,7 @@ PhongShader.setDirectionalLight( new DirectionalLight(
         new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
  */
 
-public class TestGame extends Game
+public class TestGame extends Game implements Initializable
 {
     private final Window window;
     private final CoreEngine engine;
@@ -43,9 +43,10 @@ public class TestGame extends Game
 
     public TestGame( String winName, int winWidth, int winHeight )
     {
+        super( new GameObject( new ShaderTransform() ) );
+        root = getRootObject();
         window = new Window( winName, winWidth, winHeight );
         this.engine = new CoreEngine( this, window.getWindow() );
-        this.root = new GameObject( new ShaderTransform() );
         centerWindow = new Vector2f( window.WIDTH / 2f, window.HEIGHT / 2f );
     }
 
@@ -55,6 +56,7 @@ public class TestGame extends Game
         Camera camera = new Camera( centerWindow );
         root.addChild( camera );
 
+        PhongShader.setAmbientLight( new Vector3f( 0.8f, 0.8f, 0.8f ) );
         ShaderTransform.setProjection( 70f, window.WIDTH, window.HEIGHT, 0.1f, 1000f );
         ShaderTransform.setCamera( camera );
 
@@ -75,24 +77,14 @@ public class TestGame extends Game
                 new Vector3f( 1, 1, 1 ),
                 1,
                 8 );
-        MeshRenderer meshRenderer = new MeshRenderer( mesh, material, root );
-        root.addChild( meshRenderer );
 
-        PhongShader.setAmbientLight( new Vector3f( 0.8f, 0.8f, 0.8f ) );
+        GameObject plane = new GameObject( root.getTransform() );
+        MeshRenderer meshRenderer = new MeshRenderer( mesh, material, plane );
+        plane.addChild( meshRenderer );
+        plane.getTransform().setTranslation( 0, -1, 5 );
+        root.addChild( plane );
 
-        root.init();
-    }
-
-    public void update( float deltaTime )
-    {
-        Input.execInputs();
-        root.getTransform().setTranslation( 0, -1, 5 );
-        root.update( deltaTime );
-    }
-
-    public void render()
-    {
-        root.render();
+        super.init();
     }
 
     public void startEngine() { engine.start(); }

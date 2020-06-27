@@ -1,5 +1,6 @@
 package peacefulotter.engine.core.elementary;
 
+import peacefulotter.engine.rendering.Shaders.Shader;
 import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
 import java.util.ArrayList;
@@ -32,10 +33,10 @@ public class GameObject implements GameComponent
             child.update( deltaTime );
     }
 
-    public void render()
+    public void render( Shader shader )
     {
         for ( GameComponent child: children )
-            child.render();
+            child.render( shader );
     }
 
     public ShaderTransform getTransform() { return transform; }

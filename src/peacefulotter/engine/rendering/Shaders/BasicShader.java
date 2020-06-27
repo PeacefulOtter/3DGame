@@ -2,8 +2,9 @@ package peacefulotter.engine.rendering.Shaders;
 
 import peacefulotter.engine.rendering.Graphics.Material;
 import peacefulotter.engine.core.Maths.Matrix4f;
-import peacefulotter.engine.rendering.RenderUtil;
+import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.Utils.ResourceLoader;
+import peacefulotter.engine.rendering.RenderingEngine;
 
 public class BasicShader extends Shader
 {
@@ -22,10 +23,8 @@ public class BasicShader extends Shader
 
     public void updateUniforms( Matrix4f worldMatrix, Matrix4f projectedMatrix, Material material )
     {
-        if ( material.getTexture() != null )
-            material.getTexture().bind();
-        else
-            RenderUtil.unbindTextures();
+        material.getTexture().bind();
+
         setUniformMatrix( "transform", projectedMatrix );
         setUniformVector( "color", material.getColor() );
     }

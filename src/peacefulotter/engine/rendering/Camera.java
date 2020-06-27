@@ -88,7 +88,7 @@ public class Camera implements GameComponent
     }
 
     @Override
-    public void render() { }
+    public void render( Shader shader ) { }
 
     public void move( Vector3f direction, float amount )
     {

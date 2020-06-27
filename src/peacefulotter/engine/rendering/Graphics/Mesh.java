@@ -1,7 +1,7 @@
 package peacefulotter.engine.rendering.Graphics;
 
 import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.rendering.RenderUtil;
+import peacefulotter.engine.rendering.BufferUtil;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -33,10 +33,10 @@ public class Mesh
         size = indices.length;
 
         glBindBuffer( GL_ARRAY_BUFFER, vbo );
-        glBufferData( GL_ARRAY_BUFFER, RenderUtil.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
+        glBufferData( GL_ARRAY_BUFFER, BufferUtil.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
 
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, ibo );
-        glBufferData( GL_ELEMENT_ARRAY_BUFFER, RenderUtil.createFlippedBuffer( indices ), GL_STATIC_DRAW );
+        glBufferData( GL_ELEMENT_ARRAY_BUFFER, BufferUtil.createFlippedBuffer( indices ), GL_STATIC_DRAW );
     }
 
     public void draw()

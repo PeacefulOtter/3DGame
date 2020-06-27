@@ -2,7 +2,6 @@ package peacefulotter.engine.rendering.Graphics;
 
 import peacefulotter.engine.core.elementary.GameComponent;
 import peacefulotter.engine.core.elementary.GameObject;
-import peacefulotter.engine.rendering.Shaders.BasicShader;
 import peacefulotter.engine.rendering.Shaders.Shader;
 import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
@@ -26,9 +25,8 @@ public class MeshRenderer implements GameComponent
     public void update( float deltaTime ) { }
 
     @Override
-    public void render()
+    public void render( Shader shader )
     {
-        Shader shader = BasicShader.getInstance();
         ShaderTransform transform = parent.getTransform();
         shader.bind();
         shader.updateUniforms( transform.getTransformationMatrix(), transform.getProjectedTransformationMatrix(), material );
