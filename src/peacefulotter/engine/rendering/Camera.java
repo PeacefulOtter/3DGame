@@ -1,38 +1,42 @@
 package peacefulotter.engine.rendering;
 
-import peacefulotter.engine.Utils.Time;
-import peacefulotter.engine.core.Maths.Matrix4f;
-import peacefulotter.engine.core.Maths.Vector2f;
-import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.Utils.IO.Input;
-import peacefulotter.engine.core.elementary.GameComponent;
-import peacefulotter.engine.core.elementary.GameObject;
-import peacefulotter.engine.rendering.Shaders.*;
-import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
+import peacefulotter.engine.components.GameComponent;
+import peacefulotter.engine.core.CoreEngine;
+import peacefulotter.engine.core.maths.Matrix4f;
+import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.engine.core.GameObject;
+import peacefulotter.engine.rendering.shaders.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static peacefulotter.engine.Utils.IO.Input.MOUSE_PRIMARY;
-import static peacefulotter.engine.Utils.IO.Input.MOUSE_SECONDARY;
+import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
+import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
 
 
-public class Camera implements GameComponent
+public class Camera extends GameComponent
 {
     public static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
 
+    private final Matrix4f projection;
     private Vector3f position;
     private Vector3f forward, upward;
-    private GameObject parent;
-    private Matrix4f projection;
 
     private SpotLight spotLight;
 
     public Camera( float fov, float aspectRatio, float zNear, float zFar )
     {
-        this.position = new Vector3f( 0, 0, 0 );
+        this.position = Vector3f.ZERO;
         this.forward = new Vector3f( 0, 0, 1 );
         this.upward = new Vector3f( 0, 1, 0 );
         this.projection = new Matrix4f().initPerspective( fov, aspectRatio, zNear, zFar );
+    }
+
+    @Override
+    public void addToEngine( CoreEngine engine )
+    {
+        engine.getRenderingEngine().setCamera( this );
     }
 
     public Matrix4f getViewProjection() {
@@ -40,8 +44,6 @@ public class Camera implements GameComponent
         Matrix4f cameraTranslation = new Matrix4f().initTranslation( -position.getX(), -position.getY(), -position.getZ() );
         return projection.mul( cameraRotation.mul( cameraTranslation ) );
     }
-
-    public void setParent( GameObject parent ) { this.parent = parent; }
 
     @Override
     public void init()

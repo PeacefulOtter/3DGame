@@ -2,11 +2,9 @@ package peacefulotter.engine.core;
 
 
 import org.lwjgl.opengl.GL;
-import peacefulotter.engine.Utils.IO.Input;
-import peacefulotter.engine.rendering.BufferUtil;
-import peacefulotter.engine.Utils.Time;
+import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.engine.utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
-import peacefulotter.engine.rendering.Window;
 
 import java.util.Objects;
 
@@ -119,4 +117,6 @@ public class CoreEngine
             }
         }
     }
+
+    public RenderingEngine getRenderingEngine() { return renderingEngine; }
 }

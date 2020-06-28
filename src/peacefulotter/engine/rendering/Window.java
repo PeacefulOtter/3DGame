@@ -3,7 +3,7 @@ package peacefulotter.engine.rendering;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.system.MemoryStack;
-import peacefulotter.engine.core.Maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector2f;
 
 import java.nio.IntBuffer;
 

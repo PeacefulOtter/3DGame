@@ -1,17 +1,12 @@
 package peacefulotter.game;
 
-import peacefulotter.engine.Utils.IO.Input;
 import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.Game;
-import peacefulotter.engine.core.Maths.Vector2f;
-import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.core.elementary.GameObject;
-import peacefulotter.engine.core.elementary.Initializable;
-import peacefulotter.engine.rendering.Camera;
-import peacefulotter.engine.rendering.Graphics.*;
-import peacefulotter.engine.rendering.Shaders.*;
-import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
-import peacefulotter.engine.rendering.Window;
+import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.core.GameObject;
+import peacefulotter.engine.rendering.graphics.*;
+import peacefulotter.engine.rendering.shaders.*;
 
 /*
 PointLight p1 = new PointLight(
@@ -34,14 +29,9 @@ PhongShader.setDirectionalLight( new DirectionalLight(
 
 public class TestGame extends Game
 {
-    private final CoreEngine coreEngine;
-    private final GameObject root;
-
     public TestGame( String winName, int winWidth, int winHeight )
     {
-        super( new GameObject( new ShaderTransform() ) );
-        root = getRootObject();
-        this.coreEngine = new CoreEngine( this, winName, winWidth, winHeight );
+        super( winName, winWidth, winHeight );
     }
 
     public void init()
@@ -66,14 +56,12 @@ public class TestGame extends Game
                 1,
                 8 );
 
-        GameObject plane = new GameObject( root.getTransform() );
-        MeshRenderer meshRenderer = new MeshRenderer( mesh, material, plane );
-        plane.addChild( meshRenderer );
+        GameObject plane = new GameObject();
+        MeshRenderer meshRenderer = new MeshRenderer( mesh, material );
+        plane.addComponent( meshRenderer );
         plane.getTransform().setTranslation( 0, -1, 5 );
-        root.addChild( plane );
 
+        addObject( plane );
         super.init();
     }
-
-    public void startEngine() { coreEngine.start(); }
 }

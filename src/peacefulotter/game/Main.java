@@ -12,7 +12,6 @@ public class Main
     {
         // System.out.println(glGetString(GL_VERSION));
         Game game = new TestGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
-        game.startEngine();
     }
 
 }

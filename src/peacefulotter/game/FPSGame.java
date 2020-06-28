@@ -1,19 +1,11 @@
 package peacefulotter.game;
 
 import peacefulotter.engine.core.Game;
-import peacefulotter.engine.core.elementary.GameObject;
-import peacefulotter.engine.rendering.Shaders.Transfomations.ShaderTransform;
 
 public class FPSGame extends Game
 {
-    public FPSGame()
+    public FPSGame( String winName, int winWidth, int winHeight )
     {
-        super( new GameObject( new ShaderTransform() ) );
-    }
-
-    @Override
-    public void startEngine()
-    {
-
+        super( winName, winWidth, winHeight );
     }
 }

@@ -1,10 +1,10 @@
 package peacefulotter.engine.rendering;
 
 import org.lwjgl.opengl.GL;
-import peacefulotter.engine.core.Maths.Vector3f;
-import peacefulotter.engine.core.elementary.GameObject;
-import peacefulotter.engine.rendering.Shaders.BasicShader;
-import peacefulotter.engine.rendering.Shaders.Shader;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.core.GameObject;
+import peacefulotter.engine.rendering.shaders.BasicShader;
+import peacefulotter.engine.rendering.shaders.Shader;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
@@ -38,8 +38,10 @@ public class RenderingEngine
     public void render( GameObject object )
     {
         clearScreen();
+
         Shader shader = BasicShader.getInstance();
         shader.setRenderingEngine( this );
+
         object.render( shader );
     }
 

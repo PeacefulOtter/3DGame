@@ -1,16 +1,12 @@
 package peacefulotter.engine.rendering;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL;
-import peacefulotter.engine.rendering.Graphics.Vertex;
-import peacefulotter.engine.core.Maths.Matrix4f;
-import peacefulotter.engine.core.Maths.Vector3f;
+import peacefulotter.engine.rendering.graphics.Vertex;
+import peacefulotter.engine.core.maths.Matrix4f;
+import peacefulotter.engine.core.maths.Vector3f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class BufferUtil
 {
