@@ -1,9 +1,16 @@
 package peacefulotter.engine.rendering;
 
 import org.lwjgl.opengl.GL;
+import peacefulotter.engine.components.*;
+import peacefulotter.engine.components.lights.BaseLight;
+import peacefulotter.engine.components.lights.DirectionalLight;
+import peacefulotter.engine.components.lights.PointLight;
+import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.core.GameObject;
 import peacefulotter.engine.rendering.shaders.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
@@ -17,14 +24,15 @@ import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 public class RenderingEngine
 {
     private final Window window;
+    private final Vector3f ambientLight;
+    private final List<BaseLight> lights;
+
     private Camera camera;
-    private Vector3f ambientLight;
-    private DirectionalLight directionalLight;
-    private PointLight pointLight;
-    private SpotLight spotLight;
+    private BaseLight activeLight;
 
     public RenderingEngine( String winName, int winWidth, int winHeight )
     {
+        lights = new ArrayList<>();
         window = new Window( winName, winWidth, winHeight );
         camera = new Camera(
                 (float) Math.toRadians( 70.0f ),
@@ -41,48 +49,17 @@ public class RenderingEngine
         glEnable( GL_TEXTURE_2D );
 
         ambientLight = new Vector3f( 0.2f, 0.2f, 0.2f );
-        directionalLight = new DirectionalLight(
-                new BaseLight( new Vector3f( 0.6f, 0.3f,  0.6f ), 0.5f ),
-                new Vector3f( 1, 1, 1 ) );
-        pointLight = new PointLight(
-                new BaseLight( new Vector3f( 0.4f, 1,  0.4f ), 0.4f  ),
-                new Attenuation( 1, 0, 0 ),
-                new Vector3f( 5, 0, 5 ),
-                20 );
-        spotLight = new SpotLight(
-                new PointLight(
-                        new BaseLight( new Vector3f( 1f, 0,  0f ), 1f  ),
-                        new Attenuation( 0, 0.05f, 0 ),
-                        new Vector3f( 5, 0, 5 ),
-                        20 ),
-                new Vector3f( 1, 0, 0 ),
-                0.7f
-        );
     }
-
-    public Vector3f getAmbientLight() { return ambientLight; }
-
-    public DirectionalLight getDirectionalLight() { return directionalLight; }
-
-    public PointLight getPointLight() { return pointLight; }
-
-    public SpotLight getSpotLight() { return spotLight; }
 
     public void render( GameObject object )
     {
         clearScreen();
+        lights.clear();
+
+        object.addToRenderingEngine( this ); // move to init method
 
         Shader forwardAmbient = ForwardAmbient.getInstance();
         forwardAmbient.setRenderingEngine( this );
-
-        Shader forwardDirectional = ForwardDirectional.getInstance();
-        forwardDirectional.setRenderingEngine( this );
-
-        Shader forwardPoint = ForwardPoint.getInstance();
-        forwardPoint.setRenderingEngine( this );
-
-        Shader forwardSpot = ForwardSpot.getInstance();
-        forwardSpot.setRenderingEngine( this );
 
         object.render( forwardAmbient );
 
@@ -91,19 +68,23 @@ public class RenderingEngine
         glDepthMask( false );
         glDepthFunc( GL_EQUAL );
 
-        object.render( forwardDirectional );
-        object.render( forwardPoint );
-        object.render( forwardSpot );
+        for ( BaseLight light : lights )
+        {
+            light.getShader().setRenderingEngine( this ); // move this to init
+            activeLight = light;
+            object.render( light.getShader() );
+        }
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );
         glDisable( GL_BLEND );
-
-        // Shader shader = BasicShader.getInstance();
-        // shader.setRenderingEngine( this );
-
-        // object.render( shader );
     }
+
+    public Vector3f getAmbientLight() { return ambientLight; }
+
+    public void addLight( BaseLight light ) { lights.add( light ); }
+
+    public BaseLight getActiveLight() { return activeLight; }
 
     public void initCamera() { camera.init(); }
 

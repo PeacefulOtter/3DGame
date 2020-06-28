@@ -1,7 +1,8 @@
 package peacefulotter.engine.rendering.shaders;
 
+import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.maths.Matrix4f;
-import peacefulotter.engine.rendering.Camera;
+import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
@@ -53,12 +54,12 @@ public class ForwardSpot extends Shader
         setUniformF( "specularExponent", material.getSpecularExponent() );
         setUniformVector( "eyePos", camera.getPosition() );
 
-        setUniformSpotLight( "spotLight", getRenderingEngine().getSpotLight() );
+        setUniformSpotLight( "spotLight", (SpotLight)getRenderingEngine().getActiveLight() );
     }
 
     public void setUniformSpotLight( String uniformName, SpotLight spotLight )
     {
-        setUniformPointLight( uniformName + ".pointLight", spotLight.getPointLight() );
+        setUniformPointLight( uniformName + ".pointLight", spotLight );
         setUniformVector( uniformName + ".direction", spotLight.getDirection() );
         setUniformF( uniformName + ".cutoff", spotLight.getCutoff() );
     }

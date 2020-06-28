@@ -1,10 +1,9 @@
 package peacefulotter.engine.rendering.shaders;
 
 import peacefulotter.engine.core.maths.Matrix4f;
-import peacefulotter.engine.rendering.Camera;
+import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
-import peacefulotter.engine.utils.ResourceLoader;
 
 public class ForwardAmbient extends Shader
 {

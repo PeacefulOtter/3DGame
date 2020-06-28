@@ -1,14 +1,14 @@
 package peacefulotter.engine.components;
 
 import peacefulotter.engine.core.CoreEngine;
-import peacefulotter.engine.core.GameObject;
-import peacefulotter.engine.core.elementary.Initializable;
-import peacefulotter.engine.core.elementary.Renderable;
-import peacefulotter.engine.core.elementary.Updatable;
+import peacefulotter.engine.elementary.Initializable;
+import peacefulotter.engine.elementary.Renderable;
+import peacefulotter.engine.elementary.Updatable;
+import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
-public class GameComponent implements Initializable, Updatable, Renderable
+public abstract class GameComponent implements Initializable, Updatable, Renderable
 {
     private GameObject parent;
 
@@ -25,5 +25,7 @@ public class GameComponent implements Initializable, Updatable, Renderable
 
     public STransform getTransform() { return parent.getTransform(); }
 
-    public void addToEngine( CoreEngine engine ) { }
+    public void setCoreEngine( CoreEngine engine ) { }
+
+    public void addToRenderingEngine( RenderingEngine engine ) { }
 }

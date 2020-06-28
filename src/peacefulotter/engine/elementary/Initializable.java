@@ -1,4 +1,4 @@
-package peacefulotter.engine.core.elementary;
+package peacefulotter.engine.elementary;
 
 public interface Initializable
 {

@@ -1,14 +1,30 @@
 package peacefulotter.game;
 
-import peacefulotter.engine.core.CoreEngine;
+import peacefulotter.engine.components.*;
+import peacefulotter.engine.components.lights.BaseLight;
+import peacefulotter.engine.components.lights.DirectionalLight;
+import peacefulotter.engine.components.lights.PointLight;
+import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.core.GameObject;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
 
 /*
+CAMERA SPOTLIGHT
+     spotLight = new SpotLight(
+                new PointLight(
+                        new BaseLight( new Vector3f( 1, 0.5f, 0 ), 0.8f ),
+                        new Attenuation( 0, 0.1f, 0.02f ),
+                        new Vector3f( -2, 0, 5 ),
+                        30
+                ),
+                new Vector3f( 1, 1, 1 ),
+                0.7f
+        );
+        PhongShader.setSpotLights( new SpotLight[] { spotLight } );
+
 PointLight p1 = new PointLight(
             new BaseLight( new Vector3f( 1, 0, 0 ), 4f ),
             new Attenuation( 0, 0.3f, 0.5f ),
@@ -36,8 +52,6 @@ public class TestGame extends Game
 
     public void init()
     {
-        PhongShader.setAmbientLight( new Vector3f( 0.8f, 0.8f, 0.8f ) );
-
         float fieldWidth = 10.0f;
         float fieldDepth = 10.0f;
 
@@ -61,7 +75,37 @@ public class TestGame extends Game
         plane.addComponent( meshRenderer );
         plane.getTransform().setTranslation( 0, -1, 5 );
 
+        GameObject dirLightObject = new GameObject();
+        DirectionalLight dirLight = new DirectionalLight(
+                new Vector3f( 0.6f, 0.3f,  0.6f ),
+                0.5f,
+                new Vector3f( 1, 1, 1 ) );
+        dirLightObject.addComponent( dirLight );
+
+        GameObject pointLightObject = new GameObject();
+        PointLight pointLight = new PointLight(
+                new Vector3f( 0.4f, 1,  0.4f ),
+                0.4f,
+                new Attenuation( 1, 0, 1f ),
+                new Vector3f( 5, 0, 5 ) );
+        dirLightObject.addComponent( pointLight );
+
+        GameObject spotLightObject = new GameObject();
+        SpotLight spotLight = new SpotLight(
+                new Vector3f( 1f, 0,  0f ),
+                1f,
+                new Attenuation( 0, 0.05f, 0 ),
+                new Vector3f( 5, 0, 5 ),
+                new Vector3f( 1, 0, 0 ),
+                0.7f
+        );
+        spotLightObject.addComponent( spotLight );
+
         addObject( plane );
+        addObject( dirLightObject );
+        addObject( pointLightObject );
+        addObject( spotLightObject );
+
         super.init();
     }
 }

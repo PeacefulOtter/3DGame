@@ -1,16 +1,17 @@
 package peacefulotter.engine.core;
 
+import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.utils.IO.Input;
-import peacefulotter.engine.core.elementary.Initializable;
-import peacefulotter.engine.core.elementary.Updatable;
+import peacefulotter.engine.elementary.Initializable;
+import peacefulotter.engine.elementary.Updatable;
 
 public class Game implements Initializable, Updatable
 {
     private final CoreEngine engine;
     private final GameObject root;
 
-    protected Game(String winName, int winWidth, int winHeight)
+    protected Game( String winName, int winWidth, int winHeight )
     {
         this.engine = new CoreEngine( this, winName, winWidth, winHeight );
         this.root = new GameObject();

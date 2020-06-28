@@ -1,5 +1,7 @@
 package peacefulotter.engine.core.maths;
 
+import peacefulotter.engine.components.GameComponent;
+
 public class Vector3f
 {
     public static final Vector3f ZERO = new Vector3f( 0, 0, 0 );

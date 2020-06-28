@@ -1,13 +1,11 @@
-package peacefulotter.engine.rendering;
+package peacefulotter.engine.components;
 
-import peacefulotter.engine.components.GameComponent;
 import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.utils.IO.Input;
-import peacefulotter.engine.core.GameObject;
-import peacefulotter.engine.rendering.shaders.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
@@ -23,8 +21,6 @@ public class Camera extends GameComponent
     private Vector3f position;
     private Vector3f forward, upward;
 
-    private SpotLight spotLight;
-
     public Camera( float fov, float aspectRatio, float zNear, float zFar )
     {
         this.position = Vector3f.ZERO;
@@ -34,7 +30,7 @@ public class Camera extends GameComponent
     }
 
     @Override
-    public void addToEngine( CoreEngine engine )
+    public void setCoreEngine( CoreEngine engine )
     {
         engine.getRenderingEngine().setCamera( this );
     }
@@ -60,25 +56,13 @@ public class Camera extends GameComponent
 
         Input.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> { } );
         Input.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> { } );
-
-        spotLight = new SpotLight(
-                new PointLight(
-                        new BaseLight( new Vector3f( 1, 0.5f, 0 ), 0.8f ),
-                        new Attenuation( 0, 0.1f, 0.02f ),
-                        new Vector3f( -2, 0, 5 ),
-                        30
-                ),
-                new Vector3f( 1, 1, 1 ),
-                0.7f
-        );
-        PhongShader.setSpotLights( new SpotLight[] { spotLight } );
     }
 
     @Override
     public void update( float deltaTime )
     {
-        spotLight.getPointLight().setPosition( position );
-        spotLight.setDirection( forward );
+        // spotLight.getPointLight().setPosition( position );
+        // spotLight.setDirection( forward );
 
         if ( Input.getMousePrimaryState() == Input.MOUSE_RELEASED ) return;
 
@@ -87,9 +71,6 @@ public class Camera extends GameComponent
         rotateY( deltaPos.getX() * angle );
         rotateX( deltaPos.getY() * angle );
     }
-
-    @Override
-    public void render( Shader shader ) { }
 
     public void move( Vector3f direction, float amount )
     {

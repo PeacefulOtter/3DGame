@@ -1,4 +1,4 @@
-package peacefulotter.engine.core.elementary;
+package peacefulotter.engine.elementary;
 
 
 import peacefulotter.engine.rendering.shaders.Shader;

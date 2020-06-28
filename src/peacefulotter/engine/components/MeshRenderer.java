@@ -1,6 +1,7 @@
-package peacefulotter.engine.rendering.graphics;
+package peacefulotter.engine.components;
 
-import peacefulotter.engine.components.GameComponent;
+import peacefulotter.engine.rendering.graphics.Material;
+import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.shaders.Shader;
 
 public class MeshRenderer extends GameComponent

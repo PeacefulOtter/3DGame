@@ -1,9 +1,12 @@
 package peacefulotter.engine.rendering.shaders;
 
+import peacefulotter.engine.components.lights.PointLight;
 import peacefulotter.engine.core.maths.Matrix4f;
-import peacefulotter.engine.rendering.Camera;
+import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+
+import java.awt.*;
 
 public class ForwardPoint extends Shader
 {
@@ -51,12 +54,12 @@ public class ForwardPoint extends Shader
         setUniformF( "specularExponent", material.getSpecularExponent() );
         setUniformVector( "eyePos", camera.getPosition() );
 
-        setUniformPointLight( "pointLight", getRenderingEngine().getPointLight() );
+        setUniformPointLight( "pointLight", (PointLight)getRenderingEngine().getActiveLight() );
     }
 
     public void setUniformPointLight( String uniformName, PointLight pointLight )
     {
-        setUniformBaseLight( uniformName + ".base", pointLight.getBaseLight() );
+        setUniformBaseLight( uniformName + ".base", pointLight );
         setUniformF( uniformName + ".attenuation.constant", pointLight.getAttenuation().getConstant() );
         setUniformF( uniformName + ".attenuation.linear", pointLight.getAttenuation().getLinear() );
         setUniformF( uniformName + ".attenuation.exponent", pointLight.getAttenuation().getExponent() );
