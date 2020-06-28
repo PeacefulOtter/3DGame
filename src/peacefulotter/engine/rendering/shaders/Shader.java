@@ -6,6 +6,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.utils.ResourceLoader;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,6 +72,10 @@ abstract public class Shader
         addProgramShader( text, GL_VERTEX_SHADER );
     }
 
+    public void addVertexShaderFromFile( String fileName ) {
+        addVertexShader( new ResourceLoader().loadShader( fileName ) );
+    }
+
     public void addGeometryShader( String text )
     {
         addProgramShader( text, GL_GEOMETRY_SHADER );
@@ -79,6 +84,15 @@ abstract public class Shader
     public void addFragmentShader( String text )
     {
         addProgramShader( text, GL_FRAGMENT_SHADER );
+    }
+
+    public void addFragmentShaderFromFile( String fileName ) {
+        addFragmentShader( new ResourceLoader().loadShader( fileName ) );
+    }
+
+    public void setAttribLocation( String attributeName, int location )
+    {
+        glBindAttribLocation( program, location, attributeName );
     }
 
     public void compileShader()
@@ -121,6 +135,28 @@ abstract public class Shader
         }
 
         glAttachShader( program, shader );
+    }
+
+    public void setUniformBaseLight( String uniformName, BaseLight baseLight )
+    {
+        setUniformVector( uniformName + ".color", baseLight.getColor() );
+        setUniformF( uniformName + ".intensity", baseLight.getIntensity() );
+    }
+
+    public void setUniformDirLight( String uniformName, DirectionalLight directionalLight )
+    {
+        setUniformBaseLight( uniformName + ".base", directionalLight.getBaseLight() );
+        setUniformVector( uniformName + ".direction", directionalLight.getDirection() );
+    }
+
+    public void setUniformPointLight( String uniformName, PointLight pointLight )
+    {
+        setUniformBaseLight( uniformName + ".base", pointLight.getBaseLight() );
+        setUniformF( uniformName + ".attenuation.constant", pointLight.getAttenuation().getConstant() );
+        setUniformF( uniformName + ".attenuation.linear", pointLight.getAttenuation().getLinear() );
+        setUniformF( uniformName + ".attenuation.exponent", pointLight.getAttenuation().getExponent() );
+        setUniformVector( uniformName + ".position", pointLight.getPosition() );
+        setUniformF( uniformName + ".range", pointLight.getRange() );
     }
 
     public void bind()
