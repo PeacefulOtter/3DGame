@@ -3,6 +3,7 @@ package peacefulotter.engine.rendering.shaders;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.components.Camera;
+import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
@@ -33,11 +34,11 @@ public class ForwardDirectional extends Shader
         addUniform( "dirLight.direction" );
     }
 
-    public void updateUniforms( STransform transform, Material material )
+    public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
     {
         material.getTexture().bind();
 
-        Camera camera = getRenderingEngine().getCamera();
+        Camera camera = renderingEngine.getCamera();
         Matrix4f worldMatrix = transform.getTransformationMatrix();
         Matrix4f projectedMatrix = camera.getViewProjection().mul( worldMatrix );
 
@@ -46,7 +47,7 @@ public class ForwardDirectional extends Shader
         setUniformF( "specularIntensity", material.getSpecularIntensity() );
         setUniformF( "specularExponent", material.getSpecularExponent() );
         setUniformVector( "eyePos", camera.getPosition() );
-        setUniformDirLight( "dirLight", (DirectionalLight) getRenderingEngine().getActiveLight());
+        setUniformDirLight( "dirLight", (DirectionalLight) renderingEngine.getActiveLight());
     }
 
     public static Shader getInstance() { return instance; }

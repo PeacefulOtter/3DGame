@@ -15,14 +15,10 @@ public class GameObject implements Initializable, Updatable, Renderable
 {
     private final Set<GameComponent> components = new HashSet<>();
     private final Set<GameObject> children = new HashSet<>();
+    private final STransform transform = new STransform();
 
-    private STransform transform;
     private CoreEngine engine;
 
-    public GameObject()
-    {
-        this.transform = new STransform();
-    }
 
     public GameObject addComponent( GameComponent component )
     {
@@ -43,6 +39,9 @@ public class GameObject implements Initializable, Updatable, Renderable
 
     public void init()
     {
+        for ( GameComponent component: components )
+            component.init();
+
         for ( GameObject child: children )
             child.init();
     }
@@ -56,22 +55,13 @@ public class GameObject implements Initializable, Updatable, Renderable
             child.update( deltaTime );
     }
 
-    public void render( Shader shader )
+    public void render( Shader shader, RenderingEngine renderingEngine )
     {
         for ( GameComponent component: components )
-            component.render( shader );
+            component.render( shader, renderingEngine );
 
         for ( GameObject child: children )
-            child.render( shader );
-    }
-
-    public void addToRenderingEngine( RenderingEngine engine )
-    {
-        for ( GameComponent component: components )
-            component.addToRenderingEngine( engine );
-
-        for ( GameObject child: children )
-            child.addToRenderingEngine( engine );
+            child.render( shader, renderingEngine );
     }
 
     public STransform getTransform() { return transform; }
@@ -83,7 +73,7 @@ public class GameObject implements Initializable, Updatable, Renderable
             this.engine = engine;
 
             for ( GameComponent component: components )
-                component.setCoreEngine( engine );
+                component.addToEngine( engine );
 
             for( GameObject child: children )
                 child.setEngine( engine );

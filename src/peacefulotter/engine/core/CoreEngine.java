@@ -2,6 +2,7 @@ package peacefulotter.engine.core;
 
 
 import org.lwjgl.opengl.GL;
+import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.utils.IO.Input;
 import peacefulotter.engine.utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
@@ -22,21 +23,19 @@ public class CoreEngine
 
     private boolean isRunning = false;
 
-    public CoreEngine( Game game, String winName, int winWidth, int winHeight )
+    public CoreEngine( Game game )
     {
         this.game = game;
-        this.renderingEngine = new RenderingEngine( winName, winWidth, winHeight  );
+        this.renderingEngine = new RenderingEngine();
         this.currentWindow = renderingEngine.getCurrentWindow();
     }
 
     public void start()
     {
         if ( isRunning ) return;
-
         game.init();
-        renderingEngine.initCamera();
+        game.setEngine( this );
         Input.initInputs( currentWindow );
-
         isRunning = true;
         run();
     }
@@ -97,12 +96,12 @@ public class CoreEngine
                 relativeTime -= FRAME_TIME;
                 render = true;
                 game.update( (float) FRAME_TIME );
-                renderingEngine.updateCamera( (float) FRAME_TIME );
+                Input.execInputs( (float) FRAME_TIME );
             }
 
             if ( render )
             {
-                renderingEngine.render( game.getRootObject() );
+                game.render( renderingEngine );
                 frames++;
             }
             else

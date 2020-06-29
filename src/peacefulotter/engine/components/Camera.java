@@ -4,6 +4,7 @@ import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.utils.IO.Input;
 
@@ -30,12 +31,13 @@ public class Camera extends GameComponent
     }
 
     @Override
-    public void setCoreEngine( CoreEngine engine )
+    public void addToEngine(CoreEngine engine)
     {
         engine.getRenderingEngine().setCamera( this );
     }
 
-    public Matrix4f getViewProjection() {
+    public Matrix4f getViewProjection()
+    {
         Matrix4f cameraRotation = new Matrix4f().initRotation( forward, upward );
         Matrix4f cameraTranslation = new Matrix4f().initTranslation( -position.getX(), -position.getY(), -position.getZ() );
         return projection.mul( cameraRotation.mul( cameraTranslation ) );
@@ -44,15 +46,15 @@ public class Camera extends GameComponent
     @Override
     public void init()
     {
-        Input.addKeyCallback( GLFW_KEY_W, ( deltaTime ) -> move( getForward(), 0.02f ) );
-        Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(), 0.02f ) );
-        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getForward(), -0.02f ) );
-        Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(), 0.02f ) );
+        Input.addKeyCallback( GLFW_KEY_W, ( deltaTime ) -> move( getForward(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getForward(), -deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(), deltaTime ) );
 
-        Input.addKeyCallback( GLFW_KEY_UP, ( deltaTime ) -> rotateX( -0.5f ) );
-        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY( 0.5f ) );
-        Input.addKeyCallback( GLFW_KEY_DOWN, ( deltaTime ) -> rotateX( 0.5f ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT, ( deltaTime ) -> rotateY( -0.5f ) );
+        Input.addKeyCallback( GLFW_KEY_UP, ( deltaTime ) -> rotateX( -deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY( deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_DOWN, ( deltaTime ) -> rotateX( deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_LEFT, ( deltaTime ) -> rotateY( -deltaTime ) );
 
         Input.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> { } );
         Input.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> { } );
@@ -74,20 +76,20 @@ public class Camera extends GameComponent
 
     public void move( Vector3f direction, float amount )
     {
-        position = position.add( direction.mul( amount ) );
+        position = position.add( direction.mul( amount * 20 ) );
     }
 
     public void rotateX( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        forward = forward.rotate( angle, horAxis ).normalize();
+        forward = forward.rotate( angle * 200, horAxis ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 
     public void rotateY( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        forward = forward.rotate( angle, Y_AXIS ).normalize();
+        forward = forward.rotate( angle * 200, Y_AXIS ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 

@@ -8,6 +8,7 @@ import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
 
@@ -105,6 +106,13 @@ public class TestGame extends Game
         addObject( dirLightObject );
         addObject( pointLightObject );
         addObject( spotLightObject );
+
+        Camera camera = new Camera(
+                (float)Math.toRadians(70),
+                (float) Window.getWidth() / (float) Window.getHeight(),
+                0.01f, 1000f);
+        setCamera( camera );
+        addComponent( camera );
 
         super.init();
     }

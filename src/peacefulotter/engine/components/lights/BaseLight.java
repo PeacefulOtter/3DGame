@@ -1,8 +1,8 @@
 package peacefulotter.engine.components.lights;
 
 import peacefulotter.engine.components.GameComponent;
+import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
 
 public class BaseLight extends GameComponent
@@ -18,9 +18,9 @@ public class BaseLight extends GameComponent
     }
 
     @Override
-    public void addToRenderingEngine( RenderingEngine engine )
+    public void addToEngine( CoreEngine engine )
     {
-        engine.addLight( this );
+        engine.getRenderingEngine().addLight( this );
     }
 
     public Shader getShader() { return shader; }

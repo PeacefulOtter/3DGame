@@ -20,8 +20,8 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 abstract public class Shader
 {
     private RenderingEngine renderingEngine;
-    private int program;
-    private Map<String, Integer> uniforms;
+    private final int program;
+    private final Map<String, Integer> uniforms;
 
     public Shader()
     {
@@ -35,7 +35,7 @@ abstract public class Shader
         uniforms = new HashMap<>();
     }
 
-    public void updateUniforms(STransform transform, Material material ) {}
+    abstract public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine );
 
     public void addUniform( String uniformName )
     {
@@ -168,10 +168,7 @@ abstract public class Shader
     }
 
 
-    public RenderingEngine getRenderingEngine()
-    {
-        return renderingEngine;
-    }
+    // public RenderingEngine getRenderingEngine() { return renderingEngine; }
 
     public void setRenderingEngine( RenderingEngine renderingEngine )
     {

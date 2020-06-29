@@ -1,5 +1,6 @@
 package peacefulotter.engine.components;
 
+import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.shaders.Shader;
@@ -22,10 +23,10 @@ public class MeshRenderer extends GameComponent
     public void update( float delta ) { }
 
     @Override
-    public void render( Shader shader )
+    public void render( Shader shader, RenderingEngine renderingEngine )
     {
         shader.bind();
-        shader.updateUniforms( getTransform(), material );
+        shader.updateUniforms( getTransform(), material, renderingEngine );
         mesh.draw();
     }
 }

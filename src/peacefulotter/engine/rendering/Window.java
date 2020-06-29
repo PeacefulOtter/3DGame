@@ -13,19 +13,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window
 {
-    public final String name;
-    public static int width, height;
+    private static String name;
+    private static int width, height;
     private long window;
 
-    public Window( String windowName, int windowWidth, int windowHeight )
+    public Window()
     {
-        this.name   = windowName;
-        Window.width  = windowWidth;
-        Window.height = windowHeight;
-        init();
-    }
-
-    private void init() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         GLFWErrorCallback.createPrint(System.err).set();
@@ -80,9 +73,21 @@ public class Window
 
     public long getWindow() { return window; }
 
-    public int getWidth() { return width; }
+    public static void setName( String name ) { Window.name = name; }
 
-    public int getHeight() { return height; }
+    public static int getWidth() { return width; }
+
+    public static void setWidth( int width ) { Window.width = width; }
+
+    public static int getHeight() { return height; }
+
+    public static void setHeight( int height ) { Window.height = height; }
+
+    public static void setAttributes( String winName, int winWidth, int winHeight )
+    {
+        setName( winName ); setWidth( winWidth ); setHeight( winHeight );
+    }
+
 
     public static Vector2f getCenter()
     {

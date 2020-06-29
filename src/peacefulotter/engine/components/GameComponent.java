@@ -19,13 +19,15 @@ public abstract class GameComponent implements Initializable, Updatable, Rendera
     public void update( float deltaTime ) { }
 
     @Override
-    public void render( Shader shader ) { }
+    public void render( Shader shader, RenderingEngine renderingEngine ) { }
 
     public void setParent( GameObject parent ) { this.parent = parent; }
 
     public STransform getTransform() { return parent.getTransform(); }
 
-    public void setCoreEngine( CoreEngine engine ) { }
+    public void addToEngine( CoreEngine engine ) { }
 
-    public void addToRenderingEngine( RenderingEngine engine ) { }
+    // public void setCoreEngine( CoreEngine engine ) { }
+
+    //public void addToRenderingEngine( RenderingEngine engine ) { }
 }

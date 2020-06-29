@@ -26,18 +26,13 @@ public class RenderingEngine
     private final Window window;
     private final Vector3f ambientLight;
     private final List<BaseLight> lights;
-
-    private Camera camera;
     private BaseLight activeLight;
+    private Camera camera;
 
-    public RenderingEngine( String winName, int winWidth, int winHeight )
+    public RenderingEngine()
     {
-        lights = new ArrayList<>();
-        window = new Window( winName, winWidth, winHeight );
-        camera = new Camera(
-                (float) Math.toRadians( 70.0f ),
-                (float) window.getWidth() / (float) window.getHeight(),
-                0.01f, 1000f );
+        this.lights = new ArrayList<>();
+        this.window = new Window();
 
         GL.createCapabilities();
         glClearColor( 0, 0, 0, 0 );
@@ -51,17 +46,18 @@ public class RenderingEngine
         ambientLight = new Vector3f( 0.2f, 0.2f, 0.2f );
     }
 
+
     public void render( GameObject object )
     {
-        clearScreen();
-        lights.clear();
+        if ( camera == null )
+            System.err.println( "Main camera not found." );
 
-        object.addToRenderingEngine( this ); // move to init method
+        clearScreen();
 
         Shader forwardAmbient = ForwardAmbient.getInstance();
         forwardAmbient.setRenderingEngine( this );
 
-        object.render( forwardAmbient );
+        object.render( forwardAmbient, this );
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE );
@@ -70,9 +66,9 @@ public class RenderingEngine
 
         for ( BaseLight light : lights )
         {
-            light.getShader().setRenderingEngine( this ); // move this to init
+            // light.getShader().setRenderingEngine( this ); // move this to init
             activeLight = light;
-            object.render( light.getShader() );
+            object.render( light.getShader(), this );
         }
 
         glDepthFunc( GL_LESS );
@@ -85,10 +81,6 @@ public class RenderingEngine
     public void addLight( BaseLight light ) { lights.add( light ); }
 
     public BaseLight getActiveLight() { return activeLight; }
-
-    public void initCamera() { camera.init(); }
-
-    public void updateCamera( float deltaTime ) { camera.update(  deltaTime  ); }
 
     private static void clearScreen()
     {

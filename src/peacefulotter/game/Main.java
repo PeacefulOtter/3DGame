@@ -11,7 +11,7 @@ public class Main
     public static void main( String[] args )
     {
         // System.out.println(glGetString(GL_VERSION));
-        Game game = new TestGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
+        new TestGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
     }
 
 }
