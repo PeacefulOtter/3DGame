@@ -12,7 +12,7 @@ public class STranslation
             translation = new Vector3f( 0, 0, 0 );
         }
 
-    public Vector3f getTranslation()
+    public Vector3f getTranslationVector()
         {
             return translation;
         }

@@ -1,7 +1,5 @@
 package peacefulotter.engine.core.maths;
 
-import peacefulotter.engine.components.GameComponent;
-
 public class Vector3f
 {
     public static final Vector3f ZERO = new Vector3f( 0, 0, 0 );
@@ -111,6 +109,13 @@ public class Vector3f
         return destination.sub( this ).mul( lerpFactor ).add( this );
     }
 
+    public Vector3f rotate( Quaternion rotation )
+    {
+        Quaternion conjugate = rotation.conjugate();
+        Quaternion w = rotation.mul( this ).mul( conjugate );
+        return new Vector3f( w.getX(), w.getY(), w.getZ() );
+    }
+
     @Override
     public boolean equals( Object other )
     {
@@ -143,4 +148,8 @@ public class Vector3f
     public float getZ() { return z; }
     public void setZ( float z ) { this.z = z; }
 
+    public void set( float x, float y, float z )
+    {
+        setX( x ); setY( y ); setZ( z );
+    }
 }

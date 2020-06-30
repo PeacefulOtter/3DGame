@@ -110,6 +110,11 @@ public class Matrix4f
         Vector3f r = upward.normalize().cross( f );
         Vector3f u = f.cross( r );
 
+        return initRotation( f, u, r );
+    }
+
+    public Matrix4f initRotation( Vector3f f, Vector3f u, Vector3f r )
+    {
         initIdentity();
 
         m[ 0 ][ 0 ] = r.getX();

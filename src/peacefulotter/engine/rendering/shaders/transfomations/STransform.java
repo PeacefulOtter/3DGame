@@ -1,6 +1,7 @@
 package peacefulotter.engine.rendering.shaders.transfomations;
 
 import peacefulotter.engine.core.maths.Matrix4f;
+import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
 
 public class STransform
@@ -19,27 +20,23 @@ public class STransform
                 ) );
     }
 
-    public STransform setTranslation(float x, float y, float z )
+    /*public STransform setTranslation(float x, float y, float z )
     {
         translation.setTranslation( x, y , z );
         return this;
-    }
+    }*/
 
-    public STransform setTranslation(Vector3f vector )
+    /*public STransform setTranslation(Vector3f vector )
     {
         translation.setTranslation( vector );
         return this;
-    }
+    }*/
 
-    public STransform setRotation(float x, float y, float z )
-    {
-        rotation.setRotation( x, y , z );
-        return this;
-    }
+    public Vector3f getTranslation() { return translation.getTranslationVector(); }
 
-    public STransform setRotation( Vector3f vector )
+    public STransform setRotation( Quaternion quaternion )
     {
-        rotation.setRotation( vector );
+        rotation.setRotation( quaternion );
         return this;
     }
 

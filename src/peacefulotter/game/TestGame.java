@@ -74,7 +74,7 @@ public class TestGame extends Game
         GameObject plane = new GameObject();
         MeshRenderer meshRenderer = new MeshRenderer( mesh, material );
         plane.addComponent( meshRenderer );
-        plane.getTransform().setTranslation( 0, -1, 5 );
+        plane.getTransform().getTranslation().set( 0, -1, 5 );
 
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
