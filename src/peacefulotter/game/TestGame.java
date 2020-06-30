@@ -6,6 +6,7 @@ import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
 import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.Game;
+import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
@@ -87,8 +88,7 @@ public class TestGame extends Game
         PointLight pointLight = new PointLight(
                 new Vector3f( 0.4f, 1,  0.4f ),
                 0.4f,
-                new Attenuation( 1, 0, 1f ),
-                new Vector3f( 5, 0, 5 ) );
+                new Attenuation( 1, 0, 1f ) );
         dirLightObject.addComponent( pointLight );
 
         GameObject spotLightObject = new GameObject();
@@ -96,10 +96,11 @@ public class TestGame extends Game
                 new Vector3f( 1f, 0,  0f ),
                 1f,
                 new Attenuation( 0, 0.05f, 0 ),
-                new Vector3f( 5, 0, 5 ),
-                new Vector3f( 1, 0, 0 ),
                 0.7f
         );
+        spotLightObject.getTransform().setRotation( new Quaternion().initRotation(
+                new Vector3f( 0, 1, 0 ), 90
+        ) );
         spotLightObject.addComponent( spotLight );
 
         addObject( plane );

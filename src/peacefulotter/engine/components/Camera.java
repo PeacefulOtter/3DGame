@@ -82,14 +82,14 @@ public class Camera extends GameComponent
     public void rotateX( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        forward = forward.rotate( angle * 200, horAxis ).normalize();
+        forward = forward.rotate( horAxis, angle * 200 ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 
     public void rotateY( float angle )
     {
         Vector3f horAxis = Y_AXIS.cross( forward ).normalize();
-        forward = forward.rotate( angle * 200, Y_AXIS ).normalize();
+        forward = forward.rotate( Y_AXIS, angle * 200 ).normalize();
         upward = forward.cross( horAxis ).normalize();
     }
 

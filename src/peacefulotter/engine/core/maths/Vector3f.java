@@ -37,18 +37,9 @@ public class Vector3f
         return new Vector3f( x / length, y / length, z / length );
     }
 
-    public Vector3f rotate( float angleDeg, Vector3f axis )
+    public Vector3f rotate( Vector3f axis, float angleDeg )
     {
-        double halfRadAngle = Math.toRadians( angleDeg / 2 );
-        float cosHalfAngle = (float) Math.cos( halfRadAngle );
-        float sinHalfAngle = (float) Math.sin( halfRadAngle );
-
-        Quaternion rotation = new Quaternion(
-                axis.getX() * sinHalfAngle,
-                axis.getY() * sinHalfAngle,
-                axis.getZ() * sinHalfAngle,
-                cosHalfAngle
-        );
+        Quaternion rotation = new Quaternion().initRotation( axis, angleDeg );
         Quaternion conjugate = rotation.conjugate();
         // were using the conjugate to get rid of the imaginary values
         // and keep the full rotation
@@ -59,6 +50,13 @@ public class Vector3f
         if ( w.getY() <= -0.9999 )
             return new Vector3f( getX(), getY(), getZ() );
 
+        return new Vector3f( w.getX(), w.getY(), w.getZ() );
+    }
+
+    public Vector3f rotate( Quaternion rotation )
+    {
+        Quaternion conjugate = rotation.conjugate();
+        Quaternion w = rotation.mul( this ).mul( conjugate );
         return new Vector3f( w.getX(), w.getY(), w.getZ() );
     }
 
@@ -109,13 +107,6 @@ public class Vector3f
         return destination.sub( this ).mul( lerpFactor ).add( this );
     }
 
-    public Vector3f rotate( Quaternion rotation )
-    {
-        Quaternion conjugate = rotation.conjugate();
-        Quaternion w = rotation.mul( this ).mul( conjugate );
-        return new Vector3f( w.getX(), w.getY(), w.getZ() );
-    }
-
     @Override
     public boolean equals( Object other )
     {
@@ -151,5 +142,10 @@ public class Vector3f
     public void set( float x, float y, float z )
     {
         setX( x ); setY( y ); setZ( z );
+    }
+
+    public void set( Vector3f vector )
+    {
+        set( vector.getX(), vector.getY(), vector.getZ() );
     }
 }

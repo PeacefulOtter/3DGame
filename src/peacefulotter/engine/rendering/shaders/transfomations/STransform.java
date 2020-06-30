@@ -34,6 +34,8 @@ public class STransform
 
     public Vector3f getTranslation() { return translation.getTranslationVector(); }
 
+    public Quaternion getRotation() { return rotation.getRotation(); }
+
     public STransform setRotation( Quaternion quaternion )
     {
         rotation.setRotation( quaternion );

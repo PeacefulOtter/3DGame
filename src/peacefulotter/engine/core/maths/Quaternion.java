@@ -4,6 +4,11 @@ public class Quaternion
 {
     private float x, y, z, w;
 
+    public Quaternion()
+    {
+        this( 0, 0, 0, 1 );
+    }
+
     public Quaternion(float x, float y, float z, float w )
     {
         this.x = x;
@@ -45,6 +50,20 @@ public class Quaternion
         float z_ =  w * other.getZ() + x * other.getY() - y * other.getX();
         float w_ = -x * other.getX() - y * other.getY() - z * other.getZ();
         return new Quaternion( x_, y_, z_, w_ );
+    }
+
+    public Quaternion initRotation( Vector3f axis, float angleDeg )
+    {
+        double halfRadAngle = Math.toRadians( angleDeg / 2 );
+        float cosHalfAngle = (float) Math.cos( halfRadAngle );
+        float sinHalfAngle = (float) Math.sin( halfRadAngle );
+
+        setX( axis.getX() * sinHalfAngle );
+        setY( axis.getY() * sinHalfAngle );
+        setZ( axis.getZ() * sinHalfAngle );
+        setW( cosHalfAngle );
+
+        return this;
     }
 
     public Matrix4f toRotationMatrix()

@@ -15,7 +15,7 @@ public class SRotation
         return rotation.toRotationMatrix();
     }
 
-    public Quaternion getRotationVector()
+    public Quaternion getRotation()
     {
         return rotation;
     }
