@@ -20,31 +20,21 @@ public class STransform
                 ) );
     }
 
-    /*public STransform setTranslation(float x, float y, float z )
-    {
-        translation.setTranslation( x, y , z );
-        return this;
-    }*/
-
-    /*public STransform setTranslation(Vector3f vector )
-    {
-        translation.setTranslation( vector );
-        return this;
-    }*/
-
     public Vector3f getTranslation() { return translation.getTranslationVector(); }
 
     public Quaternion getRotation() { return rotation.getRotation(); }
 
-    public STransform setRotation( Quaternion quaternion )
+    public Vector3f getScale() { return scale.getScaleVector(); }
+
+    public STransform setTranslation( Vector3f vector )
     {
-        rotation.setRotation( quaternion );
+        translation.setTranslation( vector );
         return this;
     }
 
-    public STransform setScale( float x, float y, float z )
+    public STransform setRotation( Quaternion quaternion )
     {
-        scale.setScale( x, y, z );
+        rotation.setRotation( quaternion );
         return this;
     }
 
@@ -53,6 +43,8 @@ public class STransform
         scale.setScale( vector );
         return this;
     }
+
+    public void rotate( Vector3f axis, float angleDeg ) { rotation.rotate( axis, angleDeg ); }
 
     public void setParent( STransform parent ) { this.parent = parent; }
 }

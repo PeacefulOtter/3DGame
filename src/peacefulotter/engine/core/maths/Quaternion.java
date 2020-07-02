@@ -4,12 +4,18 @@ public class Quaternion
 {
     private float x, y, z, w;
 
-    public Quaternion()
+    public Quaternion( Vector3f axis, float angleDeg )
     {
-        this( 0, 0, 0, 1 );
+        double halfRadAngle = Math.toRadians( angleDeg ) / 2;
+        float cosHalfAngle = (float) Math.cos( halfRadAngle );
+        float sinHalfAngle = (float) Math.sin( halfRadAngle );
+        setX( axis.getX() * sinHalfAngle );
+        setY( axis.getY() * sinHalfAngle );
+        setZ( axis.getZ() * sinHalfAngle );
+        setW( cosHalfAngle );
     }
 
-    public Quaternion(float x, float y, float z, float w )
+    public Quaternion( float x, float y, float z, float w )
     {
         this.x = x;
         this.y = y;
@@ -19,8 +25,7 @@ public class Quaternion
 
     public float length()
     {
-        return (float) Math.sqrt(
-                BMaths.square( x ) + BMaths.square( y ) + BMaths.square( z ) + BMaths.square( w ) );
+        return (float) Math.sqrt( x*x + y*y + z*z + w*w );
     }
 
     public Quaternion normalize()
@@ -52,20 +57,6 @@ public class Quaternion
         return new Quaternion( x_, y_, z_, w_ );
     }
 
-    public Quaternion initRotation( Vector3f axis, float angleDeg )
-    {
-        double halfRadAngle = Math.toRadians( angleDeg / 2 );
-        float cosHalfAngle = (float) Math.cos( halfRadAngle );
-        float sinHalfAngle = (float) Math.sin( halfRadAngle );
-
-        setX( axis.getX() * sinHalfAngle );
-        setY( axis.getY() * sinHalfAngle );
-        setZ( axis.getZ() * sinHalfAngle );
-        setW( cosHalfAngle );
-
-        return this;
-    }
-
     public Matrix4f toRotationMatrix()
     {
         Vector3f forward =  new Vector3f(2.0f * (x * z - w * y), 2.0f * (y * z + w * x), 1.0f - 2.0f * (x * x + y * y));
@@ -77,15 +68,15 @@ public class Quaternion
 
     public Vector3f getForward() { return new Vector3f( 0,0,1 ).rotate( this ); }
 
-    public Vector3f getBack() { return new Vector3f( 0,0,-1 ).rotate( this ); }
+    public Vector3f getBack()    { return new Vector3f( 0,0,-1 ).rotate( this ); }
 
-    public Vector3f getUp() { return new Vector3f( 0,1,0 ).rotate( this ); }
+    public Vector3f getUp()      { return new Vector3f( 0,1,0 ).rotate( this ); }
 
-    public Vector3f getDown() { return new Vector3f( 0,-1,0 ).rotate( this ); }
+    public Vector3f getDown()    { return new Vector3f( 0,-1,0 ).rotate( this ); }
 
-    public Vector3f GetRight() { return new Vector3f( 1,0,0 ).rotate(this ); }
+    public Vector3f getRight()   { return new Vector3f( 1,0,0 ).rotate( this ); }
 
-    public Vector3f GetLeft() { return new Vector3f( -1,0,0 ).rotate( this ); }
+    public Vector3f getLeft()    { return new Vector3f( -1,0,0 ).rotate( this ); }
 
     public float getX() { return x; }
     public void setX( float x ) { this.x = x; }

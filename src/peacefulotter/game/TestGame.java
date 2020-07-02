@@ -13,6 +13,11 @@ import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
 
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
+import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
+
 /*
 CAMERA SPOTLIGHT
      spotLight = new SpotLight(
@@ -98,7 +103,7 @@ public class TestGame extends Game
                 new Attenuation( 0, 0.05f, 0 ),
                 0.7f
         );
-        spotLightObject.getTransform().setRotation( new Quaternion().initRotation(
+        spotLightObject.getTransform().setRotation( new Quaternion(
                 new Vector3f( 0, 1, 0 ), 90
         ) );
         spotLightObject.addComponent( spotLight );
@@ -109,11 +114,21 @@ public class TestGame extends Game
         addObject( spotLightObject );
 
         Camera camera = new Camera(
-                (float)Math.toRadians(70),
+                70f,
                 (float) Window.getWidth() / (float) Window.getHeight(),
-                0.01f, 1000f);
+                0.01f, 1000f );
+        camera.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
+            System.out.println(deltaTime);
+        } );
+        camera.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
+            System.out.println(deltaTime);
+        } );
         setCamera( camera );
-        addComponent( camera );
+        addObject( new GameObject().addComponent( camera ) );
+
+        // Hide Mouse
+        // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
+        // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
 
         super.init();
     }

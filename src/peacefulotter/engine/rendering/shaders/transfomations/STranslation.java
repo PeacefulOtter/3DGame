@@ -5,33 +5,22 @@ import peacefulotter.engine.core.maths.Vector3f;
 
 public class STranslation
 {
-    private Vector3f translation;
-
-    public STranslation()
-        {
-            translation = new Vector3f( 0, 0, 0 );
-        }
+    private Vector3f translation = Vector3f.ZERO;
 
     public Vector3f getTranslationVector()
-        {
-            return translation;
-        }
+    {
+        return translation;
+    }
 
     public void setTranslation( Vector3f translation )
-        {
-            this.translation = translation;
-        }
-
-    public void setTranslation( float x, float y, float z )
-        {
-            translation = new Vector3f( x, y, z );
-        }
+    {
+        this.translation = translation;
+    }
 
     public Matrix4f getTranslationMatrix()
     {
-        Matrix4f translationMatrix = new Matrix4f().initTranslation(
+        return new Matrix4f().initTranslation(
                 translation.getX(), translation.getY(), translation.getZ()
         );
-        return translationMatrix;
     }
 }

@@ -42,11 +42,16 @@ public class Input
         {
             k.exec( deltaTime );
         }
+
+        for ( Key k : mouseButtons )
+        {
+            k.exec( deltaTime );
+        }
     }
 
     public static void addKeyCallback( int keyCode, IOExecutable executable )
     {
-        keys.add( new Key( keyCode, executable ) );
+        keys.add( new Key( keyCode, executable, true ) );
     }
 
     private static void initKeyCallbacks( long window )
@@ -79,15 +84,8 @@ public class Input
             {
                 if ( k.getKeyCode() == button )
                 {
-                    if ( button == MOUSE_PRIMARY )
-                    {
-                        mousePrimaryState = action;
-                        int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
-                        glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
-                    }
-                    else if ( button == MOUSE_SECONDARY ) { mouseSecondaryState = action; }
+                    k.setPressed( action == 1 );
                 }
-                // k.exec()
             }
         } );
     }

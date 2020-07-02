@@ -20,7 +20,7 @@ public class Vector2f
 
     public float length()
     {
-        return (float) Math.sqrt( BMaths.square( x ) + BMaths.square( y ) );
+        return (float) Math.sqrt( x*x + y*y );
     }
 
     public float dot( Vector2f other )

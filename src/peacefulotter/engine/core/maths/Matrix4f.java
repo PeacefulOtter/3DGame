@@ -69,11 +69,11 @@ public class Matrix4f
         return this;
     }
 
-    public Matrix4f initPerspective( float fovRad, float aspectRatio, float zNear, float zFar )
+    public Matrix4f initPerspective( float fovDeg, float aspectRatio, float zNear, float zFar )
     {
         initIdentity();
 
-        float invTanHalfFov = 1f / (float) Math.tan( fovRad / 2 );
+        float invTanHalfFov = 1f / (float) Math.tan( Math.toRadians( fovDeg ) / 2 );
         float depth = zNear - zFar;
 
         m[ 0 ][ 0 ] = invTanHalfFov * ( 1f / aspectRatio );

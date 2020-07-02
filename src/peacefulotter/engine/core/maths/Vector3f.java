@@ -14,7 +14,7 @@ public class Vector3f
 
     public float length()
     {
-        return (float) Math.sqrt( BMaths.square( x ) + BMaths.square( y ) + BMaths.square( z ) );
+        return (float) Math.sqrt( x*x + y*y + z*z );
     }
 
     public float dot( Vector3f other )
@@ -39,18 +39,7 @@ public class Vector3f
 
     public Vector3f rotate( Vector3f axis, float angleDeg )
     {
-        Quaternion rotation = new Quaternion().initRotation( axis, angleDeg );
-        Quaternion conjugate = rotation.conjugate();
-        // were using the conjugate to get rid of the imaginary values
-        // and keep the full rotation
-        // reminder :             Q = (  D*sin(angle/2), w*cos(angle/2) )
-        //              conjugate Q = ( -D*sin(angle/2), w*cos(angle/2) )
-        Quaternion w = rotation.mul( this ).mul( conjugate ); // Q*V*Q(conjugate)
-
-        if ( w.getY() <= -0.9999 )
-            return new Vector3f( getX(), getY(), getZ() );
-
-        return new Vector3f( w.getX(), w.getY(), w.getZ() );
+        return rotate( new Quaternion( axis, angleDeg ) );
     }
 
     public Vector3f rotate( Quaternion rotation )
