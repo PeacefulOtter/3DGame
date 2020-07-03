@@ -29,8 +29,9 @@ public abstract class Game implements Updatable
     public void render( RenderingEngine renderingEngine ) { renderingEngine.render( root ); }
 
     public void addObject( GameObject object ) { root.addChild( object ); }
-
-    // public GameObject getRootObject() { return root; }
-
-    public void setCamera( Camera camera ) { engine.getRenderingEngine().setCamera( camera ); }
+    public void addObjects( GameObject ...objects )
+    {
+        for ( GameObject object : objects )
+            addObject( object );
+    }
 }

@@ -22,6 +22,6 @@ public class SRotation
 
     public void rotate( Vector3f axis, float angleDeg )
     {
-        setRotation( rotation.mul( new Quaternion( axis, angleDeg ) ) );
+        setRotation( new Quaternion( axis, angleDeg ).mul( rotation ) );
     }
 }

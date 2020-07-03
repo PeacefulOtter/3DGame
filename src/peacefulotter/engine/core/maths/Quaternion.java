@@ -12,7 +12,7 @@ public class Quaternion
         setX( axis.getX() * sinHalfAngle );
         setY( axis.getY() * sinHalfAngle );
         setZ( axis.getZ() * sinHalfAngle );
-        setW( cosHalfAngle );
+            setW( cosHalfAngle );
     }
 
     public Quaternion( float x, float y, float z, float w )

@@ -14,7 +14,6 @@ public class PointLight extends BaseLight
         super( color, intensity );
         this.attenuation = attenuation;
         calcAndUpdateRange();
-        System.out.println(range);
         setShader( ForwardPoint.getInstance() );
     }
 

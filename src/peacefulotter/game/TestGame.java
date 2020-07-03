@@ -91,44 +91,43 @@ public class TestGame extends Game
 
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(
-                new Vector3f( 0.4f, 1,  0.4f ),
-                0.4f,
-                new Attenuation( 1, 0, 1f ) );
-        dirLightObject.addComponent( pointLight );
+                new Vector3f( 0.4f, 2,  0.4f ),
+                0.5f,
+                new Attenuation( 1, 0, 0.2f ) );
+        pointLightObject.getTransform().setTranslation( new Vector3f( 2, 1, 3 ) );
+        pointLightObject.addComponent( pointLight );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
                 new Vector3f( 1f, 0,  0f ),
                 1f,
-                new Attenuation( 0, 0.05f, 0 ),
+                new Attenuation( 0, 0f, 0.1f ),
                 0.7f
         );
-        spotLightObject.getTransform().setRotation( new Quaternion(
-                new Vector3f( 0, 1, 0 ), 90
-        ) );
+        spotLightObject.getTransform()
+                .setRotation( new Quaternion( new Vector3f( 0, 1, 0 ), 90 ) )
+                .setTranslation( new Vector3f( 1, 2, 1 ) );
         spotLightObject.addComponent( spotLight );
 
-        addObject( plane );
-        addObject( dirLightObject );
-        addObject( pointLightObject );
-        addObject( spotLightObject );
-
+        GameObject cameraObject = new GameObject();
         Camera camera = new Camera(
                 70f,
                 (float) Window.getWidth() / (float) Window.getHeight(),
                 0.01f, 1000f );
         camera.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
-            System.out.println(deltaTime);
+            System.out.println("shoottingg");
         } );
         camera.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
-            System.out.println(deltaTime);
+            System.out.println("aiminggg");
         } );
-        setCamera( camera );
-        addObject( new GameObject().addComponent( camera ) );
+        cameraObject.getTransform().setTranslation( new Vector3f( 1, 2, 0 ) );
+        cameraObject.addComponent( camera );
 
         // Hide Mouse
         // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
+
+        addObjects( plane, dirLightObject, pointLightObject, spotLightObject, cameraObject );
 
         super.init();
     }

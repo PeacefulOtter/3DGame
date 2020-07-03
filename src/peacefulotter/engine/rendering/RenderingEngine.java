@@ -3,9 +3,6 @@ package peacefulotter.engine.rendering;
 import org.lwjgl.opengl.GL;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
-import peacefulotter.engine.components.lights.DirectionalLight;
-import peacefulotter.engine.components.lights.PointLight;
-import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.shaders.*;
 

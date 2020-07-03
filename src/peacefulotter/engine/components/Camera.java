@@ -1,3 +1,5 @@
+
+
 package peacefulotter.engine.components;
 
 import peacefulotter.engine.core.CoreEngine;
@@ -13,9 +15,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 
 public class Camera extends GameComponent
 {
-    private static final Vector3f X_AXIS = new Vector3f( 1, 0, 0 );
     private static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
-    private static final Vector3f Z_AXIS = new Vector3f( 0, 0, 1 );
+    private static final float rotationSensitivity = 130;
+    private static final float movingSensitivity = 35;
 
     private final Matrix4f projection;
 
@@ -47,10 +49,10 @@ public class Camera extends GameComponent
         Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward(), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(),   deltaTime ) );
 
-        Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX(  1 / 10f ) );
-        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY( 1 / 10f ) );
-        Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX( -1 / 10f ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -1 / 10f ) );
+        Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
+        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * rotationSensitivity ) );
+        Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * rotationSensitivity ) );
+        Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * rotationSensitivity ) );
     }
 
     @Override
@@ -70,8 +72,8 @@ public class Camera extends GameComponent
     public void move( Vector3f direction, float amount )
     {
         getTransform().setTranslation(
-                getTransform().getTranslation().add(
-                        direction.mul( amount * 20 ) ) );
+                getPosition().add(
+                        direction.mul( amount * movingSensitivity ) ) );
     }
 
     private void rotateX( float angleDeg ) { getTransform().rotate( getRight(), angleDeg ); }
