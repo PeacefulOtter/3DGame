@@ -22,7 +22,7 @@ public class STransform
 
     public Vector3f getTranslation() { return translation.getTranslationVector(); }
 
-    public Quaternion getRotation() { return rotation.getRotation(); }
+    public Quaternion getRotation() { return rotation.getRotationQuaternion(); }
 
     public Vector3f getScale() { return scale.getScaleVector(); }
 
@@ -44,7 +44,17 @@ public class STransform
         return this;
     }
 
-    public void rotate( Vector3f axis, float angleDeg ) { rotation.rotate( axis, angleDeg ); }
+    public STransform translate( Vector3f vector )
+    {
+        translation.translate( vector );
+        return this;
+    }
+
+    public STransform rotate( Vector3f axis, float angleDeg )
+    {
+        rotation.rotate( axis, angleDeg );
+        return this;
+    }
 
     public void setParent( STransform parent ) { this.parent = parent; }
 }

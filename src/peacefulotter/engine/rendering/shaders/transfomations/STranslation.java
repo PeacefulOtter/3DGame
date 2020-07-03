@@ -7,15 +7,14 @@ public class STranslation
 {
     private Vector3f translation = Vector3f.ZERO;
 
-    public Vector3f getTranslationVector()
-    {
-        return translation;
-    }
+    public Vector3f getTranslationVector() { return translation; }
 
     public void setTranslation( Vector3f translation )
     {
         this.translation = translation;
     }
+
+    public void translate( Vector3f vector ) { translation = translation.add( vector ); }
 
     public Matrix4f getTranslationMatrix()
     {

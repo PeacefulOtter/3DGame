@@ -8,7 +8,7 @@ public class SRotation
 {
     private Quaternion rotation = new Quaternion( 0, 0, 0, 1 );
 
-    public Quaternion getRotation()
+    public Quaternion getRotationQuaternion()
     {
         return rotation;
     }

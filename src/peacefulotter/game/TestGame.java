@@ -80,7 +80,7 @@ public class TestGame extends Game
         GameObject plane = new GameObject();
         MeshRenderer meshRenderer = new MeshRenderer( mesh, material );
         plane.addComponent( meshRenderer );
-        plane.getTransform().getTranslation().set( 0, -1, 5 );
+        plane.getTransform().setTranslation( new Vector3f( 0, -1, 5 ) );
 
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
@@ -94,19 +94,20 @@ public class TestGame extends Game
                 new Vector3f( 0.4f, 2,  0.4f ),
                 0.5f,
                 new Attenuation( 1, 0, 0.2f ) );
-        pointLightObject.getTransform().setTranslation( new Vector3f( 2, 1, 3 ) );
+        pointLightObject.getTransform().translate( new Vector3f( 2, 1, 3 ) );
         pointLightObject.addComponent( pointLight );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
                 new Vector3f( 1f, 0,  0f ),
                 1f,
-                new Attenuation( 0, 0f, 0.1f ),
+                new Attenuation( 0, 0f, 0.01f ),
                 0.7f
         );
         spotLightObject.getTransform()
-                .setRotation( new Quaternion( new Vector3f( 0, 1, 0 ), 90 ) )
-                .setTranslation( new Vector3f( 1, 2, 1 ) );
+                .rotate( new Vector3f( 0, 1, 0 ), 90 )
+                .rotate( new Vector3f( 1, 0, 0 ), 20 )
+                .translate( new Vector3f( 5, 0.2f, 1 ) );
         spotLightObject.addComponent( spotLight );
 
         GameObject cameraObject = new GameObject();
@@ -120,7 +121,7 @@ public class TestGame extends Game
         camera.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
             System.out.println("aiminggg");
         } );
-        cameraObject.getTransform().setTranslation( new Vector3f( 1, 2, 0 ) );
+        cameraObject.getTransform().translate( new Vector3f( 0, 1, 0 ) );
         cameraObject.addComponent( camera );
 
         // Hide Mouse
