@@ -114,6 +114,7 @@ public class TestGame extends Game
                 1f,
                 new Attenuation( 1, 0, 0.01f ) );
         pointLightObject.addComponent( pointLight );
+        pointLightObject.getTransform().translate( new Vector3f( 0, 1, 0 ) );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
