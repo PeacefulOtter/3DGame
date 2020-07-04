@@ -19,7 +19,6 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 abstract public class Shader
 {
-    private RenderingEngine renderingEngine;
     private final int program;
     private final Map<String, Integer> uniforms;
 
@@ -165,13 +164,5 @@ abstract public class Shader
     public void bind()
     {
         glUseProgram( program );
-    }
-
-
-    // public RenderingEngine getRenderingEngine() { return renderingEngine; }
-
-    public void setRenderingEngine( RenderingEngine renderingEngine )
-    {
-        this.renderingEngine = renderingEngine;
     }
 }

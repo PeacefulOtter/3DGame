@@ -11,33 +11,6 @@ public class Material
     private Map<String, Vector3f> vectorMap = new HashMap<>();
     private Map<String, Float> floatMap = new HashMap<>();
 
-    // private Texture texture;
-    // private Vector3f color;
-    // private float specularIntensity, specularExponent; // how much does it reflects light - tiny or wide ?
-
-    /*public Material( Texture texture )
-    {
-        this( texture, new Vector3f( 1, 1, 1 ) );
-    }
-
-    public Material( Texture texture, Vector3f color )
-    {
-        this( texture, color, 2, 32 );
-    }
-
-    public Material( Texture texture, Vector3f color, float specularIntensity, float specularExponent )
-    {
-        this.texture = texture;
-        this.color = color;
-        this.specularIntensity = specularIntensity;
-        this.specularExponent = specularExponent;
-    }*/
-
-    public Material()
-    {
-
-    }
-
     public void addTexture( String name, Texture texture )
     {
         textureMap.put( name, texture );
@@ -45,7 +18,9 @@ public class Material
 
     public Texture getTexture( String name )
     {
-        return textureMap.get( name );
+        if ( textureMap.containsKey( name ) )
+            return textureMap.get( name );
+        return new Texture( "test.png" );
     }
 
     public void addVector3f( String name, Vector3f vector )
@@ -55,7 +30,9 @@ public class Material
 
     public Vector3f getVector3f( String name )
     {
-        return vectorMap.get( name );
+        if ( vectorMap.containsKey( name ) )
+            return vectorMap.get( name );
+        return Vector3f.ZERO;
     }
 
     public void addFloat( String name, float value )
@@ -65,6 +42,8 @@ public class Material
 
     public float getFloat( String name )
     {
-        return floatMap.get( name );
+        if ( floatMap.containsKey( name ) )
+            return floatMap.get( name );
+        return 0;
     }
 }

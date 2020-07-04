@@ -81,13 +81,13 @@ public class TestGame extends Game
         Material material = new Material();
         material.addTexture( "diffuse", new Texture( "test.png" ) );
         material.addFloat( "specularIntensity", 1 );
-        material.addFloat( "specularExponent", 8 );
+        material.addFloat( "specularExponent", 2 );
 
         GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
         plane2 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
         GameObject plane3 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
         GameObject plane4 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
-        plane2.getTransform().translate( new Vector3f( 8, 4, 8 ) ).rotate( new Vector3f( 0, 1, 0 ), -30 ).scale( 0.5f );
+        plane2.getTransform().translate( new Vector3f( 8, 4, 8 ) ).scale( 0.5f );
         plane3.getTransform().translate( new Vector3f( 0, 3, 0 ) ).scale( 0.5f );
         plane4.getTransform().translate( new Vector3f( 0, 6, 0 ) ).scale( 0.5f );
         plane3.addChild( plane4 );
@@ -105,9 +105,9 @@ public class TestGame extends Game
         PointLight pointLight = new PointLight(
                 new Vector3f( 0.4f, 2,  0.4f ),
                 0.5f,
-                new Attenuation( 1, 0, 0.2f ) );
+                new Attenuation( 1, 0, 0.1f ) );
         pointLightObject.addComponent( pointLight );
-        pointLightObject.getTransform().translate( new Vector3f( 2, 0.2f, 3 ) );
+        pointLightObject.getTransform().translate( new Vector3f( 1, 0.2f, 2 ) );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
@@ -139,7 +139,7 @@ public class TestGame extends Game
         // Hide Mouse
         // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
-        plane4.addChild( cameraObject );
+        addObject( cameraObject );
         cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
         addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject );
 

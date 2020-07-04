@@ -51,10 +51,7 @@ public class RenderingEngine
 
         clearScreen();
 
-        Shader forwardAmbient = ForwardAmbient.getInstance();
-        forwardAmbient.setRenderingEngine( this );
-
-        object.render( forwardAmbient, this );
+        object.render( ForwardAmbient.getInstance(), this );
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE );
