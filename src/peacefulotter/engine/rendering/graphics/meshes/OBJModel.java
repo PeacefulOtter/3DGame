@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OBJModel
 {
@@ -94,9 +96,13 @@ public class OBJModel
     public IndexedModel toIndexedModel()
     {
         IndexedModel model = new IndexedModel();
-        int[] i = { 0 };
-        
-        indices.forEach( ( index ) -> {
+        Map<Integer, Integer> indexMap = new HashMap<>();
+        int currentVertexIndex = 0;
+
+        for (int i = 0; i < indices.size(); i++)
+        {
+            OBJIndex index = indices.get( i );
+
             Vector3f pos = positions.get( index.vertexIndex );
             Vector2f texCoord = Vector2f.ZERO;
             Vector3f normal = Vector3f.ZERO;
@@ -106,11 +112,30 @@ public class OBJModel
             if ( hasNormals )
                 normal = normals.get( index.normalIndex );
 
-            model.getPositions().add( pos );
-            model.getTexCoords().add( texCoord );
-            model.getNormals().add( normal );
-            model.getIndices().add( i[0]++ );
-        } );
+            int previousVertexIndex = -1;
+            for ( int j = 0; j < i; j++ )
+            {
+                OBJIndex oldIndex = indices.get( j );
+                if (
+                        index.vertexIndex == oldIndex.vertexIndex &&
+                        index.texCoordIndex == oldIndex.texCoordIndex &&
+                        index.normalIndex == oldIndex.normalIndex )
+                {
+                    previousVertexIndex = j;
+                    model.getIndices().add( indexMap.get( j ) );
+                    break;
+                }
+            }
+
+            if ( previousVertexIndex == -1 )
+            {
+                indexMap.put( i, currentVertexIndex );
+                model.getPositions().add( pos );
+                model.getTexCoords().add( texCoord );
+                model.getNormals().add( normal );
+                model.getIndices().add( currentVertexIndex++ );
+            }
+        }
 
         return model;
     }
