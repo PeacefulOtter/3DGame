@@ -23,7 +23,12 @@ public abstract class GameComponent implements Initializable, Updatable, Rendera
 
     public void setParent( GameObject parent ) { this.parent = parent; }
 
-    public STransform getTransform() { return parent.getTransform(); }
+    public STransform getTransform()
+    {
+        if ( parent == null )
+            throw new NullPointerException( "GameComponents must be added to a GameObject before getting its Transformation" );
+        return parent.getTransform();
+    }
 
     public void addToEngine( CoreEngine engine ) { }
 

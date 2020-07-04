@@ -12,12 +12,6 @@ public class Vector2f
         this.y = y;
     }
 
-    public float getX() { return x; }
-    public float getY() { return y; }
-
-    public void setX( float newX ) { x = newX; }
-    public void setY( float newY ) { y = newY; }
-
     public float length()
     {
         return (float) Math.sqrt( x*x + y*y );
@@ -94,6 +88,15 @@ public class Vector2f
     {
         return x * other.getY() - y * other.getX();
     }
+
+    public float getX() { return x; }
+    public float getY() { return y; }
+
+    public void setX( float newX ) { x = newX; }
+    public void setY( float newY ) { y = newY; }
+
+    public void set( float x, float y ) { setX( x ); setY( y ); }
+    public void set( Vector2f vector ) { set( vector.getX(), vector.getY() ); }
 
     @Override
     public boolean equals( Object other )

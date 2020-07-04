@@ -31,7 +31,6 @@ public class GameObject implements Initializable, Updatable, Renderable
     public GameObject addChild( GameObject child )
     {
         children.add( child );
-        child.setEngine( engine );
         child.getTransform().setParent( transform );
 
         return this;
@@ -48,6 +47,8 @@ public class GameObject implements Initializable, Updatable, Renderable
 
     public void update( float deltaTime )
     {
+        transform.update( deltaTime );
+
         for ( GameComponent component: components )
             component.update( deltaTime );
 

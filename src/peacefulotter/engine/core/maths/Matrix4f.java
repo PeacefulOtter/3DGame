@@ -130,6 +130,15 @@ public class Matrix4f
         return this;
     }
 
+    public Vector3f transform( Vector3f vector )
+    {
+        float vX = vector.getX(); float vY = vector.getY(); float vZ = vector.getZ();
+        return new Vector3f(
+                getAt( 0, 0 ) * vX + getAt( 0, 1 ) * vY + getAt( 0, 2 ) + vZ + getAt( 0, 3 ),
+                getAt( 1, 0 ) * vX + getAt( 1, 1 ) * vY + getAt( 1, 2 ) + vZ + getAt( 1, 3 ),
+                getAt( 2, 0 ) * vX + getAt( 2, 1 ) * vY + getAt( 2, 2 ) + vZ + getAt( 2, 3 ) );
+    }
+
     public float[][] getM()
     {
         float[][] res = new float[ 4 ][ 4 ];

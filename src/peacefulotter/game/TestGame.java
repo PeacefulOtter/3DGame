@@ -57,6 +57,8 @@ public class TestGame extends Game
         super( winName, winWidth, winHeight );
     }
 
+    GameObject plane2;
+
     public void init()
     {
         float fieldWidth = 10.0f;
@@ -77,25 +79,31 @@ public class TestGame extends Game
                 1,
                 8 );
 
-        GameObject plane = new GameObject();
-        MeshRenderer meshRenderer = new MeshRenderer( mesh, material );
-        plane.addComponent( meshRenderer );
-        plane.getTransform().setTranslation( new Vector3f( 0, -1, 5 ) );
+        GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        plane2 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        GameObject plane3 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        GameObject plane4 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        plane2.getTransform().translate( new Vector3f( 8, 4, 8 ) ).rotate( new Vector3f( 0, 1, 0 ), -30 ).scale( 0.5f );
+        plane3.getTransform().translate( new Vector3f( 0, 3, 0 ) ).scale( 0.5f );
+        plane4.getTransform().translate( new Vector3f( 0, 6, 0 ) ).scale( 0.5f );
+        plane3.addChild( plane4 );
+        plane2.addChild( plane3 );
 
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
                 new Vector3f( 0.6f, 0.3f,  0.6f ),
-                0.5f,
-                new Vector3f( 1, 1, 1 ) );
+                0.5f );
         dirLightObject.addComponent( dirLight );
+        dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
+
 
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(
                 new Vector3f( 0.4f, 2,  0.4f ),
                 0.5f,
                 new Attenuation( 1, 0, 0.2f ) );
-        pointLightObject.getTransform().translate( new Vector3f( 2, 1, 3 ) );
         pointLightObject.addComponent( pointLight );
+        pointLightObject.getTransform().translate( new Vector3f( 2, 0.2f, 3 ) );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
@@ -127,9 +135,20 @@ public class TestGame extends Game
         // Hide Mouse
         // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
-
-        addObjects( plane, dirLightObject, pointLightObject, spotLightObject, cameraObject );
+        plane4.addChild( cameraObject );
+        cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
+        addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject );
 
         super.init();
+    }
+
+    float t = 0;
+
+    public void update( float deltaTime )
+    {
+        t += deltaTime * 5;
+        plane2.getTransform().setTranslation( new Vector3f( (float)Math.sin(t)*2, 4, 8 ) );
+
+        super.update( deltaTime );
     }
 }

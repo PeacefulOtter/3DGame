@@ -46,7 +46,7 @@ public class ForwardDirectional extends Shader
         setUniformMatrix( "MVP", projectedMatrix );
         setUniformF( "specularIntensity", material.getSpecularIntensity() );
         setUniformF( "specularExponent", material.getSpecularExponent() );
-        setUniformVector( "eyePos", camera.getPosition() );
+        setUniformVector( "eyePos", camera.getTransform().getTransformedTranslation() );
         setUniformDirLight( "dirLight", (DirectionalLight) renderingEngine.getActiveLight());
     }
 

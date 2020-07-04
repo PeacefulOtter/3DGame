@@ -13,7 +13,7 @@ public class SRotation
         return rotation;
     }
 
-    public void setRotation( Quaternion rotation ) { this.rotation = rotation; }
+    public void setRotation( Quaternion rotation ) { this.rotation = rotation.normalize(); }
 
     public Matrix4f getRotationMatrix()
     {

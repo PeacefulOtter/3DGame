@@ -3,21 +3,38 @@ package peacefulotter.engine.rendering.shaders.transfomations;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.elementary.Updatable;
 
-public class STransform
+public class STransform implements Updatable
 {
     private final STranslation translation = new STranslation();
     private final SRotation rotation = new SRotation();
     private final SScale scale = new SScale();
 
     private STransform parent;
+    private Matrix4f parentTranslation = new Matrix4f().initIdentity();
+    private Quaternion parentRotation = new Quaternion( 0, 0, 0, 1 );
+
+    private boolean hasChanged, hasChangedBis;
+
 
     public Matrix4f getTransformationMatrix()
     {
-        return translation.getTranslationMatrix().mul(
-                rotation.getRotationMatrix().mul(
-                        scale.getScaleMatrix()
-                ) );
+        return parentTranslation.mul(
+                translation.getTranslationMatrix().mul(
+                    rotation.getRotationMatrix().mul(
+                        scale.getScaleMatrix() ) ) );
+    }
+
+
+    public Vector3f getTransformedTranslation()
+    {
+        return parentTranslation.transform( getTranslation() );
+    }
+
+    public Quaternion getTransformedRotation()
+    {
+        return parentRotation.mul( getRotation() );
     }
 
     public Vector3f getTranslation() { return translation.getTranslationVector(); }
@@ -29,32 +46,69 @@ public class STransform
     public STransform setTranslation( Vector3f vector )
     {
         translation.setTranslation( vector );
+        hasChanged = true;
         return this;
     }
 
     public STransform setRotation( Quaternion quaternion )
     {
         rotation.setRotation( quaternion );
+        hasChanged = true;
         return this;
     }
 
     public STransform setScale( Vector3f vector )
     {
         scale.setScale( vector );
+        hasChanged = true;
         return this;
     }
 
     public STransform translate( Vector3f vector )
     {
         translation.translate( vector );
+        hasChanged = true;
         return this;
     }
 
     public STransform rotate( Vector3f axis, float angleDeg )
     {
         rotation.rotate( axis, angleDeg );
+        hasChanged = true;
+        return this;
+    }
+
+    public STransform scale( float percentage ) { return scale( percentage, percentage, percentage ); }
+
+    public STransform scale( float scaleX, float scaleY, float scaleZ )
+    {
+        scale.setScale( new Vector3f( scaleX, scaleY, scaleZ ) );
+        hasChanged = true;
         return this;
     }
 
     public void setParent( STransform parent ) { this.parent = parent; }
+
+    @Override
+    public void update( float deltaTime )
+    {
+        if ( hasChanged )
+        {
+            if ( hasChangedBis )
+            {
+                hasChanged = false;
+                hasChangedBis = false;
+            }
+            else
+            {
+                hasChangedBis = true;
+            }
+        }
+        if ( parent != null && parent.hasChanged )
+        {
+            hasChanged = true;
+            parentTranslation = parent.getTransformationMatrix();
+            parentRotation = parent.getTransformedRotation();
+        }
+    }
 }

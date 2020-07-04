@@ -89,4 +89,16 @@ public class Quaternion
 
     public float getW() { return w; }
     public void setW( float w ) { this.w = w; }
+
+    public void set( float x, float y, float z, float w ) { setX( x ); setY( y ); setZ( z ); setW( w ); }
+    public void set( Quaternion q ) { set( q.x, q.y, q.z, q.w ); }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if ( !( obj instanceof Quaternion ) )
+            return false;
+        Quaternion quat = (Quaternion)obj;
+        return quat.x == x && quat.y == y && quat.z == z && quat.w == w;
+    }
 }
