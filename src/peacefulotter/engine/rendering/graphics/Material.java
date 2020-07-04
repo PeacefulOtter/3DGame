@@ -7,9 +7,16 @@ import java.util.Map;
 
 public class Material
 {
-    private Map<String, Texture> textureMap = new HashMap<>();
-    private Map<String, Vector3f> vectorMap = new HashMap<>();
-    private Map<String, Float> floatMap = new HashMap<>();
+    private final Map<String, Texture>  textureMap;
+    private final Map<String, Vector3f> vectorMap;
+    private final Map<String, Float>    floatMap;
+
+    public Material()
+    {
+        textureMap = new HashMap<>();
+        vectorMap = new HashMap<>();
+        floatMap = new HashMap<>();
+    }
 
     public void addTexture( String name, Texture texture )
     {

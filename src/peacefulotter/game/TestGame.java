@@ -84,9 +84,12 @@ public class TestGame extends Game
         material.addFloat( "specularIntensity", 1 );
         material.addFloat( "specularExponent", 2 );
 
-
-        Mesh temp = new ResourceLoader().loadMesh( "alien.obj", false );
-        GameObject alienObject = new GameObject().addComponent( new MeshRenderer( temp, material ) );
+        // Material alienMaterial = new Material();
+        // alienMaterial.addTexture( "diffuse", new Texture( "apple.png" ) );
+        // alienMaterial.addFloat( "specularIntensity", 1 );
+        // alienMaterial.addFloat( "specularExponent", 2 );
+        GameObject alienObject = new GameObject().addComponent(
+                new MeshRenderer(  new Mesh( "alien.obj" ), material ) );
         addObject( alienObject );
 
 
@@ -148,7 +151,7 @@ public class TestGame extends Game
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
         addObject( cameraObject );
         cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
-        addObjects( plane1, dirLightObject, pointLightObject, spotLightObject );
+        addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject );
 
         super.init();
     }

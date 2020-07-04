@@ -1,6 +1,7 @@
 package peacefulotter.game;
 
 import peacefulotter.engine.core.Game;
+import peacefulotter.engine.elementary.Disposable;
 
 public class Main
 {
@@ -12,6 +13,7 @@ public class Main
     {
         // System.out.println(glGetString(GL_VERSION));
         new TestGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
+        // Runtime.getRuntime().addShutdownHook( new Disposable().createDisposeThread() );
     }
 
 }

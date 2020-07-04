@@ -1,8 +1,6 @@
 package peacefulotter.engine.utils;
 
-import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.Vertex;
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
 
@@ -43,12 +41,7 @@ public class ResourceLoader
         return sj.toString();
     }
 
-    public static void indicesAddAt( List<Integer> indices, int index, String[] split )
-    {
-        indices.add( Integer.parseInt( split[ index ].split( "/" )[ 0 ] ) - 1 );
-    }
-
-    public Mesh loadMesh( String fileName, boolean calcNormals )
+    public Object[] loadMesh( String fileName )
     {
         String[] splitArray = fileName.split( "\\." );
         String extension = splitArray[ splitArray.length - 1 ];
@@ -74,54 +67,10 @@ public class ResourceLoader
                     indexedModel.getNormals().get( i ) ) );
         }
 
-        return new Mesh(
+        return new Object[] {
                 Arrays.copyOf( vertices.toArray(), vertices.size(), Vertex[].class ),
                 Util.toIntArray( indexedModel.getIndices() ),
-                calcNormals
-        );
-
-
-        /*try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MODELS_PATH + fileName ) ) ) )
-        {
-            String line;
-            while ( ( line = reader.readLine() ) != null )
-            {
-                String[] split = line.split( " " );
-                split = Util.removeEmptyStrings( split );
-
-                if ( split[ 0 ].equals( "v" ) )
-                {
-                    vertices.add( new Vertex( new Vector3f(
-                            Float.parseFloat( split[ 1 ] ),
-                            Float.parseFloat( split[ 2 ] ),
-                            Float.parseFloat( split[ 3 ] ) ) ) );
-                }
-                else if ( split[ 0 ].equals( "f" ) )
-                {
-                    for ( int i = 1; i <= 3; i++ )
-                    {
-                        indicesAddAt( indices, i, split );
-                    }
-                    if ( split.length > 4 )
-                    {
-                        indicesAddAt( indices, 1, split );
-                        indicesAddAt( indices, 3, split );
-                        indicesAddAt( indices, 4, split );
-                    }
-                }
-            }
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-            System.exit( 1 );
-        }
-
-        return new Mesh(
-                Arrays.copyOf( vertices.toArray(), vertices.size(), Vertex[].class ),
-                Util.toIntArray( indices ),
-                calcNormals
-        );*/
+                true };
     }
 
     public int loadTexture( String fileName )
@@ -137,7 +86,7 @@ public class ResourceLoader
 
             id = glGenTextures();
 
-            glBindTexture( GL_TEXTURE_2D, id );
+            // glBindTexture( GL_TEXTURE_2D, id );
             glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, decoder.getWidth(), decoder.getHeight(), 0,
                     GL_RGB, GL_UNSIGNED_BYTE, buffer );
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );

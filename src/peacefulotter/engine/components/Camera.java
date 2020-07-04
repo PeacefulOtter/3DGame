@@ -48,6 +48,8 @@ public class Camera extends GameComponent
         Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(),   deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward(), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(),   deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_SPACE,         ( deltaTime ) -> move( getUp(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL,  ( deltaTime ) -> move( getDown(), deltaTime ) );
 
         Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
         Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * rotationSensitivity ) );
@@ -88,6 +90,8 @@ public class Camera extends GameComponent
 
     public Vector3f getForward()  { return getTransform().getRotation().getForward(); }
     public Vector3f getBackward() { return getTransform().getRotation().getBack(); }
+    public Vector3f getUp()       { return getTransform().getRotation().getUp(); }
+    public Vector3f getDown()     { return getTransform().getRotation().getDown(); }
     public Vector3f getRight()    { return getTransform().getRotation().getRight(); }
     public Vector3f getLeft()     { return getTransform().getRotation().getLeft(); }
 
