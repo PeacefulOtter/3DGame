@@ -84,12 +84,12 @@ public class TestGame extends Game
         material.addFloat( "specularIntensity", 1 );
         material.addFloat( "specularExponent", 2 );
 
-        // Material alienMaterial = new Material();
-        // alienMaterial.addTexture( "diffuse", new Texture( "apple.png" ) );
-        // alienMaterial.addFloat( "specularIntensity", 1 );
-        // alienMaterial.addFloat( "specularExponent", 2 );
+        Material alienMaterial = new Material();
+        alienMaterial.addTexture( "diffuse", new Texture( "apple.png" ) );
+        alienMaterial.addFloat( "specularIntensity", 1 );
+        alienMaterial.addFloat( "specularExponent", 2 );
         GameObject alienObject = new GameObject().addComponent(
-                new MeshRenderer(  new Mesh( "alien.obj" ), material ) );
+                new MeshRenderer(  new Mesh( "alien.obj" ), alienMaterial ) );
         addObject( alienObject );
 
 

@@ -1,12 +1,17 @@
 package peacefulotter.engine.utils;
 
+import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.rendering.graphics.Vertex;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -77,20 +82,42 @@ public class ResourceLoader
     {
         int id = 0;
 
-        try ( InputStream in = resourceStream( TEXTURES_PATH + fileName ) ) {
-            PNGDecoder decoder = new PNGDecoder( in );
-            // assuming RGB here but should allow for RGB and RGBA (changing wall.png to RGBA will crash this!)
-            ByteBuffer buffer = ByteBuffer.allocateDirect( 3 * decoder.getWidth() * decoder.getHeight() );
-            decoder.decode( buffer, decoder.getWidth() * 3, PNGDecoder.Format.RGB );
+        try
+        {
+            BufferedImage image = ImageIO.read( resourceStream( TEXTURES_PATH + fileName ) );
+
+            int imageWidth = image.getWidth(); int imageHeight = image.getHeight();
+            int[] pixels = image.getRGB( 0, 0, imageWidth, imageHeight, null, 0, imageWidth );
+
+            ByteBuffer buffer = BufferUtil.createByteBuffer( imageWidth * imageHeight * 4 );
+
+            for ( int y = 0; y < imageHeight; y++ )
+            {
+                for ( int x = 0; x < imageWidth; x++ )
+                {
+                    int pixel = pixels[ y * imageWidth + x ];
+                    buffer.put( (byte) ( ( pixel >> 16 ) & 0xff ) );
+                    buffer.put( (byte) ( ( pixel >> 8 )  & 0xff ) );
+                    buffer.put( (byte) ( ( pixel )       & 0xff ) );
+                    if ( image.getColorModel().hasAlpha() )
+                        buffer.put( (byte) ( ( pixel >> 24 ) & 0xff ) );
+                    else
+                        buffer.put( (byte) 0xff );
+                }
+            }
+
             buffer.flip();
 
             id = glGenTextures();
+            glBindTexture( GL_TEXTURE_2D, id );
 
-            // glBindTexture( GL_TEXTURE_2D, id );
-            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB, decoder.getWidth(), decoder.getHeight(), 0,
-                    GL_RGB, GL_UNSIGNED_BYTE, buffer );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
+
+            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+
+            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
         }
         catch( IOException e )
         {

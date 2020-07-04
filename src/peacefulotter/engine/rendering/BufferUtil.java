@@ -5,6 +5,7 @@ import peacefulotter.engine.rendering.graphics.Vertex;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -73,4 +74,11 @@ public class BufferUtil
         buffer.flip();
         return buffer;
     }
+
+
+
+    /*
+                BYTE BUFFER
+     */
+    public static ByteBuffer createByteBuffer( int size ) { return BufferUtils.createByteBuffer( size ); }
 }
