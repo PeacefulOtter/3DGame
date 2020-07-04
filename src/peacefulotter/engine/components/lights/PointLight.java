@@ -22,7 +22,7 @@ public class PointLight extends BaseLight
         float a = attenuation.getExponent();
         float b = attenuation.getLinear();
         float c = attenuation.getConstant();
-        range = 20;
+        range = 100;
         /*if ( a != 0 )
             range = (float) ( ( -b + Math.sqrt( b * b - 4 * a * c ) ) / ( 2 * a ) );
         else

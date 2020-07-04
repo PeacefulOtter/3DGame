@@ -3,6 +3,8 @@ package peacefulotter.engine.utils;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.Vertex;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
+import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
 
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -41,7 +43,7 @@ public class ResourceLoader
         return sj.toString();
     }
 
-    private void indicesAddAt( List<Integer> indices, int index, String[] split )
+    public static void indicesAddAt( List<Integer> indices, int index, String[] split )
     {
         indices.add( Integer.parseInt( split[ index ].split( "/" )[ 0 ] ) - 1 );
     }
@@ -58,10 +60,28 @@ public class ResourceLoader
             System.exit( 1 );
         }
 
+        OBJModel objModel = new OBJModel( MODELS_PATH + fileName );
+        IndexedModel indexedModel = objModel.toIndexedModel();
+        indexedModel.calcNormals();
+        int modelSize = indexedModel.getPositions().size();
+        
         List<Vertex> vertices = new ArrayList<>();
-        List<Integer> indices = new ArrayList<>();
+        for ( int i = 0; i < modelSize; i++ )
+        {
+            vertices.add( new Vertex(
+                    indexedModel.getPositions().get( i ),
+                    indexedModel.getTexCoords().get( i ),
+                    indexedModel.getNormals().get( i ) ) );
+        }
 
-        try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MODELS_PATH + fileName ) ) ) )
+        return new Mesh(
+                Arrays.copyOf( vertices.toArray(), vertices.size(), Vertex[].class ),
+                Util.toIntArray( indexedModel.getIndices() ),
+                calcNormals
+        );
+
+
+        /*try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MODELS_PATH + fileName ) ) ) )
         {
             String line;
             while ( ( line = reader.readLine() ) != null )
@@ -101,7 +121,7 @@ public class ResourceLoader
                 Arrays.copyOf( vertices.toArray(), vertices.size(), Vertex[].class ),
                 Util.toIntArray( indices ),
                 calcNormals
-        );
+        );*/
     }
 
     public int loadTexture( String fileName )

@@ -12,6 +12,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
+import peacefulotter.engine.utils.ResourceLoader;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
@@ -83,6 +84,12 @@ public class TestGame extends Game
         material.addFloat( "specularIntensity", 1 );
         material.addFloat( "specularExponent", 2 );
 
+
+        Mesh temp = new ResourceLoader().loadMesh( "alien.obj", false );
+        GameObject alienObject = new GameObject().addComponent( new MeshRenderer( temp, material ) );
+        addObject( alienObject );
+
+
         GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
         plane2 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
         GameObject plane3 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
@@ -104,22 +111,21 @@ public class TestGame extends Game
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(
                 new Vector3f( 0.4f, 2,  0.4f ),
-                0.5f,
-                new Attenuation( 1, 0, 0.1f ) );
+                1f,
+                new Attenuation( 1, 0, 0.01f ) );
         pointLightObject.addComponent( pointLight );
-        pointLightObject.getTransform().translate( new Vector3f( 1, 0.2f, 2 ) );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
                 new Vector3f( 1f, 0,  0f ),
                 1f,
-                new Attenuation( 0, 0f, 0.01f ),
+                new Attenuation( 1, 0f, 0 ),
                 0.7f
         );
         spotLightObject.getTransform()
-                .rotate( new Vector3f( 0, 1, 0 ), 90 )
-                .rotate( new Vector3f( 1, 0, 0 ), 20 )
-                .translate( new Vector3f( 5, 0.2f, 1 ) );
+                .rotate( new Vector3f( 0, 1, 0 ), -90 )
+                .rotate( new Vector3f( 1, 0, 0 ), 40 )
+                .translate( new Vector3f( 30, 10f, 1 ) );
         spotLightObject.addComponent( spotLight );
 
         GameObject cameraObject = new GameObject();
@@ -141,7 +147,7 @@ public class TestGame extends Game
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
         addObject( cameraObject );
         cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
-        addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject );
+        addObjects( plane1, dirLightObject, pointLightObject, spotLightObject );
 
         super.init();
     }
