@@ -2,13 +2,20 @@ package peacefulotter.engine.rendering.graphics;
 
 import peacefulotter.engine.core.maths.Vector3f;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Material
 {
-    private Texture texture;
-    private Vector3f color;
-    private float specularIntensity, specularExponent; // how much does it reflects light - tiny or wide ?
+    private Map<String, Texture> textureMap = new HashMap<>();
+    private Map<String, Vector3f> vectorMap = new HashMap<>();
+    private Map<String, Float> floatMap = new HashMap<>();
 
-    public Material( Texture texture )
+    // private Texture texture;
+    // private Vector3f color;
+    // private float specularIntensity, specularExponent; // how much does it reflects light - tiny or wide ?
+
+    /*public Material( Texture texture )
     {
         this( texture, new Vector3f( 1, 1, 1 ) );
     }
@@ -24,17 +31,40 @@ public class Material
         this.color = color;
         this.specularIntensity = specularIntensity;
         this.specularExponent = specularExponent;
+    }*/
+
+    public Material()
+    {
+
     }
 
-    public Texture getTexture() { return texture; }
-    public void setTexture( Texture texture ) { this.texture = texture; }
+    public void addTexture( String name, Texture texture )
+    {
+        textureMap.put( name, texture );
+    }
 
-    public Vector3f getColor() { return color; }
-    public void setColor( Vector3f color ) { this.color = color; }
+    public Texture getTexture( String name )
+    {
+        return textureMap.get( name );
+    }
 
-    public float getSpecularIntensity() { return specularIntensity; }
-    public void setSpecularIntensity( float specularIntensity ) { this.specularIntensity = specularIntensity; }
+    public void addVector3f( String name, Vector3f vector )
+    {
+        vectorMap.put( name, vector );
+    }
 
-    public float getSpecularExponent() { return specularExponent; }
-    public void setSpecularExponent( float specularExponent ) { this.specularExponent = specularExponent; }
+    public Vector3f getVector3f( String name )
+    {
+        return vectorMap.get( name );
+    }
+
+    public void addFloat( String name, float value )
+    {
+        floatMap.put( name, value );
+    }
+
+    public float getFloat( String name )
+    {
+        return floatMap.get( name );
+    }
 }

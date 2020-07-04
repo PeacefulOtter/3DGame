@@ -27,7 +27,7 @@ public class ForwardAmbient extends Shader
 
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
     {
-        material.getTexture().bind();
+        material.getTexture( "diffuse" ).bind();
 
         Camera camera = renderingEngine.getCamera();
         Matrix4f worldMatrix = transform.getTransformationMatrix();

@@ -36,7 +36,7 @@ public class ForwardDirectional extends Shader
 
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
     {
-        material.getTexture().bind();
+        material.getTexture( "diffuse" ).bind();
 
         Camera camera = renderingEngine.getCamera();
         Matrix4f worldMatrix = transform.getTransformationMatrix();
@@ -44,8 +44,8 @@ public class ForwardDirectional extends Shader
 
         setUniformMatrix( "model", worldMatrix );
         setUniformMatrix( "MVP", projectedMatrix );
-        setUniformF( "specularIntensity", material.getSpecularIntensity() );
-        setUniformF( "specularExponent", material.getSpecularExponent() );
+        setUniformF( "specularIntensity", material.getFloat( "specularIntensity" ) );
+        setUniformF( "specularExponent", material.getFloat( "specularExponent" ) );
         setUniformVector( "eyePos", camera.getTransform().getTransformedTranslation() );
         setUniformDirLight( "dirLight", (DirectionalLight) renderingEngine.getActiveLight());
     }

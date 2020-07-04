@@ -73,11 +73,15 @@ public class TestGame extends Game
         int[] indices = new int[] { 0, 1, 2, 2, 1, 3 };
 
         Mesh mesh = new Mesh( vertices, indices, true ); // new ResourceLoader().loadMesh( "cube.obj", true );
-        Material material = new Material(
+        /*Material material = new Material(
                 new Texture( "test.png" ),
                 new Vector3f( 1, 1, 1 ),
                 1,
-                8 );
+                8 );*/
+        Material material = new Material();
+        material.addTexture( "diffuse", new Texture( "test.png" ) );
+        material.addFloat( "specularIntensity", 1 );
+        material.addFloat( "specularExponent", 8 );
 
         GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
         plane2 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
