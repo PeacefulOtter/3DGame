@@ -42,7 +42,7 @@ public class Camera extends GameComponent
     }
 
     @Override
-    public void init()
+    public void initAll()
     {
         Input.addKeyCallback( GLFW_KEY_W, ( deltaTime ) -> move( getForward(), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(),   deltaTime ) );
@@ -58,7 +58,7 @@ public class Camera extends GameComponent
     }
 
     @Override
-    public void update( float deltaTime )
+    public void updateAll(float deltaTime )
     {
         // spotLight.getPointLight().setPosition( position );
         // spotLight.setDirection( forward );

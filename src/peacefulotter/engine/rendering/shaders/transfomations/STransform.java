@@ -90,7 +90,7 @@ public class STransform implements Updatable
     public void setParent( STransform parent ) { this.parent = parent; }
 
     @Override
-    public void update( float deltaTime )
+    public void updateAll(float deltaTime )
     {
         if ( hasChanged )
         {
@@ -110,5 +110,15 @@ public class STransform implements Updatable
             parentTranslation = parent.getTransformationMatrix();
             parentRotation = parent.getTransformedRotation();
         }
+    }
+
+    public void lookAt( Vector3f point, Vector3f up )
+    {
+        setRotation( getLookAtDirection( point, up ) );
+    }
+
+    public Quaternion getLookAtDirection( Vector3f point, Vector3f up )
+    {
+        return new Quaternion( new Matrix4f().initRotation( point.sub( getTranslation() ).normalize(), up ) );
     }
 }

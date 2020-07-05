@@ -2,7 +2,6 @@ package peacefulotter.engine.core;
 
 
 import org.lwjgl.opengl.GL;
-import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.utils.IO.Input;
 import peacefulotter.engine.utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
@@ -95,7 +94,7 @@ public class CoreEngine
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-                game.update( (float) FRAME_TIME );
+                game.updateAll( (float) FRAME_TIME );
                 Input.execInputs( (float) FRAME_TIME );
             }
 

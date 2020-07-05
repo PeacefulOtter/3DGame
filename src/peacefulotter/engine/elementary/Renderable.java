@@ -6,5 +6,5 @@ import peacefulotter.engine.rendering.shaders.Shader;
 
 public interface Renderable
 {
-    void render(Shader shader, RenderingEngine renderingEngine );
+    void render( Shader shader, RenderingEngine renderingEngine );
 }

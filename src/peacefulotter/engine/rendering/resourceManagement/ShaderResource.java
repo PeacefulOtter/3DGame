@@ -173,8 +173,7 @@ public class ShaderResource extends Disposable
 
             startLocation = shaderText.indexOf( STRUCT_TAG, startLocation + STRUCT_TAG_LENGTH );
         }
-        System.out.println("ShaderResource around line 190 says :");
-        System.out.println(structMap);
+
         return structMap;
     }
 

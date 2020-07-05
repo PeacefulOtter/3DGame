@@ -1,7 +1,6 @@
 package peacefulotter.game;
 
 import peacefulotter.engine.components.*;
-import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
 import peacefulotter.engine.components.lights.SpotLight;
@@ -12,10 +11,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
-import peacefulotter.engine.utils.ResourceLoader;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
 
@@ -179,11 +175,11 @@ public class TestGame extends Game
 
     float t = 0;
 
-    public void update( float deltaTime )
+    public void updateAll(float deltaTime )
     {
         t += deltaTime * 5;
         plane2.getTransform().setTranslation( new Vector3f( (float)Math.sin(t)*2 - 30, 4, 8 ) );
 
-        super.update( deltaTime );
+        super.updateAll( deltaTime );
     }
 }

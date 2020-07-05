@@ -8,7 +8,9 @@ import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class GameObject implements Initializable, Updatable, Renderable
@@ -40,9 +42,6 @@ public class GameObject implements Initializable, Updatable, Renderable
     {
         for ( GameComponent component: components )
             component.init();
-
-        for ( GameObject child: children )
-            child.init();
     }
 
     public void update( float deltaTime )
@@ -51,18 +50,44 @@ public class GameObject implements Initializable, Updatable, Renderable
 
         for ( GameComponent component: components )
             component.update( deltaTime );
-
-        for ( GameObject child: children )
-            child.update( deltaTime );
     }
 
     public void render( Shader shader, RenderingEngine renderingEngine )
     {
         for ( GameComponent component: components )
             component.render( shader, renderingEngine );
+    }
+
+    public void initAll()
+    {
+        init();
 
         for ( GameObject child: children )
-            child.render( shader, renderingEngine );
+            child.initAll();
+    }
+
+    public void updateAll(float deltaTime )
+    {
+        update( deltaTime );
+
+        for ( GameObject child: children )
+            child.updateAll( deltaTime );
+    }
+
+    public void renderAll( Shader shader, RenderingEngine renderingEngine )
+    {
+        render( shader, renderingEngine );
+
+        for ( GameObject child: children )
+            child.renderAll( shader, renderingEngine );
+    }
+
+    public List<GameObject> getAttachedObjects()
+    {
+        List<GameObject> objects = new ArrayList<>();
+        objects.add( this );
+        children.forEach( ( object ) -> objects.addAll( object.getAttachedObjects() ) );
+        return objects;
     }
 
     public STransform getTransform() { return transform; }

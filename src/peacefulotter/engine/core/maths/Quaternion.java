@@ -23,6 +23,54 @@ public class Quaternion
         this.w = w;
     }
 
+    //From Ken Shoemake's "Quaternion Calculus and Fast Animation" article
+    public Quaternion(Matrix4f rot)
+    {
+        float trace = rot.getAt(0, 0) + rot.getAt(1, 1) + rot.getAt(2, 2);
+
+        if(trace > 0)
+        {
+            float s = 0.5f / (float)Math.sqrt(trace+ 1.0f);
+            w = 0.25f / s;
+            x = (rot.getAt(1, 2) - rot.getAt(2, 1)) * s;
+            y = (rot.getAt(2, 0) - rot.getAt(0, 2)) * s;
+            z = (rot.getAt(0, 1) - rot.getAt(1, 0)) * s;
+        }
+        else
+        {
+            if(rot.getAt(0, 0) > rot.getAt(1, 1) && rot.getAt(0, 0) > rot.getAt(2, 2))
+            {
+                float s = 2.0f * (float)Math.sqrt(1.0f + rot.getAt(0, 0) - rot.getAt(1, 1) - rot.getAt(2, 2));
+                w = (rot.getAt(1, 2) - rot.getAt(2, 1)) / s;
+                x = 0.25f * s;
+                y = (rot.getAt(1, 0) + rot.getAt(0, 1)) / s;
+                z = (rot.getAt(2, 0) + rot.getAt(0, 2)) / s;
+            }
+            else if(rot.getAt(1, 1) > rot.getAt(2, 2))
+            {
+                float s = 2.0f * (float)Math.sqrt(1.0f + rot.getAt(1, 1) - rot.getAt(0, 0) - rot.getAt(2, 2));
+                w = (rot.getAt(2, 0) - rot.getAt(0, 2)) / s;
+                x = (rot.getAt(1, 0) + rot.getAt(0, 1)) / s;
+                y = 0.25f * s;
+                z = (rot.getAt(2, 1) + rot.getAt(1, 2)) / s;
+            }
+            else
+            {
+                float s = 2.0f * (float)Math.sqrt(1.0f + rot.getAt(2, 2) - rot.getAt(0, 0) - rot.getAt(1, 1));
+                w = (rot.getAt(0, 1) - rot.getAt(1, 0) ) / s;
+                x = (rot.getAt(2, 0) + rot.getAt(0, 2) ) / s;
+                y = (rot.getAt(1, 2) + rot.getAt(2, 1) ) / s;
+                z = 0.25f * s;
+            }
+        }
+
+        float length = (float)Math.sqrt(x * x + y * y + z * z + w * w);
+        x /= length;
+        y /= length;
+        z /= length;
+        w /= length;
+    }
+
     public float length()
     {
         return (float) Math.sqrt( x*x + y*y + z*z + w*w );
@@ -37,6 +85,21 @@ public class Quaternion
     public Quaternion conjugate()
     {
         return new Quaternion( -x, -y, -z, w );
+    }
+
+    public Quaternion add( Quaternion other )
+    {
+        return new Quaternion( x + other.getX(), y + other.getY(), z + other.getZ(), w + other.getW() );
+    }
+
+    public Quaternion sub( Quaternion other )
+    {
+        return new Quaternion( x - other.getX(), y - other.getY(), z - other.getZ(), w - other.getW() );
+    }
+
+    public float dot( Quaternion other )
+    {
+        return x * other.getX() + y * other.getY() + z * other.getZ() + w * other.getW();
     }
 
     public Quaternion mul( Quaternion other )
