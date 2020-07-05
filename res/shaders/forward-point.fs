@@ -8,13 +8,13 @@ in vec3 worldPosOut;
 out vec4 fragColor;
 
 
-uniform sampler2D diffuse;
-uniform PointLight pointLight;
+uniform sampler2D R_diffuse;
+uniform PointLight R_pointLight;
 
 
 void main()
 {	
-	fragColor = texture(diffuse, textCoord.xy) * calcPointLight(pointLight, normalize(normalOut), worldPosOut);	
+	fragColor = texture(R_diffuse, textCoord.xy) * calcPointLight(R_pointLight, normalize(normalOut), worldPosOut);	
 }
 
 

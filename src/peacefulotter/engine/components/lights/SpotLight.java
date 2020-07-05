@@ -2,7 +2,7 @@ package peacefulotter.engine.components.lights;
 
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.shaders.Attenuation;
-import peacefulotter.engine.rendering.shaders.ForwardSpot;
+import peacefulotter.engine.rendering.shaders.ShaderTypes;
 
 public class SpotLight extends PointLight
 {
@@ -12,7 +12,7 @@ public class SpotLight extends PointLight
     {
         super( color, intensity, attenuation );
         this.cutoff = cutoff;
-        setShader( ForwardSpot.getInstance() );
+        setShader( ShaderTypes.SPOT.getShader() );
     }
 
     public Vector3f getDirection() { return getTransform().getTransformedRotation().getForward(); }

@@ -8,8 +8,8 @@ in vec3 worldPosOut;
 out vec4 fragColor;
 
 
-uniform sampler2D diffuse;
-uniform DirectionalLight dirLight;
+uniform sampler2D R_diffuse;
+uniform DirectionalLight R_dirLight;
 
 
 
@@ -17,7 +17,7 @@ uniform DirectionalLight dirLight;
 void main()
 {	
 
-	fragColor = texture(diffuse, textCoord.xy) * calclDirectionalLight(dirLight, normalize(normalOut), worldPosOut );	
+	fragColor = texture(R_diffuse, textCoord.xy) * calclDirectionalLight(R_dirLight, normalize(normalOut), worldPosOut );	
 }
 
 

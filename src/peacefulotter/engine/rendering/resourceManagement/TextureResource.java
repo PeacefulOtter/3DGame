@@ -20,5 +20,5 @@ public class TextureResource extends Disposable
         // glDeleteBuffers( id );
     }
 
-    public int getId()  { return id;  }
+    public int getId()  { return id; }
 }

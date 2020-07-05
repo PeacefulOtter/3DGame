@@ -4,10 +4,13 @@ import org.lwjgl.opengl.GL;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.shaders.*;
+import peacefulotter.engine.rendering.shaders.ShaderTypes;
+import peacefulotter.engine.utils.MappedValues;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
@@ -18,18 +21,23 @@ import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
  */
 
 
-public class RenderingEngine
+public class RenderingEngine extends MappedValues
 {
     private final Window window;
-    private final Vector3f ambientLight;
+    private Camera camera;
+
     private final List<BaseLight> lights;
     private BaseLight activeLight;
-    private Camera camera;
+
+    private final Map<String, Integer>  samplerMap;
 
     public RenderingEngine()
     {
         this.lights = new ArrayList<>();
         this.window = new Window();
+        this.samplerMap = new HashMap<>();
+        samplerMap.put( "diffuse", 0 );
+        addVector3f( "ambient", new Vector3f( 0.2f, 0.2f, 0.2f ) );
 
         GL.createCapabilities();
         glClearColor( 0.3f, 0.3f, 0.9f, 0.8f );
@@ -39,8 +47,6 @@ public class RenderingEngine
         glEnable( GL_DEPTH_TEST );
         glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
-
-        ambientLight = new Vector3f( 0.2f, 0.2f, 0.2f );
     }
 
 
@@ -49,9 +55,9 @@ public class RenderingEngine
         if ( camera == null )
             System.err.println( "Main camera not found." );
 
-        clearScreen();
+        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-        object.render( ForwardAmbient.getInstance(), this );
+        object.render( ShaderTypes.AMBIENT.getShader(), this );
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE );
@@ -70,35 +76,17 @@ public class RenderingEngine
         glDisable( GL_BLEND );
     }
 
-    public Vector3f getAmbientLight() { return ambientLight; }
-
     public void addLight( BaseLight light ) { lights.add( light ); }
 
     public BaseLight getActiveLight() { return activeLight; }
-
-    private static void clearScreen()
-    {
-        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    }
-
-    private static void setTextures( boolean enable )
-    {
-        if ( enable ) { glEnable( GL_TEXTURE_2D ); }
-        else { glDisable( GL_TEXTURE_2D ); }
-    }
-
-    private static void unbindTextures()
-    {
-        glBindTexture( GL_TEXTURE_2D, 0 );
-    }
-
-    private static void setClearColor( Vector3f color )
-    {
-        glClearColor( color.getX(), color.getY(), color.getZ(), 1 );
-    }
 
     public long getCurrentWindow() { return window.getWindow(); }
 
     public Camera getCamera() { return camera; }
     public void setCamera( Camera camera ) { this.camera = camera; }
+
+    public int getSamplerSlot( String samplerName )
+    {
+        return samplerMap.get( samplerName );
+    }
 }

@@ -8,13 +8,13 @@ in vec3 worldPosOut;
 out vec4 fragColor;
 
 
-uniform sampler2D diffuse;
-uniform SpotLight spotLight;
+uniform sampler2D R_diffuse;
+uniform SpotLight R_spotLight;
 
 
 void main()
 {	
-	fragColor = texture(diffuse, textCoord.xy) * calcSpotLight(spotLight, normalize(normalOut), worldPosOut );	
+	fragColor = texture(R_diffuse, textCoord.xy) * calcSpotLight(R_spotLight, normalize(normalOut), worldPosOut );	
 }
 
 

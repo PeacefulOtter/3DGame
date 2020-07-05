@@ -2,7 +2,7 @@ package peacefulotter.engine.components.lights;
 
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.shaders.Attenuation;
-import peacefulotter.engine.rendering.shaders.ForwardPoint;
+import peacefulotter.engine.rendering.shaders.ShaderTypes;
 
 public class PointLight extends BaseLight
 {
@@ -14,7 +14,7 @@ public class PointLight extends BaseLight
         super( color, intensity );
         this.attenuation = attenuation;
         calcAndUpdateRange();
-        setShader( ForwardPoint.getInstance() );
+        setShader( ShaderTypes.POINT.getShader() );
     }
 
     public void calcAndUpdateRange()
