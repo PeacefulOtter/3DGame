@@ -1,14 +1,17 @@
 package peacefulotter.engine.rendering.resourceManagement;
 
 import peacefulotter.engine.elementary.Disposable;
+import peacefulotter.engine.utils.ResourceLoader;
+
+import static org.lwjgl.opengl.GL11.glGenTextures;
 
 public class TextureResource extends Disposable
 {
-    private int id;
+    private final int id;
 
-    public TextureResource( int id )
+    public TextureResource()
     {
-        this.id = id;
+        this.id = glGenTextures();
     }
 
     public void dispose()

@@ -5,6 +5,7 @@ import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.utils.ResourceLoader;
 
 public class ForwardAmbient extends Shader
 {
@@ -12,17 +13,7 @@ public class ForwardAmbient extends Shader
 
     private ForwardAmbient()
     {
-        super();
-        addVertexShaderFromFile( "forward-ambient.vs" );
-        addFragmentShaderFromFile( "forward-ambient.fs" );
-
-        setAttribLocation("position", 0 );
-        setAttribLocation("textureCoord", 1 );
-
-        compileShader();
-
-        addUniform( "MVP" );
-        addUniform( "ambientIntensity" );
+        super( "forward-ambient" );
     }
 
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )

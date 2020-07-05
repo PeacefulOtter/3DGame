@@ -8,10 +8,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OBJModel
 {
@@ -36,6 +33,8 @@ public class OBJModel
             {
                 String[] split = line.split( " " );
                 split = Util.removeEmptyStrings( split );
+                if ( split.length < 3 )
+                    continue;
                 String prefix = split[ 0 ];
 
                 if ( prefix.equals( "v" ) )

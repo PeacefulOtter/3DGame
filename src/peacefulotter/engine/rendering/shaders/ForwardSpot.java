@@ -13,32 +13,7 @@ public class ForwardSpot extends Shader
 
     private ForwardSpot()
     {
-        super();
-        addVertexShaderFromFile("forward-spot.vs" );
-        addFragmentShaderFromFile( "forward-spot.fs" );
-
-        setAttribLocation("position", 0 );
-        setAttribLocation("textureCoord", 1 );
-        setAttribLocation("normal", 2 );
-
-        compileShader();
-
-        addUniform( "model" );
-        addUniform( "MVP" );
-        addUniform( "specularIntensity" );
-        addUniform( "specularExponent" );
-        addUniform( "eyePos" );
-        addUniform( "diffuse" );
-
-        addUniform( "spotLight.pointLight.base.color" );
-        addUniform( "spotLight.pointLight.base.intensity" );
-        addUniform( "spotLight.pointLight.attenuation.constant" );
-        addUniform( "spotLight.pointLight.attenuation.linear" );
-        addUniform( "spotLight.pointLight.attenuation.exponent" );
-        addUniform( "spotLight.pointLight.position" );
-        addUniform( "spotLight.pointLight.range" );
-        addUniform( "spotLight.direction" );
-        addUniform( "spotLight.cutoff" );
+        super( "forward-spot" );
     }
 
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )

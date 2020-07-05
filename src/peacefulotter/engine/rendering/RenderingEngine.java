@@ -32,7 +32,7 @@ public class RenderingEngine
         this.window = new Window();
 
         GL.createCapabilities();
-        glClearColor( 0, 0, 0, 0 );
+        glClearColor( 0.3f, 0.3f, 0.9f, 0.8f );
         glFrontFace( GL_CW );
         glCullFace( GL_BACK );
         glEnable( GL_CULL_FACE );

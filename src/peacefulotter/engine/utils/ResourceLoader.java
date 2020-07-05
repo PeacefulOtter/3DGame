@@ -4,8 +4,10 @@ import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.rendering.graphics.Vertex;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
+import peacefulotter.engine.rendering.resourceManagement.TextureResource;
 
 import javax.imageio.ImageIO;
+import javax.swing.tree.AbstractLayoutCache;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -21,6 +23,9 @@ public class ResourceLoader
     private static final String MODELS_PATH = "/models/";
     private static final String TEXTURES_PATH = "/textures/";
 
+    private static final String INCLUDE_DIRECTIVE = "#include";
+    private static final int INCLUDE_DIRECTIVE_LENGTH = INCLUDE_DIRECTIVE.length();
+
     private InputStream resourceStream( String resourceName )
     {
         return getClass().getResourceAsStream( resourceName );
@@ -35,7 +40,10 @@ public class ResourceLoader
             String line;
             while ( ( line = reader.readLine() ) != null )
             {
-                sj.add( line );
+                if ( line.startsWith( INCLUDE_DIRECTIVE ) )
+                    sj.add( loadShader( line.substring( INCLUDE_DIRECTIVE_LENGTH + 2, line.length() - 2 ) ) );
+                else
+                    sj.add( line );
             }
         }
         catch ( IOException e )
@@ -78,9 +86,9 @@ public class ResourceLoader
                 true };
     }
 
-    public int loadTexture( String fileName )
+    public TextureResource loadTexture( String fileName )
     {
-        int id = 0;
+        TextureResource resource = null;
 
         try
         {
@@ -108,8 +116,8 @@ public class ResourceLoader
 
             buffer.flip();
 
-            id = glGenTextures();
-            glBindTexture( GL_TEXTURE_2D, id );
+            resource = new TextureResource();
+            glBindTexture( GL_TEXTURE_2D, resource.getId() );
 
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
@@ -125,6 +133,6 @@ public class ResourceLoader
             System.exit( 1 );
         }
 
-        return id;
+        return resource;
     }
 }

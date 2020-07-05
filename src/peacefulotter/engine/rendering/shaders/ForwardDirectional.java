@@ -6,6 +6,7 @@ import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.utils.ResourceLoader;
 
 public class ForwardDirectional extends Shader
 {
@@ -13,25 +14,7 @@ public class ForwardDirectional extends Shader
 
     private ForwardDirectional()
     {
-        super();
-        addVertexShaderFromFile("forward-directional.vs" );
-        addFragmentShaderFromFile( "forward-directional.fs" );
-
-        setAttribLocation("position", 0 );
-        setAttribLocation("textureCoord", 1 );
-        setAttribLocation("normal", 2 );
-
-        compileShader();
-
-        addUniform( "model" );
-        addUniform( "MVP" );
-        addUniform( "specularIntensity" );
-        addUniform( "specularExponent" );
-        addUniform( "eyePos" );
-        addUniform( "diffuse" );
-        addUniform( "dirLight.base.color" );
-        addUniform( "dirLight.base.intensity" );
-        addUniform( "dirLight.direction" );
+        super( "forward-directional" );
     }
 
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )

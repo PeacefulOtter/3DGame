@@ -15,30 +15,7 @@ public class ForwardPoint extends Shader
 
     private ForwardPoint()
     {
-        super();
-        addVertexShaderFromFile("forward-point.vs" );
-        addFragmentShaderFromFile( "forward-point.fs" );
-
-        setAttribLocation("position", 0 );
-        setAttribLocation("textureCoord", 1 );
-        setAttribLocation("normal", 2 );
-
-        compileShader();
-
-        addUniform( "model" );
-        addUniform( "MVP" );
-        addUniform( "specularIntensity" );
-        addUniform( "specularExponent" );
-        addUniform( "eyePos" );
-        addUniform( "diffuse" );
-
-        addUniform( "pointLight.base.color" );
-        addUniform( "pointLight.base.intensity" );
-        addUniform( "pointLight.attenuation.constant" );
-        addUniform( "pointLight.attenuation.linear" );
-        addUniform( "pointLight.attenuation.exponent" );
-        addUniform( "pointLight.position" );
-        addUniform( "pointLight.range" );
+        super( "forward-point" );
     }
 
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )

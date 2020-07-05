@@ -80,17 +80,38 @@ public class TestGame extends Game
                 1,
                 8 );*/
         Material material = new Material();
-        material.addTexture( "diffuse", new Texture( "test.png" ) );
+        material.addTexture( "diffuse", new Texture( "grass.jpg" ) );
         material.addFloat( "specularIntensity", 1 );
         material.addFloat( "specularExponent", 2 );
 
         Material alienMaterial = new Material();
         alienMaterial.addTexture( "diffuse", new Texture( "apple.png" ) );
-        alienMaterial.addFloat( "specularIntensity", 1 );
-        alienMaterial.addFloat( "specularExponent", 2 );
+        alienMaterial.addFloat( "specularIntensity", 2 );
+        alienMaterial.addFloat( "specularExponent", 3 );
         GameObject alienObject = new GameObject().addComponent(
                 new MeshRenderer(  new Mesh( "alien.obj" ), alienMaterial ) );
         addObject( alienObject );
+        alienObject.getTransform().translate( new Vector3f( 10, 0, 10 ) );
+
+
+        /*Material treesMaterial = new Material();
+        treesMaterial.addTexture( "diffuse", new Texture( "grass.jpg" ) );
+        treesMaterial.addFloat( "specularIntensity", 1 );
+        treesMaterial.addFloat( "specularExponent", 2 );
+        GameObject treesObject = new GameObject().addComponent(
+                new MeshRenderer(  new Mesh( "trees9.obj" ), treesMaterial ) );
+        addObject( treesObject );
+        treesObject.getTransform().translate( new Vector3f( -30, 0, -30 ) );*/
+
+
+        Material m4a4Material = new Material();
+        m4a4Material.addTexture( "diffuse", new Texture( "test.png" ) );
+        m4a4Material.addFloat( "specularIntensity", 1 );
+        m4a4Material.addFloat( "specularExponent", 2 );
+        GameObject m4a4Object = new GameObject().addComponent(
+                new MeshRenderer(  new Mesh( "m4a1.obj" ), m4a4Material ) );
+        addObject( m4a4Object );
+        m4a4Object.getTransform().translate( new Vector3f( 30, 0, 30 ) );
 
 
         GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
@@ -105,31 +126,31 @@ public class TestGame extends Game
 
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
-                new Vector3f( 0.6f, 0.3f,  0.6f ),
-                0.5f );
+                new Vector3f( 0.4f, 0f,0.4f ),
+                0.3f );
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
 
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(
-                new Vector3f( 0.4f, 2,  0.4f ),
-                1f,
-                new Attenuation( 1, 0, 0.01f ) );
+                new Vector3f( 1f, 0f,  1f ),
+                0.4f,
+                new Attenuation( 0.5f, 0, 0.01f ) );
         pointLightObject.addComponent( pointLight );
-        pointLightObject.getTransform().translate( new Vector3f( 0, 1, 0 ) );
+        pointLightObject.getTransform().translate( new Vector3f( 4, 0.5f, 4 ) );
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
                 new Vector3f( 1f, 0,  0f ),
-                1f,
-                new Attenuation( 1, 0f, 0 ),
+                5f,
+                new Attenuation( 0, 0f, 0.01f ),
                 0.7f
         );
         spotLightObject.getTransform()
                 .rotate( new Vector3f( 0, 1, 0 ), -90 )
                 .rotate( new Vector3f( 1, 0, 0 ), 40 )
-                .translate( new Vector3f( 30, 10f, 1 ) );
+                .translate( new Vector3f( 35, 10f, 8 ) );
         spotLightObject.addComponent( spotLight );
 
         GameObject cameraObject = new GameObject();
@@ -161,7 +182,7 @@ public class TestGame extends Game
     public void update( float deltaTime )
     {
         t += deltaTime * 5;
-        plane2.getTransform().setTranslation( new Vector3f( (float)Math.sin(t)*2, 4, 8 ) );
+        plane2.getTransform().setTranslation( new Vector3f( (float)Math.sin(t)*2 - 30, 4, 8 ) );
 
         super.update( deltaTime );
     }
