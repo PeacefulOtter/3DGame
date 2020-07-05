@@ -2,6 +2,7 @@ package peacefulotter.engine.rendering.graphics;
 
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.resourceManagement.MeshResource;
 import peacefulotter.engine.utils.ResourceLoader;
 
@@ -61,11 +62,13 @@ public class Mesh
         glEnableVertexAttribArray( 0 );
         glEnableVertexAttribArray( 1 );
         glEnableVertexAttribArray( 2 );
+        glEnableVertexAttribArray( 3 );
 
         glBindBuffer( GL_ARRAY_BUFFER,  resource.getVbo() );
         glVertexAttribPointer( 0, 3, GL_FLOAT, false, Vertex.SIZE * 4, 0 );
         glVertexAttribPointer( 1, 2, GL_FLOAT, false, Vertex.SIZE * 4, 12 ); // 12 = FLOAT_BYTES (4) * NB_FLOAT_BEFORE (3)
         glVertexAttribPointer( 2, 3, GL_FLOAT, false, Vertex.SIZE * 4, 20 );
+        glVertexAttribPointer( 3, 3, GL_FLOAT, false, Vertex.SIZE * 4, 32 );
 
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
         glDrawElements( GL_TRIANGLES, resource.getSize(), GL_UNSIGNED_INT, 0 );
@@ -73,6 +76,7 @@ public class Mesh
         glDisableVertexAttribArray( 0 );
         glDisableVertexAttribArray( 1 );
         glDisableVertexAttribArray( 2 );
+        glDisableVertexAttribArray( 3 );
     }
 
     private void calcNormals( Vertex[] vertices, int[] indices )

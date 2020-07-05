@@ -17,10 +17,10 @@ public class MeshRenderer extends GameComponent
     }
 
     @Override
-    public void initAll() { }
+    public void init() { }
 
     @Override
-    public void updateAll(float delta ) { }
+    public void update(float delta ) { }
 
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine )

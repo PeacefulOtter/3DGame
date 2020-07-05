@@ -90,7 +90,7 @@ public class STransform implements Updatable
     public void setParent( STransform parent ) { this.parent = parent; }
 
     @Override
-    public void updateAll(float deltaTime )
+    public void update( float deltaTime )
     {
         if ( hasChanged )
         {

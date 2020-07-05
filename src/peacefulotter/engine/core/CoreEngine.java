@@ -94,7 +94,7 @@ public class CoreEngine
             {
                 relativeTime -= FRAME_TIME;
                 render = true;
-                game.updateAll( (float) FRAME_TIME );
+                game.update( (float) FRAME_TIME );
                 Input.execInputs( (float) FRAME_TIME );
             }
 

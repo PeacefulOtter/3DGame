@@ -29,8 +29,6 @@ public class Texture
         }
     }
 
-    public void bind() { bind(0); }
-
     public void bind( int samplerSlot )
     {
         assert ( samplerSlot >= 0 && samplerSlot <= 31 );

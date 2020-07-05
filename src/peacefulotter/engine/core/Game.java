@@ -22,7 +22,7 @@ public abstract class Game implements Updatable
     public void setEngine( CoreEngine engine ) { root.setEngine( engine ); }
 
     public void init() { root.initAll(); }
-    public void updateAll(float deltaTime ) { root.updateAll( deltaTime ); }
+    public void update(float deltaTime ) { root.updateAll( deltaTime ); }
     public void render( RenderingEngine renderingEngine ) { renderingEngine.render( root ); }
 
     public void addObject( GameObject object ) { root.addChild( object ); }

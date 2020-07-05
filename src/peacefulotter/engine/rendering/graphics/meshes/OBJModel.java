@@ -122,7 +122,7 @@ public class OBJModel
                 model.getPositions().add( pos );
                 model.getTexCoords().add( texCoord );
                 if ( hasNormals )
-                    model.getNormals().add( normal );
+                    model.getNormals().add( normal.normalize() );
             }
 
             Integer normalModelIndex = normalIndexMap.get( index.vertexIndex );
@@ -134,7 +134,7 @@ public class OBJModel
 
                 normalModel.getPositions().add( pos );
                 normalModel.getTexCoords().add( texCoord );
-                normalModel.getNormals().add( normal );
+                normalModel.getNormals().add( normal.normalize() );
             }
 
             model.getIndices().add( modelVertexIndex );

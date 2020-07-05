@@ -175,11 +175,12 @@ public class TestGame extends Game
 
     float t = 0;
 
-    public void updateAll(float deltaTime )
+    public void update( float deltaTime )
     {
         t += deltaTime * 5;
-        plane2.getTransform().setTranslation( new Vector3f( (float)Math.sin(t)*2 - 30, 4, 8 ) );
+        plane2.getTransform()
+                .setTranslation( new Vector3f( (float)Math.sin(t)*2 - 30, 4, 8 ) );
 
-        super.updateAll( deltaTime );
+        super.update( deltaTime );
     }
 }

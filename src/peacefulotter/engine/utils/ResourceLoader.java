@@ -77,7 +77,8 @@ public class ResourceLoader
             vertices.add( new Vertex(
                     indexedModel.getPositions().get( i ),
                     indexedModel.getTexCoords().get( i ),
-                    indexedModel.getNormals().get( i ) ) );
+                    indexedModel.getNormals().get( i ),
+                    indexedModel.getTangents().get( i ) ) );
         }
 
         return new Object[] {

@@ -9,4 +9,5 @@ public class FPSGame extends Game
     {
         super( winName, winWidth, winHeight );
     }
+
 }

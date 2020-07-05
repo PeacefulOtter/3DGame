@@ -10,22 +10,29 @@ public class Vertex
     private Vector3f pos;
     private Vector2f textureCoordinates;
     private Vector3f normal;
+    private Vector3f tangent;
 
     public Vertex( Vector3f pos )
     {
-        this( pos, new Vector2f( 0, 0 ) );
+        this( pos, Vector2f.ZERO );
     }
 
     public Vertex( Vector3f pos, Vector2f textureCoordinates )
     {
-        this( pos, textureCoordinates, new Vector3f( 0, 0, 0 ) );
+        this( pos, textureCoordinates, Vector3f.ZERO );
     }
 
     public Vertex( Vector3f pos, Vector2f textureCoordinates, Vector3f normal )
     {
+        this( pos, textureCoordinates, normal, Vector3f.ZERO );
+    }
+
+    public Vertex(Vector3f pos, Vector2f textureCoordinates, Vector3f normal, Vector3f tangent )
+    {
         this.pos = pos;
         this.textureCoordinates = textureCoordinates;
         this.normal = normal;
+        this.tangent = tangent;
     }
 
     public Vector3f getPos() { return pos; }
@@ -37,4 +44,6 @@ public class Vertex
     public Vector3f getNormal() { return normal; }
     public void setNormal( Vector3f normal ) { this.normal = normal; }
 
+    public Vector3f getTangent() { return tangent; }
+    public void setTangent( Vector3f tangent ) { this.tangent = tangent; }
 }

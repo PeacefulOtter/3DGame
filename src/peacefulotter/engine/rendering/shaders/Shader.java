@@ -1,6 +1,5 @@
 package peacefulotter.engine.rendering.shaders;
 
-import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
