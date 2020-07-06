@@ -2,9 +2,9 @@ package peacefulotter.engine.utils.IO;
 
 public class Key
 {
-    private int keyCode;
-    private IOExecutable IOExecutable;
-    private boolean isPressed = false;
+    private final int keyCode;
+    private final IOExecutable IOExecutable;
+    private boolean isPressed;
 
     public Key( int keyCode, IOExecutable executable )
     {

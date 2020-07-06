@@ -3,6 +3,7 @@ package peacefulotter.engine.core;
 
 import org.lwjgl.opengl.GL;
 import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.engine.utils.ProfileTimer;
 import peacefulotter.engine.utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
 
@@ -20,6 +21,8 @@ public class CoreEngine
     private static final double FRAMES_CAP = 500;
     private static final double FRAME_TIME = 1.0 / FRAMES_CAP;
 
+    private final ProfileTimer GLprofiler;
+
     private boolean isRunning = false;
 
     public CoreEngine( Game game )
@@ -27,6 +30,7 @@ public class CoreEngine
         this.game = game;
         this.renderingEngine = new RenderingEngine();
         this.currentWindow = renderingEngine.getCurrentWindow();
+        this.GLprofiler = new ProfileTimer();
     }
 
     public void start()
@@ -70,9 +74,11 @@ public class CoreEngine
                 return;
             }
 
+            GLprofiler.startInvocation();
             GL.createCapabilities();
             glfwSwapBuffers( currentWindow );
             glfwPollEvents();
+            GLprofiler.stopInvocation();
 
             boolean render = false;
 
@@ -85,7 +91,15 @@ public class CoreEngine
 
             if ( framesCounter >= 1.0 )
             {
-                System.out.println(frames);
+                // profiling
+                double totalTime = ( 1000.0 * framesCounter ) / (double) frames;
+                double totalRecordedTime = 0;
+                totalRecordedTime += game.displayUpdateTime( frames );
+                totalRecordedTime += renderingEngine.displayRenderTime( frames );
+                totalRecordedTime += GLprofiler.displayAndReset( "GL core engine time", frames );
+                System.out.println("Other time : " + (totalTime - totalRecordedTime) + "ms" );
+                System.out.println("Total time : " + totalTime + "ms" );
+
                 frames = 0;
                 framesCounter = 0;
             }

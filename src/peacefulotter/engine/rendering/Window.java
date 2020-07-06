@@ -8,6 +8,9 @@ import peacefulotter.engine.core.maths.Vector2f;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.GL_DRAW_BUFFER;
+import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -88,10 +91,14 @@ public class Window
         setName( winName ); setWidth( winWidth ); setHeight( winHeight );
     }
 
-
     public static Vector2f getCenter()
     {
         return new Vector2f( width / 2f, height / 2f );
     }
 
+    public static void bindAsRenderTarget()
+    {
+        glBindFramebuffer( GL_DRAW_BUFFER, 0 );
+        glViewport( 0, 0, width, height );
+    }
 }

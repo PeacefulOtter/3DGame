@@ -7,6 +7,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.utils.MappedValues;
+import peacefulotter.engine.utils.ProfileTimer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,16 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
-
-/*
-
-    Move camera inside Game class ?
- */
-
 
 public class RenderingEngine extends MappedValues
 {
+    private final ProfileTimer profiler;
     private final Window window;
     private Camera camera;
 
@@ -35,9 +30,11 @@ public class RenderingEngine extends MappedValues
 
     public RenderingEngine()
     {
+        this.profiler = new ProfileTimer();
         this.lights = new ArrayList<>();
         this.window = new Window();
         this.samplerMap = new HashMap<>();
+
         samplerMap.put( "diffuse", 0 );
         samplerMap.put( "normalMap", 1 );
         samplerMap.put( "dispMap", 2 );
@@ -53,6 +50,8 @@ public class RenderingEngine extends MappedValues
 
         addVector3f( "ambient", new Vector3f( 0.4f, 0.4f, 0.4f ) );
         ambient = ShaderTypes.AMBIENT.getShader();
+
+        // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
     }
 
 
@@ -60,6 +59,8 @@ public class RenderingEngine extends MappedValues
     {
         if ( camera == null )
             System.err.println( "Main camera not found." );
+
+        profiler.startInvocation();
 
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
@@ -79,6 +80,8 @@ public class RenderingEngine extends MappedValues
         glDepthFunc( GL_LESS );
         glDepthMask( true );
         glDisable( GL_BLEND );
+
+        profiler.stopInvocation();
     }
 
     public void addLight( BaseLight light ) { lights.add( light ); }
@@ -94,4 +97,7 @@ public class RenderingEngine extends MappedValues
     {
         return samplerMap.get( samplerName );
     }
+
+    public double displayRenderTime() { return profiler.displayAndReset( "Render time" ); }
+    public double displayRenderTime( double dividend ) { return profiler.displayAndReset( "Render time", dividend ); }
 }

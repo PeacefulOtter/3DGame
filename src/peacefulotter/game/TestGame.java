@@ -30,7 +30,7 @@ public class TestGame extends Game
                 new Texture( "bricks.jpg" ),
                 new Texture( "bricks_normal.jpg" ),
                 new Texture( "bricks_height.jpg" ),
-                1f, 8, 0.03f, -0.04f );
+                1f, 8, 0.04f, -1f );
 
         Material bricks2 = new Material(
                 new Texture( "bricks2.jpg" ),
@@ -42,7 +42,7 @@ public class TestGame extends Game
                 new Texture( "metal.jpg" ),
                 new Texture( "metal_normal.jpg" ),
                 new Texture( "metal_height.png" ),
-                1, 4, 0.04f, -0.5f );
+                1, 8, 0.04f, -0.5f );
 
 
         Mesh mesh = new Mesh( "plane3.obj" );
@@ -71,10 +71,10 @@ public class TestGame extends Game
 
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
-                new Vector3f( 1f, 0.95f,0.8f ),
-                0.2f );
+                new Vector3f( 1f, 0.9f,0.8f ),
+                0.15f );
         dirLightObject.addComponent( dirLight );
-        //dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
+        dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(

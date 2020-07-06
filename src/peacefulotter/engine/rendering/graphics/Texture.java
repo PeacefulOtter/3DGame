@@ -35,4 +35,9 @@ public class Texture
         glActiveTexture( GL_TEXTURE0 + samplerSlot );
         glBindTexture( GL_TEXTURE_2D, resource.getId() );
     }
+
+    public void bindAsRenderTarget()
+    {
+        //
+    }
 }
