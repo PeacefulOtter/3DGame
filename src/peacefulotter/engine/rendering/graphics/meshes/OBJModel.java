@@ -136,7 +136,6 @@ public class OBJModel
                 normalModel.getPositions().add( pos );
                 normalModel.getTexCoords().add( texCoord );
                 normalModel.getNormals().add( normal );
-                System.out.println(Vector3f.getZero());
                 normalModel.getTangents().add( Vector3f.getZero() );
             }
 

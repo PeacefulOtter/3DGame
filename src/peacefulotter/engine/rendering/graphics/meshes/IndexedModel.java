@@ -36,13 +36,13 @@ public class IndexedModel
             Vector3f normal1 = normals.get( i1 );
             Vector3f normal2 = normals.get( i2 );
 
-            normal0.set( normal0.add( normal ) );
-            normal1.set( normal1.add( normal ) );
-            normal2.set( normal2.add( normal ) );
+            normal0.set( normal0.add( normal ).normalize() );
+            normal1.set( normal1.add( normal ).normalize() );
+            normal2.set( normal2.add( normal ).normalize() );
         }
 
         //for( int i = 0; i < normals.size(); i++)
-            // normals.set( i, normals.get( i ).normalize() );
+       //     normals.set( i, normals.get( i ) );
     }
 
     /*public void calcTangents()
@@ -104,13 +104,13 @@ public class IndexedModel
             tangent.setY(f * (deltaV2 * edge1.getY() - deltaV1 * edge2.getY()));
             tangent.setZ(f * (deltaV2 * edge1.getZ() - deltaV1 * edge2.getZ()));
 
-            tangents.get(i0).set(tangents.get(i0).add(tangent));
-            tangents.get(i1).set(tangents.get(i1).add(tangent));
-            tangents.get(i2).set(tangents.get(i2).add(tangent));
+            tangents.set( i0, tangents.get( i0 ).add( tangent ).normalize() );
+            tangents.set( i1, tangents.get( i1 ).add( tangent ).normalize() );
+            tangents.set( i2, tangents.get( i2 ).add( tangent ).normalize() );
         }
 
-        for( int i = 0; i < tangents.size(); i++ )
-            tangents.set( i, tangents.get( i ).normalize() );
+        //for( int i = 0; i < tangents.size(); i++ )
+        //    tangents.set( i, tangents.get( i ).normalize() );
     }
 
 

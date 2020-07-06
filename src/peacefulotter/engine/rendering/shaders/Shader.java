@@ -128,9 +128,9 @@ public class Shader
     public void setUniformPointLight( String uniformName, PointLight pointLight )
     {
         setUniformBaseLight( uniformName + ".base", pointLight );
-        setUniformF( uniformName + ".attenuation.constant", pointLight.getAttenuation().getConstant() );
-        setUniformF( uniformName + ".attenuation.linear", pointLight.getAttenuation().getLinear() );
-        setUniformF( uniformName + ".attenuation.exponent", pointLight.getAttenuation().getExponent() );
+        setUniformF( uniformName + ".atten.constant", pointLight.getAttenuation().getConstant() );
+        setUniformF( uniformName + ".atten.linear", pointLight.getAttenuation().getLinear() );
+        setUniformF( uniformName + ".atten.exponent", pointLight.getAttenuation().getExponent() );
         setUniformVector( uniformName + ".position", pointLight.getPosition() );
         setUniformF( uniformName + ".range", pointLight.getRange() );
     }

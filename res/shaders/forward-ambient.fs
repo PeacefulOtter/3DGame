@@ -1,8 +1,8 @@
 #version 130
 #include "sampling.glh";
 
-in vec2 texCoordOut;
-in vec3 worldPosOut;
+in vec2 texCoord0;
+in vec3 worldPos0;
 in mat3 tbnMatrix;
 
 out vec4 fragColor;
@@ -18,8 +18,7 @@ uniform float dispMapBias;
 
 void main()
 {
-	vec3 directionToEye = normalize(C_eyePos - worldPosOut);
-	vec2 texCoords = calcParallaxTextCoord(R_dispMap, tbnMatrix, directionToEye, texCoordOut, dispMapScale, dispMapBias); 
-
-	fragColor = texture(R_diffuse, texCoords) * vec4(R_ambient, 1); 
+	vec3 directionToEye = normalize(C_eyePos - worldPos0);
+	vec2 texCoords = calcParallaxTexCoords(R_dispMap, tbnMatrix, directionToEye, texCoord0, dispMapScale, dispMapBias);
+	fragColor = texture(R_diffuse, texCoords) * vec4(R_ambient, 1);
 }

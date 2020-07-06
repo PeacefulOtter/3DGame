@@ -1,5 +1,6 @@
-in vec2 texCoordOut;
-in vec3 worldPosOut;
+
+in vec2 texCoord0;
+in vec3 worldPos0;
 in mat3 tbnMatrix;
 
 out vec4 fragColor;
