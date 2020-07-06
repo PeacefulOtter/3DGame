@@ -32,7 +32,4 @@ public abstract class GameComponent implements Initializable, Updatable, Rendera
 
     public void addToEngine( CoreEngine engine ) { }
 
-    // public void setCoreEngine( CoreEngine engine ) { }
-
-    //public void addToRenderingEngine( RenderingEngine engine ) { }
 }

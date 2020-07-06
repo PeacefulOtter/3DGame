@@ -1,21 +1,15 @@
 #version 130
-#include "lighting.glh";
+#include "lighting.fsh";
 
-in vec2 textCoord;
-in vec3 normalOut;
-in vec3 worldPosOut;
-
-out vec4 fragColor;
-
-
-uniform sampler2D R_diffuse;
 uniform PointLight R_pointLight;
 
 
-void main()
-{	
-	fragColor = texture(R_diffuse, textCoord.xy) * calcPointLight(R_pointLight, normalize(normalOut), worldPosOut);	
+vec4 calcLightingEffect(vec3 normal, vec3 worldPos)
+{
+	return calcPointLight(R_pointLight, normal, worldPos);
 }
+
+#include "lightingMain.fsh";
 
 
 

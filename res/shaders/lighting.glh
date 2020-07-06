@@ -56,7 +56,7 @@ vec4 calcLight( BaseLight base, vec3 direction, vec3 normal, vec3 worldPos )
 		
 		vec3 directionToEye = normalize(C_eyePos - worldPos);
 		// vec3 reflectDir = normalize( reflect( direction, normal ) );
-		//float specularFactor = dot( directionToEye, reflectDir );
+		// float specularFactor = dot( directionToEye, reflectDir );
 		vec3 halfDir = normalize(directionToEye - direction);
 		float specularFactor = dot(halfDir, normal);
 		specularFactor = pow( specularFactor, specularExponent );
@@ -71,7 +71,7 @@ vec4 calcLight( BaseLight base, vec3 direction, vec3 normal, vec3 worldPos )
 }
 
 
-vec4 calclDirectionalLight( DirectionalLight dirLight, vec3 normal, vec3 worldPos )
+vec4 calcDirectionalLight( DirectionalLight dirLight, vec3 normal, vec3 worldPos )
 {
 	return calcLight( dirLight.base, -dirLight.direction, normal, worldPos );
 }
@@ -90,8 +90,7 @@ vec4 calcPointLight( PointLight pointLight, vec3 normal, vec3 worldPos )
 	vec4 color = calcLight( pointLight.base, lightDirection, normal, worldPos );
 	float attenuation = pointLight.attenuation.constant + 
 			    pointLight.attenuation.linear * distanceToPoint + 
-			    pointLight.attenuation.exponent * distanceToPoint * distanceToPoint +
-			    0.0001;
+			    pointLight.attenuation.exponent * distanceToPoint * distanceToPoint + 0.0001;
 	
 	return color / attenuation;
 }

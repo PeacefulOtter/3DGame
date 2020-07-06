@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.utils.MappedValues;
 
@@ -27,6 +28,7 @@ public class RenderingEngine extends MappedValues
     private Camera camera;
 
     private final List<BaseLight> lights;
+    private final Shader ambient;
     private BaseLight activeLight;
 
     private final Map<String, Integer>  samplerMap;
@@ -37,16 +39,20 @@ public class RenderingEngine extends MappedValues
         this.window = new Window();
         this.samplerMap = new HashMap<>();
         samplerMap.put( "diffuse", 0 );
-        addVector3f( "ambient", new Vector3f( 0.2f, 0.2f, 0.2f ) );
+        samplerMap.put( "normalMap", 1 );
+        samplerMap.put( "dispMap", 2 );
 
         GL.createCapabilities();
-        glClearColor( 0.3f, 0.3f, 0.9f, 0.8f );
+        glClearColor( 0.6f, 0.6f, 0.6f, 0.8f );
         glFrontFace( GL_CW );
         glCullFace( GL_BACK );
         glEnable( GL_CULL_FACE );
         glEnable( GL_DEPTH_TEST );
-        glEnable( GL_DEPTH_CLAMP );
+        // glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
+
+        addVector3f( "ambient", new Vector3f( 0.4f, 0.4f, 0.4f ) );
+        ambient = ShaderTypes.AMBIENT.getShader();
     }
 
 
@@ -57,7 +63,7 @@ public class RenderingEngine extends MappedValues
 
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
-        object.renderAll( ShaderTypes.AMBIENT.getShader(), this );
+        object.renderAll( ambient, this );
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE );
@@ -66,7 +72,6 @@ public class RenderingEngine extends MappedValues
 
         for ( BaseLight light : lights )
         {
-            // light.getShader().setRenderingEngine( this ); // move this to init
             activeLight = light;
             object.renderAll( light.getShader(), this );
         }

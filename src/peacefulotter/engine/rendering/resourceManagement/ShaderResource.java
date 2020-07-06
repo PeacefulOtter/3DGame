@@ -3,12 +3,12 @@ package peacefulotter.engine.rendering.resourceManagement;
 import peacefulotter.engine.elementary.Disposable;
 import peacefulotter.engine.utils.ResourceLoader;
 
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
@@ -109,6 +109,8 @@ public class ShaderResource extends Disposable
     private void addUniform( String uniformName, String uniformType, Map<String, List<GLSLStruct>> structs )
     {
         System.out.println("Trying to add to uniforms : " + uniformName);
+        // System.out.println(structs.keySet());
+        // System.out.println(structs.values());
         boolean addThis = true;
         List<GLSLStruct> structComponents = structs.get( uniformType );
         if ( structComponents != null )
@@ -126,13 +128,11 @@ public class ShaderResource extends Disposable
 
         if ( addThis )
         {
-            System.out.println(" now Adding " + uniformName);
+            System.out.println(" now Adding " + uniformName + ".");
             int uniformLoc = glGetUniformLocation( program, uniformName );
 
             if ( uniformLoc == -1 )
-            {
                 throw new IllegalArgumentException( "Could not find uniform " + uniformName );
-            }
 
             uniformsMap.put( uniformName, uniformLoc );
         }
@@ -145,11 +145,12 @@ public class ShaderResource extends Disposable
 
         while ( startLocation != -1 )
         {
-            int begin = startLocation + STRUCT_TAG_LENGTH + 1;
-            int braceBegin = shaderText.indexOf( "{", begin );
+            int begin = startLocation + STRUCT_TAG_LENGTH;
+            int braceBegin = shaderText.indexOf( "{", begin ) - 1;
             int braceEnd = shaderText.indexOf( "}", braceBegin );
 
             String structName = shaderText.trim().substring( begin, braceBegin ).trim();
+            System.out.println("StructName " + structName);
             List<GLSLStruct> componentStructs = new ArrayList<>();
 
             int componentSemicolonPosition = shaderText.indexOf( ";", braceBegin );
@@ -208,16 +209,12 @@ public class ShaderResource extends Disposable
         glLinkProgram( program );
 
         if ( glGetProgrami( program, GL_LINK_STATUS ) == 0 )
-        {
-            throw new IllegalArgumentException( glGetShaderInfoLog( program ) );
-        }
+            throw new IllegalArgumentException( glGetProgramInfoLog( program, 1024 ) );
 
         glValidateProgram( program );
 
         if ( glGetProgrami( program, GL_VALIDATE_STATUS ) == 0 )
-        {
-            throw new IllegalArgumentException( glGetShaderInfoLog( program ) );
-        }
+            throw new IllegalArgumentException( glGetProgramInfoLog( program, 1024 ) );
     }
 
     private void addProgramShader( String text, int type )
@@ -225,19 +222,13 @@ public class ShaderResource extends Disposable
         int shader = glCreateShader( type );
 
         if ( shader == 0 )
-        {
-            System.err.println( "Could not find memory location when creating a shader" );
-            System.exit( 1 );
-        }
+            throw new IllegalArgumentException( "Could not find memory location when creating a shader" );
 
         glShaderSource( shader, text );
         glCompileShader( shader );
 
         if ( glGetShaderi( shader, GL_COMPILE_STATUS ) == 0 )
-        {
-            System.err.println( glGetShaderInfoLog( shader ) );
-            System.exit( 1 );
-        }
+            throw new IllegalArgumentException( glGetShaderInfoLog( shader ) );
 
         glAttachShader( program, shader );
     }

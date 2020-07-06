@@ -29,6 +29,7 @@ public class BufferUtil
             Vertex v = vertices[ i ];
             Vector3f pos = v.getPos();
             Vector3f normal = v.getNormal();
+            Vector3f tangent = v.getTangent();
 
             buffer.put( pos.getX() );
             buffer.put( pos.getY() );
@@ -38,6 +39,9 @@ public class BufferUtil
             buffer.put( normal.getX() );
             buffer.put( normal.getY() );
             buffer.put( normal.getZ() );
+            buffer.put( tangent.getX() );
+            buffer.put( tangent.getY() );
+            buffer.put( tangent.getZ() );
         }
 
         buffer.flip();

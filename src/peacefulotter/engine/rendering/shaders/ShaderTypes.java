@@ -10,12 +10,11 @@ public enum ShaderTypes
     POINT( "forward-point" ),
     SPOT( "forward-spot" );
 
-    private final ShaderResource resource;
     private final Shader shader;
 
     ShaderTypes( String shaderName )
     {
-        this.resource = new ShaderResource( shaderName );
+        ShaderResource resource = new ShaderResource( shaderName );
         this.shader = new Shader( resource );
     }
 

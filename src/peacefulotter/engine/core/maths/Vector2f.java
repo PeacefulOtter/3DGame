@@ -2,8 +2,6 @@ package peacefulotter.engine.core.maths;
 
 public class Vector2f
 {
-    public static final Vector2f ZERO = new Vector2f( 0, 0 );
-
     private float x, y;
 
     public Vector2f( float x, float y )
@@ -11,6 +9,8 @@ public class Vector2f
         this.x = x;
         this.y = y;
     }
+
+    public static Vector2f getZero() { return new Vector2f( 0, 0 ); }
 
     public float length()
     {

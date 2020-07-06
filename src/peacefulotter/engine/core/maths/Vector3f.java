@@ -2,7 +2,6 @@ package peacefulotter.engine.core.maths;
 
 public class Vector3f
 {
-    public static final Vector3f ZERO = new Vector3f( 0, 0, 0 );
     private float x, y, z;
 
     public Vector3f( float x, float y, float z )
@@ -11,6 +10,8 @@ public class Vector3f
         this.y = y;
         this.z = z;
     }
+
+    public static Vector3f getZero() { return new Vector3f( 0, 0, 0 ); }
 
     public float length()
     {
@@ -34,6 +35,8 @@ public class Vector3f
     public Vector3f normalize()
     {
         float length = length();
+        if ( length == 0 )
+            return new Vector3f( x, y, z );
         return new Vector3f( x / length, y / length, z / length );
     }
 

@@ -7,8 +7,6 @@ import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
 import peacefulotter.engine.rendering.resourceManagement.TextureResource;
 
 import javax.imageio.ImageIO;
-import javax.swing.tree.AbstractLayoutCache;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -33,6 +31,7 @@ public class ResourceLoader
 
     public String loadShader( String fileName )
     {
+        System.out.println("Loading shader : " + fileName );
         StringJoiner sj = new StringJoiner( "\n" );
 
         try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( SHADER_PATH + fileName ) ) ) )
@@ -123,8 +122,8 @@ public class ResourceLoader
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
-            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST );
+            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
             glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
         }

@@ -11,8 +11,8 @@ public class IndexedModel
     private final List<Vector3f> positions = new ArrayList<>();
     private final List<Vector2f> texCoords = new ArrayList<>();
     private final List<Vector3f> normals   = new ArrayList<>();
+    private final List<Vector3f> tangents  = new ArrayList<>();
     private final List<Integer>  indices   = new ArrayList<>();
-    private final List<Vector3f> tangents = new ArrayList<>();
 
 
     public void calcNormals()
@@ -39,6 +39,24 @@ public class IndexedModel
             normal0.set( normal0.add( normal ) );
             normal1.set( normal1.add( normal ) );
             normal2.set( normal2.add( normal ) );
+        }
+
+        //for( int i = 0; i < normals.size(); i++)
+            // normals.set( i, normals.get( i ).normalize() );
+    }
+
+    /*public void calcTangents()
+    {
+        int indicesLength = indices.size();
+
+        for ( int i = 0; i < indicesLength; i += 3 )
+        {
+            int i0 = indices.get( i );
+            int i1 = indices.get( i + 1 );
+            int i2 = indices.get( i + 2 );
+
+            Vector3f v1 = positions.get( i1 ).sub( positions.get( i0 ) );
+            Vector3f v2 = positions.get( i2 ).sub( positions.get( i0 ) );
 
             Vector2f uv0 = texCoords.get( i0 );
             Vector2f uv1 = texCoords.get( i1 );
@@ -47,27 +65,58 @@ public class IndexedModel
             Vector2f deltaUv1 = uv1.sub( uv0 );
             Vector2f deltaUv2 = uv2.sub( uv0 );
 
-            float r = 1 / ( deltaUv1.getX() * deltaUv2.getY() - deltaUv1.getY() * deltaUv2.getX() );
+            float dividend = deltaUv1.getX() * deltaUv2.getY() - deltaUv1.getY() * deltaUv2.getX();
+            float r = dividend == 0 ? 0.0f : 1.0f/dividend;
             Vector3f tangent = v1.mul( deltaUv2.getY() ).sub( v2.mul( deltaUv1.getY() ) ).mul( r );
-            tangents.add( tangent.normalize() );
-            tangents.add( tangent.normalize() );
-            tangents.add( tangent.normalize() );
+
+            tangents.set( i0, tangents.get( i0 ).add( tangent ) );
+            tangents.set( i1, tangents.get( i1 ).add( tangent ) );
+            tangents.set( i2, tangents.get( i2 ).add( tangent ) );
+            // tangent.mul( rotationMatrix );
         }
 
-        /*for ( int i = 0; i < positionsLength; i++ )
+        for( int i = 0; i < tangents.size(); i++ )
+            tangents.set( i, tangents.get( i ).normalize() );
+    }*/
+
+    public void calcTangents()
+    {
+        for(int i = 0; i < indices.size(); i += 3)
         {
-            Vector3f normal = normals.get( i );
-            normal.set( normal.normalize() );
-        }*/
+            int i0 = indices.get(i);
+            int i1 = indices.get(i + 1);
+            int i2 = indices.get(i + 2);
 
+            Vector3f edge1 = positions.get(i1).sub(positions.get(i0));
+            Vector3f edge2 = positions.get(i2).sub(positions.get(i0));
 
-        // tangent.mul( rotationMatrix );
+            float deltaU1 = texCoords.get(i1).getX() - texCoords.get(i0).getX();
+            float deltaV1 = texCoords.get(i1).getY() - texCoords.get(i0).getY();
+            float deltaU2 = texCoords.get(i2).getX() - texCoords.get(i0).getX();
+            float deltaV2 = texCoords.get(i2).getY() - texCoords.get(i0).getY();
+
+            float dividend = (deltaU1*deltaV2 - deltaU2*deltaV1);
+            //TODO: The first 0.0f may need to be changed to 1.0f here.
+            float f = dividend == 0 ? 0.0f : 1.0f/dividend;
+
+            Vector3f tangent = new Vector3f(0,0,0);
+            tangent.setX(f * (deltaV2 * edge1.getX() - deltaV1 * edge2.getX()));
+            tangent.setY(f * (deltaV2 * edge1.getY() - deltaV1 * edge2.getY()));
+            tangent.setZ(f * (deltaV2 * edge1.getZ() - deltaV1 * edge2.getZ()));
+
+            tangents.get(i0).set(tangents.get(i0).add(tangent));
+            tangents.get(i1).set(tangents.get(i1).add(tangent));
+            tangents.get(i2).set(tangents.get(i2).add(tangent));
+        }
+
+        for( int i = 0; i < tangents.size(); i++ )
+            tangents.set( i, tangents.get( i ).normalize() );
     }
 
 
     public List<Vector3f> getPositions() { return positions; }
     public List<Vector2f> getTexCoords() { return texCoords; }
     public List<Vector3f> getNormals()   { return normals; }
-    public List<Integer> getIndices()    { return indices; }
     public List<Vector3f> getTangents()  { return tangents; }
+    public List<Integer> getIndices()    { return indices; }
 }

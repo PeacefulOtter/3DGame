@@ -19,7 +19,7 @@ public abstract class MappedValues
     {
         if ( vectorMap.containsKey( name ) )
             return vectorMap.get( name );
-        return Vector3f.ZERO;
+        return Vector3f.getZero();
     }
 
     public void addFloat( String name, float value )

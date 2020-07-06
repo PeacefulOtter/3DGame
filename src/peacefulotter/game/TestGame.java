@@ -15,38 +15,6 @@ import peacefulotter.engine.rendering.shaders.*;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
 
-/*
-CAMERA SPOTLIGHT
-     spotLight = new SpotLight(
-                new PointLight(
-                        new BaseLight( new Vector3f( 1, 0.5f, 0 ), 0.8f ),
-                        new Attenuation( 0, 0.1f, 0.02f ),
-                        new Vector3f( -2, 0, 5 ),
-                        30
-                ),
-                new Vector3f( 1, 1, 1 ),
-                0.7f
-        );
-        PhongShader.setSpotLights( new SpotLight[] { spotLight } );
-
-PointLight p1 = new PointLight(
-            new BaseLight( new Vector3f( 1, 0, 0 ), 4f ),
-            new Attenuation( 0, 0.3f, 0.5f ),
-            new Vector3f( -2, 0, 3 ),
-            10 );
-PointLight p2 = new PointLight(
-            new BaseLight( new Vector3f( 0.3f, 0.7f, 1 ), 3f ),
-            new Attenuation( 1, 0.3f, 0.01f ),
-            new Vector3f( 2, 0, 7 ),
-            20 );
-PhongShader.setPointLights( new PointLight[] { p1, p2 } );
-p1.setPosition( new Vector3f( 3, 1, 8 * sinTemp + 10.5f ) );
-p2.setPosition( new Vector3f( 7, 1, 8 * cosTemp + 10.5f ) );
-
-PhongShader.setDirectionalLight( new DirectionalLight(
-        new BaseLight( new Vector3f( 1, 1, 1 ), 0.8f ), new Vector3f( 1, 1, 1 ) ) );
- */
-
 public class TestGame extends Game
 {
     public TestGame( String winName, int winWidth, int winHeight )
@@ -58,36 +26,34 @@ public class TestGame extends Game
 
     public void init()
     {
-        float fieldWidth = 10.0f;
-        float fieldDepth = 10.0f;
+        Material material = new Material(
+                new Texture( "bricks.jpg" ),
+                new Texture( "bricks_normal.jpg" ),
+                new Texture( "bricks_height.jpg" ),
+                1f, 2, 0.03f, -0.5f );
 
-        Vertex[] vertices = new Vertex[] {
-                new Vertex( new Vector3f(  -fieldWidth,     0,  -fieldDepth ),     new Vector2f( 0, 0 ) ),
-                new Vertex( new Vector3f(  -fieldWidth,     0, fieldDepth * 3 ), new Vector2f( 0, 1 ) ),
-                new Vertex( new Vector3f( fieldWidth * 3, 0,  -fieldDepth ),     new Vector2f( 1, 0 ) ),
-                new Vertex( new Vector3f( fieldWidth * 3, 0, fieldDepth * 3 ), new Vector2f( 1, 1 ) )
-        };
-        int[] indices = new int[] { 0, 1, 2, 2, 1, 3 };
 
-        Mesh mesh = new Mesh( vertices, indices, true ); // new ResourceLoader().loadMesh( "cube.obj", true );
-        /*Material material = new Material(
-                new Texture( "test.png" ),
-                new Vector3f( 1, 1, 1 ),
-                1,
-                8 );*/
-        Material material = new Material();
-        material.addTexture( "diffuse", new Texture( "grass.jpg" ) );
-        material.addFloat( "specularIntensity", 1 );
-        material.addFloat( "specularExponent", 2 );
+        Mesh mesh = new Mesh( "plane3.obj" );
+        GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        plane1.getTransform().scale( 3 );
+        plane2 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        GameObject plane3 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        GameObject plane4 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
+        plane2.getTransform().translate( new Vector3f( 8, 4, 8 ) ).scale( 0.5f );
+        plane3.getTransform().translate( new Vector3f( 0, 3, 0 ) ).scale( 0.5f );
+        plane4.getTransform().translate( new Vector3f( 0, 6, 0 ) ).scale( 0.5f );
+        plane3.addChild( plane4 );
+        plane2.addChild( plane3 );
 
-        Material alienMaterial = new Material();
-        alienMaterial.addTexture( "diffuse", new Texture( "apple.png" ) );
-        alienMaterial.addFloat( "specularIntensity", 2 );
-        alienMaterial.addFloat( "specularExponent", 3 );
+        Material alienMaterial = new Material(
+                new Texture( "metal.jpg" ),
+                new Texture( "metal_normal.jpg" ),
+                new Texture( "metal_height.png" ),
+                1, 2, 0.04f, -0.5f );
         GameObject alienObject = new GameObject().addComponent(
                 new MeshRenderer(  new Mesh( "alien.obj" ), alienMaterial ) );
         addObject( alienObject );
-        alienObject.getTransform().translate( new Vector3f( 10, 0, 10 ) );
+        alienObject.getTransform().translate( new Vector3f( 3, 0, 3 ) ).scale( 0.5f );
 
 
         /*Material treesMaterial = new Material();
@@ -100,37 +66,26 @@ public class TestGame extends Game
         treesObject.getTransform().translate( new Vector3f( -30, 0, -30 ) );*/
 
 
-        Material m4a4Material = new Material();
+        /*Material m4a4Material = new Material();
         m4a4Material.addTexture( "diffuse", new Texture( "test.png" ) );
         m4a4Material.addFloat( "specularIntensity", 1 );
-        m4a4Material.addFloat( "specularExponent", 2 );
+        m4a4Material.addFloat( "specularExponent", 2 );*/
         GameObject m4a4Object = new GameObject().addComponent(
-                new MeshRenderer(  new Mesh( "m4a1.obj" ), m4a4Material ) );
+                new MeshRenderer(  new Mesh( "m4a1.obj" ), alienMaterial ) );
         addObject( m4a4Object );
         m4a4Object.getTransform().translate( new Vector3f( 30, 0, 30 ) );
 
-
-        GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
-        plane2 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
-        GameObject plane3 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
-        GameObject plane4 = new GameObject().addComponent( new MeshRenderer( mesh, material ) );
-        plane2.getTransform().translate( new Vector3f( 8, 4, 8 ) ).scale( 0.5f );
-        plane3.getTransform().translate( new Vector3f( 0, 3, 0 ) ).scale( 0.5f );
-        plane4.getTransform().translate( new Vector3f( 0, 6, 0 ) ).scale( 0.5f );
-        plane3.addChild( plane4 );
-        plane2.addChild( plane3 );
-
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
-                new Vector3f( 0.4f, 0f,0.4f ),
-                0.3f );
+                new Vector3f( 0.5f, 0.5f,0.5f ),
+                0.2f );
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
 
         GameObject pointLightObject = new GameObject();
         PointLight pointLight = new PointLight(
-                new Vector3f( 1f, 0f,  1f ),
+                new Vector3f( 0f, 1f,  1f ),
                 0.4f,
                 new Attenuation( 0.5f, 0, 0.01f ) );
         pointLightObject.addComponent( pointLight );
@@ -138,15 +93,15 @@ public class TestGame extends Game
 
         GameObject spotLightObject = new GameObject();
         SpotLight spotLight = new SpotLight(
-                new Vector3f( 1f, 0,  0f ),
-                5f,
-                new Attenuation( 0, 0f, 0.01f ),
+                new Vector3f( 0f, 1f,  1f ),
+                1f,
+                new Attenuation( 0, 0.1f, 0.001f ),
                 0.7f
         );
         spotLightObject.getTransform()
                 .rotate( new Vector3f( 0, 1, 0 ), -90 )
                 .rotate( new Vector3f( 1, 0, 0 ), 40 )
-                .translate( new Vector3f( 35, 10f, 8 ) );
+                .translate( new Vector3f( 55, 10f, 8 ) );
         spotLightObject.addComponent( spotLight );
 
         GameObject cameraObject = new GameObject();
@@ -162,13 +117,13 @@ public class TestGame extends Game
         } );
         cameraObject.getTransform().translate( new Vector3f( 0, 1, 0 ) );
         cameraObject.addComponent( camera );
-
         // Hide Mouse
         // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
-        addObject( cameraObject );
         cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
-        addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject );
+
+
+        addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject, cameraObject );
 
         super.init();
     }
@@ -179,7 +134,7 @@ public class TestGame extends Game
     {
         t += deltaTime * 5;
         plane2.getTransform()
-                .setTranslation( new Vector3f( (float)Math.sin(t)*2 - 30, 4, 8 ) );
+                .setTranslation( new Vector3f( (float)Math.cos(t)*2 - 30, (float)Math.sin(t)*2 + 4, (float)Math.sin(t)*2 + 8 ) );
 
         super.update( deltaTime );
     }

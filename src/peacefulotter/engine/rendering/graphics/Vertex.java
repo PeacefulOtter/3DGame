@@ -5,7 +5,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 
 public class Vertex
 {
-    public static final int SIZE = 8;
+    public static final int SIZE = 11;
 
     private Vector3f pos;
     private Vector2f textureCoordinates;
@@ -14,20 +14,20 @@ public class Vertex
 
     public Vertex( Vector3f pos )
     {
-        this( pos, Vector2f.ZERO );
+        this( pos, Vector2f.getZero() );
     }
 
     public Vertex( Vector3f pos, Vector2f textureCoordinates )
     {
-        this( pos, textureCoordinates, Vector3f.ZERO );
+        this( pos, textureCoordinates, Vector3f.getZero() );
     }
 
     public Vertex( Vector3f pos, Vector2f textureCoordinates, Vector3f normal )
     {
-        this( pos, textureCoordinates, normal, Vector3f.ZERO );
+        this( pos, textureCoordinates, normal, Vector3f.getZero() );
     }
 
-    public Vertex(Vector3f pos, Vector2f textureCoordinates, Vector3f normal, Vector3f tangent )
+    public Vertex( Vector3f pos, Vector2f textureCoordinates, Vector3f normal, Vector3f tangent )
     {
         this.pos = pos;
         this.textureCoordinates = textureCoordinates;

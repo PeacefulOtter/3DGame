@@ -1,0 +1,5 @@
+
+vec2 calcParallaxTextCoord(sampler2D dispMap, mat3 tbnMatrix, vec3 directionToEye, vec2 textureCoords, float scale, float bias)
+{
+	return textureCoords.xy + (directionToEye * tbnMatrix).xy * (texture(dispMap, textureCoords.xy).r * scale + bias);
+}

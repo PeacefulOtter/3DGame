@@ -12,13 +12,13 @@ import java.util.*;
 
 public class OBJModel
 {
-    private List<Vector3f> positions = new ArrayList<>();
-    private List<Vector2f> texCoords = new ArrayList<>();
-    private List<Vector3f> normals   = new ArrayList<>();
-    private List<OBJIndex> indices   = new ArrayList<>();
+    private final List<Vector3f> positions = new ArrayList<>();
+    private final List<Vector2f> texCoords = new ArrayList<>();
+    private final List<Vector3f> normals   = new ArrayList<>();
+    private final List<OBJIndex> indices   = new ArrayList<>();
     private boolean hasTexCoords, hasNormals;
 
-    private InputStream resourceStream(String resourceName )
+    private InputStream resourceStream( String resourceName )
     {
         return getClass().getResourceAsStream( resourceName );
     }
@@ -48,7 +48,7 @@ public class OBJModel
                 {
                     texCoords.add( new Vector2f(
                             Float.parseFloat( split[ 1 ] ),
-                            Float.parseFloat( split[ 2 ] ) ) );
+                            1.0f - Float.parseFloat( split[ 2 ] ) ) );
                 }
                 else if ( prefix.equals( "vn" ) )
                 {
@@ -77,11 +77,12 @@ public class OBJModel
 
     private OBJIndex parseOBJIndex( String line )
     {
-        OBJIndex result = new OBJIndex();
         String[] values = line.split( "/" );
+
+        OBJIndex result = new OBJIndex();
         result.vertexIndex = Integer.parseInt( values[ 0 ] ) - 1;
 
-        hasTexCoords = values.length > 1;
+        hasTexCoords = values.length > 1 && !values[ 1 ].isEmpty();
         hasNormals = values.length > 2;
 
         if ( hasTexCoords )
@@ -103,8 +104,8 @@ public class OBJModel
 
         indices.forEach( ( index ) -> {
             Vector3f pos = positions.get( index.vertexIndex );
-            Vector2f texCoord = Vector2f.ZERO;
-            Vector3f normal = Vector3f.ZERO;
+            Vector2f texCoord = Vector2f.getZero();
+            Vector3f normal = Vector3f.getZero();
 
             if ( hasTexCoords )
                 texCoord = texCoords.get( index.texCoordIndex );
@@ -122,7 +123,7 @@ public class OBJModel
                 model.getPositions().add( pos );
                 model.getTexCoords().add( texCoord );
                 if ( hasNormals )
-                    model.getNormals().add( normal.normalize() );
+                    model.getNormals().add( normal );
             }
 
             Integer normalModelIndex = normalIndexMap.get( index.vertexIndex );
@@ -134,7 +135,9 @@ public class OBJModel
 
                 normalModel.getPositions().add( pos );
                 normalModel.getTexCoords().add( texCoord );
-                normalModel.getNormals().add( normal.normalize() );
+                normalModel.getNormals().add( normal );
+                System.out.println(Vector3f.getZero());
+                normalModel.getTangents().add( Vector3f.getZero() );
             }
 
             model.getIndices().add( modelVertexIndex );
@@ -145,10 +148,18 @@ public class OBJModel
         if ( !hasNormals )
         {
             normalModel.calcNormals();
-            int normalsLength = model.getNormals().size();
+            int normalsLength = model.getPositions().size();
             for ( int i = 0; i < normalsLength; i++ )
                 model.getNormals().add( normalModel.getNormals().get( indexMap.get( i ) ) );
         }
+
+        normalModel.calcTangents();
+
+        for ( int i = 0; i < model.getPositions().size(); i++ )
+            model.getTangents().add( normalModel.getTangents().get( indexMap.get( i ) ) );
+
+        // for( int i = 0; i < model.getTexCoords().size(); i++ )
+        //    model.getTexCoords().get( i ).setY( 1.0f - model.getTexCoords().get( i ).getY() );
 
         return model;
     }
