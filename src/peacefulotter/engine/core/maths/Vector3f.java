@@ -99,6 +99,20 @@ public class Vector3f
         return destination.sub( this ).mul( lerpFactor ).add( this );
     }
 
+    public Vector3f max( Vector3f other )
+    {
+        return new Vector3f(
+                Math.max( x, other.getX() ),
+                Math.max( y, other.getY() ),
+                Math.max( z, other.getZ() )
+        );
+    }
+
+    public float maxValue()
+    {
+        return Math.max( x, Math.max( y, z ) );
+    }
+
     @Override
     public boolean equals( Object other )
     {

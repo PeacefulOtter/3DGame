@@ -2,6 +2,7 @@ package peacefulotter.engine.core;
 
 
 import org.lwjgl.opengl.GL;
+import peacefulotter.engine.physics.PhysicsEngine;
 import peacefulotter.engine.utils.IO.Input;
 import peacefulotter.engine.utils.ProfileTimer;
 import peacefulotter.engine.utils.Time;
@@ -17,6 +18,7 @@ public class CoreEngine
     private final Game game;
     private final long currentWindow;
     private final RenderingEngine renderingEngine;
+    private final PhysicsEngine physicsEngine;
 
     private static final double FRAMES_CAP = 500;
     private static final double FRAME_TIME = 1.0 / FRAMES_CAP;
@@ -29,6 +31,7 @@ public class CoreEngine
     {
         this.game = game;
         this.renderingEngine = new RenderingEngine();
+        this.physicsEngine = new PhysicsEngine();
         this.currentWindow = renderingEngine.getCurrentWindow();
         this.GLprofiler = new ProfileTimer();
     }
