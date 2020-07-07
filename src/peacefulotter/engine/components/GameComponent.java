@@ -16,7 +16,7 @@ public abstract class GameComponent implements Initializable, Updatable, Rendera
     public void init() { }
 
     @Override
-    public void update(float deltaTime ) { }
+    public void update( float deltaTime ) { }
 
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine ) { }

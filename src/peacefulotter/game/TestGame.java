@@ -6,7 +6,6 @@ import peacefulotter.engine.components.lights.PointLight;
 import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
-import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
@@ -22,7 +21,7 @@ public class TestGame extends Game
         super( winName, winWidth, winHeight );
     }
 
-    GameObject plane2;
+    GameObject plane2, plane3;
 
     public void init()
     {
@@ -46,10 +45,11 @@ public class TestGame extends Game
 
 
         Mesh mesh = new Mesh( "plane3.obj" );
-        GameObject plane1 = new GameObject().addComponent( new MeshRenderer( mesh, bricks2 ) );
+        GameObject plane1 = new GameObject()
+                .addComponent( new MeshRenderer( mesh, bricks2 ) );
         plane1.getTransform().scale( 2 );
         plane2 = new GameObject().addComponent( new MeshRenderer( mesh, bricks1 ) );
-        GameObject plane3 = new GameObject().addComponent( new MeshRenderer( mesh, bricks1 ) );
+        plane3 = new GameObject().addComponent( new MeshRenderer( mesh, bricks1 ) );
         GameObject plane4 = new GameObject().addComponent( new MeshRenderer( mesh, bricks1 ) );
         plane2.getTransform().translate( new Vector3f( 8, 4, 8 ) ).scale( 0.5f );
         plane3.getTransform().translate( new Vector3f( 0, 3, 0 ) ).scale( 0.5f );
@@ -62,10 +62,15 @@ public class TestGame extends Game
         addObject( alienObject );
         alienObject.getTransform().translate( new Vector3f( 3, 0, 3 ) ).scale( 0.5f );
 
-        GameObject m4a4Object = new GameObject().addComponent(
-                new MeshRenderer(  new Mesh( "m4a1.obj" ), alienMaterial ) );
-        addObject( m4a4Object );
-        m4a4Object.getTransform().translate( new Vector3f( 30, 0, 30 ) );
+        GameObject sphereObject1 = new GameObject( new Vector3f(-10f, 0, 0 ) ).addComponent(
+                new MeshRenderer(  new Mesh( "sphere.obj" ), bricks1 ) );
+        addObject( sphereObject1 );
+        sphereObject1.getTransform().translate( new Vector3f( 30, 0, 30 ) ).scale( 0.3f );
+
+        GameObject sphereObject2 = new GameObject( new Vector3f(10f, 0, 0 ) ).addComponent(
+                new MeshRenderer(  new Mesh( "sphere.obj" ), bricks2 ) );
+        addObject( sphereObject2 );
+        sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.3f );
 
 
 
@@ -115,7 +120,6 @@ public class TestGame extends Game
         // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
         cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
 
-
         addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject, cameraObject );
 
         super.init();
@@ -125,10 +129,9 @@ public class TestGame extends Game
 
     public void update( float deltaTime )
     {
-        //t += deltaTime * 5;
+        t += deltaTime * 5;
         plane2.getTransform()
                 .setTranslation( new Vector3f( (float)Math.cos(t)*2 - 30, (float)Math.sin(t)*2 + 4, (float)Math.sin(t)*2 + 8 ) );
-
         super.update( deltaTime );
     }
 }

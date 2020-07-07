@@ -1,21 +1,24 @@
 package peacefulotter.engine.core;
 
 import peacefulotter.engine.components.GameObject;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.elementary.Updatable;
+import peacefulotter.engine.physics.PhysicsEngine;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Window;
-import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.utils.ProfileTimer;
 
 public abstract class Game implements Updatable
 {
-    private final ProfileTimer profiler;
+    private final ProfileTimer updateProfiler, physicsProfiler;
     private final CoreEngine engine;
     private final GameObject root;
 
     protected Game( String winName, int winWidth, int winHeight )
     {
         Window.setAttributes( winName, winWidth, winHeight );
-        this.profiler = new ProfileTimer();
+        this.updateProfiler = new ProfileTimer();
+        this.physicsProfiler = new ProfileTimer();
         this.engine = new CoreEngine( this );
         this.root = new GameObject();
         startEngine();
@@ -27,9 +30,15 @@ public abstract class Game implements Updatable
     public void init() { root.initAll(); }
     public void update( float deltaTime )
     {
-        profiler.startInvocation();
+        updateProfiler.startInvocation();
         root.updateAll( deltaTime );
-        profiler.stopInvocation();
+        updateProfiler.stopInvocation();
+    }
+    public void simulate( float deltaTime, PhysicsEngine physicsEngine )
+    {
+        physicsProfiler.startInvocation();
+        physicsEngine.simulate( root, deltaTime );
+        physicsProfiler.stopInvocation();
     }
     public void render( RenderingEngine renderingEngine ) { renderingEngine.render( root ); }
 
@@ -40,5 +49,13 @@ public abstract class Game implements Updatable
             addObject( object );
     }
 
-    public double displayUpdateTime( double dividend ) { return profiler.displayAndReset( "Update time", dividend ); }
+    public double displayUpdateTime( double dividend )
+    {
+        return updateProfiler.displayAndReset( "Update time", dividend );
+    }
+
+    public double displayPhysicsTime( double dividend )
+    {
+        return physicsProfiler.displayAndReset( "Physics time", dividend );
+    }
 }

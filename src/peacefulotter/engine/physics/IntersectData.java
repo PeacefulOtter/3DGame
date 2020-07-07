@@ -11,6 +11,6 @@ public class IntersectData
         this.distance = distance;
     }
 
-    public boolean isDoesIntersect() { return doesIntersect; }
+    public boolean getDoesIntersect() { return doesIntersect; }
     public float getDistance() { return distance; }
 }

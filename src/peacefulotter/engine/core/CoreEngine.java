@@ -97,6 +97,7 @@ public class CoreEngine
                 // profiling
                 double totalTime = ( 1000.0 * framesCounter ) / (double) frames;
                 double totalRecordedTime = 0;
+                totalRecordedTime += game.displayPhysicsTime( frames );
                 totalRecordedTime += game.displayUpdateTime( frames );
                 totalRecordedTime += renderingEngine.displayRenderTime( frames );
                 totalRecordedTime += GLprofiler.displayAndReset( "GL core engine time", frames );
@@ -117,6 +118,7 @@ public class CoreEngine
 
             if ( render )
             {
+                game.simulate( (float) FRAME_TIME, physicsEngine );
                 game.render( renderingEngine );
                 frames++;
             }
@@ -134,4 +136,6 @@ public class CoreEngine
     }
 
     public RenderingEngine getRenderingEngine() { return renderingEngine; }
+
+    public PhysicsEngine getPhysicsEngine() { return physicsEngine; }
 }
