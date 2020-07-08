@@ -2,7 +2,7 @@ package peacefulotter.engine.physics;
 
 
 import peacefulotter.engine.components.GameObject;
-import peacefulotter.engine.physics.colliders.PhysicsObject;
+import peacefulotter.engine.physics.colliders.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,18 +27,13 @@ public class PhysicsEngine
 
         for ( int i = 0; i < numObjects; i++ )
         {
-            PhysicsObject sphereI = physicsObjects.get( i );
+            PhysicsObject objectI = physicsObjects.get( i );
             for ( int j = i + 1; j < numObjects; j++ )
             {
-                PhysicsObject sphereJ = physicsObjects.get( j );
-                IntersectData intersectData = sphereI.getBoundingSphere()
-                        .intersectBoundingSphere( sphereJ.getBoundingSphere() );
+                PhysicsObject objectJ = physicsObjects.get( j );
+                IntersectData intersectData = Intersections.intersect( objectI.getCollider(), objectJ.getCollider() );
                 if ( intersectData.getDoesIntersect() )
-                {
-                    sphereI.interactWith( sphereJ );
-                    sphereI.setVelocity( sphereI.getVelocity().mul( -1 ) );
-                    sphereJ.setVelocity( sphereJ.getVelocity().mul( -1 ) );
-                }
+                    objectI.interactWith( objectJ );
             }
         }
     }

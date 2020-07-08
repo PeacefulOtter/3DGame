@@ -1,7 +1,5 @@
 package peacefulotter.engine.physics.colliders;
 
-import peacefulotter.engine.physics.IntersectData;
-
 public abstract class Collider
 {
     private final ColliderTypes type;
@@ -11,18 +9,20 @@ public abstract class Collider
         this.type = type;
     }
 
-    abstract public IntersectData intersect( Collider other );
-
     public enum ColliderTypes
     {
         BOUNDING_SPHERE( BoundingSphere.class ),
         AABB( AABB.class ),
         PLANE( Plane.class );
 
+        private final Class<? extends Collider> colliderClass;
 
         ColliderTypes( Class<? extends Collider> a )
         {
+            this.colliderClass = a;
         }
+
+        public Class<? extends Collider> getColliderClass() { return colliderClass; }
     }
 
     public ColliderTypes getType() { return type; }

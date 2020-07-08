@@ -41,7 +41,7 @@ public class TestGame extends Game
                 new Texture( "metal.jpg" ),
                 new Texture( "metal_normal.jpg" ),
                 new Texture( "metal_height.png" ),
-                1, 8, 0.04f, -0.5f );
+                2, 12, 0.04f, -1f );
 
 
         Mesh mesh = new Mesh( "plane3.obj" );
@@ -68,7 +68,7 @@ public class TestGame extends Game
         sphereObject1.getTransform().translate( new Vector3f( 30, 0, 30 ) ).scale( 0.3f );
 
         GameObject sphereObject2 = new GameObject( new Vector3f(10f, 0, 0 ) ).addComponent(
-                new MeshRenderer(  new Mesh( "sphere.obj" ), bricks2 ) );
+                new MeshRenderer(  new Mesh( "sphere.obj" ), alienMaterial ) );
         addObject( sphereObject2 );
         sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.3f );
 

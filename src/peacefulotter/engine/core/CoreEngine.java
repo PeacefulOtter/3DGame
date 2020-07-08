@@ -97,6 +97,7 @@ public class CoreEngine
                 // profiling
                 double totalTime = ( 1000.0 * framesCounter ) / (double) frames;
                 double totalRecordedTime = 0;
+                System.out.println();
                 totalRecordedTime += game.displayPhysicsTime( frames );
                 totalRecordedTime += game.displayUpdateTime( frames );
                 totalRecordedTime += renderingEngine.displayRenderTime( frames );

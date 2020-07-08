@@ -5,25 +5,27 @@ import peacefulotter.engine.elementary.Interactable;
 import peacefulotter.engine.elementary.Interactor;
 import peacefulotter.engine.physics.InteractionHandler;
 
-public class PhysicsObject implements Interactable, Interactor
+public abstract class PhysicsObject implements Interactable, Interactor
 {
+    private final InteractionHandler handler;
+
     private Vector3f position;
     private Vector3f velocity;
     private float radius;
-    private InteractionHandler handler;
 
     public PhysicsObject( Vector3f velocity )
     {
-        this( Vector3f.getZero(), velocity, 6 );
+        this( Vector3f.getZero(), velocity );
     }
 
-    public PhysicsObject( Vector3f position, Vector3f velocity, float radius )
+    public PhysicsObject( Vector3f position, Vector3f velocity )
     {
         this.position = position;
         this.velocity = velocity;
-        this.radius = radius;
         this.handler = new ObjectInteractionHandler();
     }
+
+    abstract public Collider getCollider();
 
     @Override
     public void interactWith( Interactable other )
@@ -39,22 +41,22 @@ public class PhysicsObject implements Interactable, Interactor
         other.interactWith( this );
     }
 
-    public BoundingSphere getBoundingSphere()
+    private class ObjectInteractionHandler implements InteractionHandler
     {
-        return new BoundingSphere( position, radius );
-    }
+        // public void interactWith( PhysicsObjectHerited other );
 
-    private static class ObjectInteractionHandler implements InteractionHandler
-    {
         @Override
         public void interactWith( PhysicsObject other )
         {
-            //v System.out.println("interaction Handler");
+            if ( !getVelocity().equals( Vector3f.getZero() ) )
+                PhysicsObject.this.velocity = PhysicsObject.this.velocity.mul( -1 );
+            if ( !other.getVelocity().equals( Vector3f.getZero() ) )
+                other.setVelocity( other.getVelocity().mul( -1 ) );
         }
     }
 
     public Vector3f getPosition() { return position; }
-    public void setPosition( Vector3f position ) { this.position = position; }
+    public void setPosition( Vector3f position ) { this.position = position;  }
 
     public Vector3f getVelocity() { return velocity; }
     public void setVelocity( Vector3f velocity ) { this.velocity = velocity; }

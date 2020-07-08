@@ -5,6 +5,8 @@ import peacefulotter.engine.elementary.Initializable;
 import peacefulotter.engine.elementary.Renderable;
 import peacefulotter.engine.elementary.Simulatable;
 import peacefulotter.engine.elementary.Updatable;
+import peacefulotter.engine.physics.colliders.BoundingSphere;
+import peacefulotter.engine.physics.colliders.BoundingSpherePhysicsObject;
 import peacefulotter.engine.physics.colliders.PhysicsObject;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
@@ -14,7 +16,10 @@ public abstract class GameModel implements Initializable, Updatable, Renderable,
     private final PhysicsObject physicsObject;
 
     public GameModel() { this( Vector3f.getZero() ); }
-    public GameModel( Vector3f vel ) { physicsObject = new PhysicsObject( vel ); }
+    public GameModel( Vector3f vel )
+    {
+        physicsObject = new BoundingSpherePhysicsObject( Vector3f.getZero(), vel, 6 );
+    }
 
     @Override
     public void update( float deltaTime )
