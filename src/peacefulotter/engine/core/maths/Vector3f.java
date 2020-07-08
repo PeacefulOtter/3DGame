@@ -94,6 +94,11 @@ public class Vector3f
 
     public Vector3f abs() { return new Vector3f( Math.abs( x ), Math.abs( y ), Math.abs( z ) ); }
 
+    public Vector3f reflect( Vector3f other )
+    {
+        return this.sub( other.mul( 2 * this.dot( other ) ) );
+    }
+
     public Vector3f lerp( Vector3f destination, float lerpFactor )
     {
         return destination.sub( this ).mul( lerpFactor ).add( this );

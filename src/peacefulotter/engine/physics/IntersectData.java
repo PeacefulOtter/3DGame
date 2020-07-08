@@ -1,16 +1,19 @@
 package peacefulotter.engine.physics;
 
+import peacefulotter.engine.core.maths.Vector3f;
+
 public class IntersectData
 {
     private final boolean doesIntersect;
-    private final float distance;
+    private final Vector3f direction;
 
-    public IntersectData( boolean doesIntersect, float distance )
+    public IntersectData( boolean doesIntersect, Vector3f direction )
     {
         this.doesIntersect = doesIntersect;
-        this.distance = distance;
+        this.direction = direction;
     }
 
     public boolean getDoesIntersect() { return doesIntersect; }
-    public float getDistance() { return distance; }
+    public Vector3f getDirection() { return direction; }
+    public float getDistance() { return direction.length(); }
 }

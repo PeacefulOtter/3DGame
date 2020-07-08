@@ -1,6 +1,6 @@
 package peacefulotter.engine.physics.colliders;
 
-import org.lwjgl.system.CallbackI;
+import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector3f;
 
 public class AABBPhysicsObject extends PhysicsObject

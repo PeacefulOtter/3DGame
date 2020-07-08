@@ -10,9 +10,16 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
+import peacefulotter.game.actor.Player;
 
 import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
+
+
+
+// Hide Mouse
+// int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
+// glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
 
 public class TestGame extends Game
 {
@@ -57,20 +64,18 @@ public class TestGame extends Game
         plane3.addChild( plane4 );
         plane2.addChild( plane3 );
 
-        GameObject alienObject = new GameObject().addComponent(
-                new MeshRenderer(  new Mesh( "alien.obj" ), alienMaterial ) );
-        addObject( alienObject );
-        alienObject.getTransform().translate( new Vector3f( 3, 0, 3 ) ).scale( 0.5f );
+        GameObject characterObject = new GameObject()
+                .addComponent( new MeshRenderer( new Mesh( "alien.obj" ), alienMaterial ) );
 
-        GameObject sphereObject1 = new GameObject( new Vector3f(-10f, 0, 0 ) ).addComponent(
-                new MeshRenderer(  new Mesh( "sphere.obj" ), bricks1 ) );
-        addObject( sphereObject1 );
-        sphereObject1.getTransform().translate( new Vector3f( 30, 0, 30 ) ).scale( 0.3f );
+        PhysicsObject sphereObject1 = new PhysicsObject( new Vector3f(-20f, 0, 20 ) )
+                .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), bricks1 ) );
+        sphereObject1.getTransform().translate( new Vector3f( 30, 0, 10 ) ).scale( 0.3f );
 
-        GameObject sphereObject2 = new GameObject( new Vector3f(10f, 0, 0 ) ).addComponent(
-                new MeshRenderer(  new Mesh( "sphere.obj" ), alienMaterial ) );
-        addObject( sphereObject2 );
+        PhysicsObject sphereObject2 = new PhysicsObject( new Vector3f(20f, 0, 0 ) )
+                .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), alienMaterial ) );
         sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.3f );
+
+        addPhysicalObjects( sphereObject1, sphereObject2 );
 
 
 
@@ -102,25 +107,17 @@ public class TestGame extends Game
                 .translate( new Vector3f( 55, 10f, 8 ) );
         spotLightObject.addComponent( spotLight );
 
-        GameObject cameraObject = new GameObject();
+
+        GameObject cameraObject = new Player();
         Camera camera = new Camera(
                 70f,
                 (float) Window.getWidth() / (float) Window.getHeight(),
                 0.01f, 1000f );
-        camera.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
-            System.out.println("shoottingg");
-        } );
-        camera.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
-            System.out.println("aiminggg");
-        } );
-        cameraObject.getTransform().translate( new Vector3f( 0, 1, 0 ) );
-        cameraObject.addComponent( camera );
-        // Hide Mouse
-        // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
-        // glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
-        cameraObject.getTransform().translate( new Vector3f(0, 2, 0) );
 
-        addObjects( plane1, plane2, dirLightObject, pointLightObject, spotLightObject, cameraObject );
+        cameraObject.getTransform().translate( new Vector3f( 0, 6.5f, 0.3f ) );
+        cameraObject.addComponent( camera );
+
+        addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject, cameraObject );
 
         super.init();
     }

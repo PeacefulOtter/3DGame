@@ -7,11 +7,9 @@ import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
-import peacefulotter.engine.utils.IO.IOExecutable;
 import peacefulotter.engine.utils.IO.Input;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 
 public class Camera extends GameComponent
 {
@@ -41,24 +39,9 @@ public class Camera extends GameComponent
         return projection.mul( cameraRotation.mul( cameraTranslation ) );
     }
 
-    @Override
-    public void init()
-    {
-        Input.addKeyCallback( GLFW_KEY_W, ( deltaTime ) -> move( getForward(), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(),   deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward(), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(),   deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_SPACE,         ( deltaTime ) -> move( getUp(), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL,  ( deltaTime ) -> move( getDown(), deltaTime ) );
-
-        Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
-        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * rotationSensitivity ) );
-        Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * rotationSensitivity ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * rotationSensitivity ) );
-    }
 
     @Override
-    public void update(float deltaTime )
+    public void update( float deltaTime )
     {
         // spotLight.getPointLight().setPosition( position );
         // spotLight.setDirection( forward );
@@ -71,28 +54,10 @@ public class Camera extends GameComponent
         rotateX( deltaPos.getY() * angle );
     }
 
-    public void move( Vector3f direction, float amount )
-    {
-        getTransform().setTranslation(
-                getTransform().getTranslation().add(
-                        direction.mul( amount * movingSensitivity ) ) );
-    }
-
     private void rotateX( float angleDeg ) { getTransform().rotate( getRight(), angleDeg ); }
 
     private void rotateY( float angleDeg ) { getTransform().rotate( Y_AXIS, angleDeg ); }
 
-    public void addMouseCallback( int keyCode, IOExecutable exec )
-    {
-        Input.addMouseCallback( keyCode, exec );
-    }
-
-
-    public Vector3f getForward()  { return getTransform().getRotation().getForward(); }
-    public Vector3f getBackward() { return getTransform().getRotation().getBack(); }
-    public Vector3f getUp()       { return getTransform().getRotation().getUp(); }
-    public Vector3f getDown()     { return getTransform().getRotation().getDown(); }
     public Vector3f getRight()    { return getTransform().getRotation().getRight(); }
-    public Vector3f getLeft()     { return getTransform().getRotation().getLeft(); }
 
 }

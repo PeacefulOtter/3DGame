@@ -1,6 +1,7 @@
 package peacefulotter.engine.core;
 
 import peacefulotter.engine.components.GameObject;
+import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.physics.PhysicsEngine;
@@ -47,6 +48,13 @@ public abstract class Game implements Updatable
     {
         for ( GameObject object : objects )
             addObject( object );
+    }
+
+    public void addPhysicalObject( PhysicsObject object ) { root.addPhysicalChild( object ); }
+    public void addPhysicalObjects( PhysicsObject ...objects )
+    {
+        for ( PhysicsObject object : objects )
+            addPhysicalObject( object );
     }
 
     public double displayUpdateTime( double dividend )

@@ -2,29 +2,34 @@ package peacefulotter.engine.components;
 
 import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.elementary.Initializable;
+import peacefulotter.engine.elementary.Renderable;
+import peacefulotter.engine.elementary.Updatable;
+import peacefulotter.engine.physics.colliders.BoundingSpherePhysicsObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
+import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GameObject extends GameModel
+public class GameObject implements Initializable, Updatable, Renderable
 {
+    private final STransform transform = new STransform();
+
     private final Set<GameComponent> components = new HashSet<>();
     private final Set<GameObject> children = new HashSet<>();
+    private final Set<PhysicsObject> physicsChildren = new HashSet<>();
 
     private CoreEngine engine;
 
-    public GameObject() { super(); }
-    public GameObject( Vector3f vel ) { super( vel ); }
 
     public GameObject addComponent( GameComponent component )
     {
         components.add( component );
         component.setParent( this );
-
         return this;
     }
 
@@ -35,15 +40,21 @@ public class GameObject extends GameModel
         return this;
     }
 
+    public GameObject addPhysicalChild( PhysicsObject child )
+    {
+        physicsChildren.add( child );
+        return addChild( (GameObject) child );
+    }
+
     public void init()
     {
         for ( GameComponent component: components )
             component.init();
     }
 
+    @Override
     public void update( float deltaTime )
     {
-        super.update( deltaTime );
         getTransform().update( deltaTime );
 
         for ( GameComponent component: components )
@@ -56,11 +67,6 @@ public class GameObject extends GameModel
             component.render( shader, renderingEngine );
     }
 
-    @Override
-    public void simulate( float deltaTime )
-    {
-        super.simulate( deltaTime );
-    }
 
     public void initAll()
     {
@@ -88,10 +94,9 @@ public class GameObject extends GameModel
 
     public void simulateAll( float deltaTime )
     {
-        simulate( deltaTime );
-
-        for ( GameObject object : children )
-            object.simulate( deltaTime );
+        System.out.println(physicsChildren);
+        for ( PhysicsObject object : physicsChildren )
+            object.simulateAll( deltaTime );
     }
 
     public List<GameObject> getAttachedObjects()
@@ -107,7 +112,6 @@ public class GameObject extends GameModel
         if ( this.engine != engine )
         {
             this.engine = engine;
-            engine.getPhysicsEngine().addPhysicObject( getPhysicsObject() );
 
             for ( GameComponent component: components )
                 component.addToEngine( engine );
@@ -116,4 +120,8 @@ public class GameObject extends GameModel
                 child.setEngine( engine );
         }
     }
+
+    public STransform getTransform() { return transform; }
+    protected CoreEngine getCoreEngine() { return engine; }
+    protected Set<PhysicsObject> getPhysicsChildren() { return physicsChildren; }
 }

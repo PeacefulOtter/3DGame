@@ -14,7 +14,7 @@ public class Intersections
         Vector3f distances  = distances1.max( distances2 );
         float maxDistance   = distances.maxValue();
 
-        return new IntersectData( maxDistance < 0, maxDistance );
+        return new IntersectData( maxDistance < 0, distances );
     }
 
     public static IntersectData intersect( AABB collider1, BoundingSphere collider2 )
@@ -40,10 +40,11 @@ public class Intersections
     public static IntersectData intersect( BoundingSphere collider1, BoundingSphere collider2 )
     {
         float radiusDistance = collider1.getRadius() + collider2.getRadius();
-        float centerDistance = collider2.getCenter().sub( collider1.getCenter() ).length();
+        Vector3f direction = collider2.getCenter().sub( collider1.getCenter() );
+        float centerDistance = direction.length();
         float distance = centerDistance - radiusDistance;
 
-        return new IntersectData( distance < 0, distance );
+        return new IntersectData( distance < 0, direction.normalize().mul( distance ) );
     }
 
     public static IntersectData intersect( Plane collider1, BoundingSphere collider2 )
@@ -52,7 +53,7 @@ public class Intersections
                 collider1.getNormal().dot( collider2.getCenter() ) + collider1.getDistance() );
         float distanceFromSphere = distanceFromCenterSphere - collider2.getRadius();
 
-        return new IntersectData( distanceFromSphere < 0, distanceFromSphere );
+        return new IntersectData( distanceFromSphere < 0, collider1.getNormal().mul( distanceFromCenterSphere ) );
     }
 
     public static IntersectData intersect( BoundingSphere collider1, Plane collider2 )
