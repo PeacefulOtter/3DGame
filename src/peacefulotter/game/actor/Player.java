@@ -1,6 +1,6 @@
 package peacefulotter.game.actor;
 
-import peacefulotter.engine.components.GameObject;
+import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.utils.IO.Input;
 
@@ -8,12 +8,15 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static peacefulotter.engine.utils.IO.Input.*;
 
-public class Player extends GameObject
+public class Player extends PhysicsObject
 {
+    private static final float GRAVITY = 55f;
+    private static final float JUMP_HEIGHT = 20f;
     private static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
 
     private final float movingSensitivity;
     private float rotationSensitivity;
+    private boolean isJumping, isCrouching;
 
     public Player()
     {
@@ -22,6 +25,7 @@ public class Player extends GameObject
 
     public Player( float movingSensitivity, float rotationSensitivity )
     {
+        super( Vector3f.getZero() );
         this.movingSensitivity = movingSensitivity;
         this.rotationSensitivity = rotationSensitivity;
     }
@@ -33,12 +37,12 @@ public class Player extends GameObject
         Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(),   deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward(), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(),   deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_SPACE,         ( deltaTime ) -> move( getUp(), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL,  ( deltaTime ) -> move( getDown(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_SPACE,         ( deltaTime ) -> jump() );// move( getUp(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL,  ( deltaTime ) -> crouch() );
 
-        Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
+        //Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
         Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * rotationSensitivity ) );
-        Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * rotationSensitivity ) );
+        //Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * rotationSensitivity ) );
         Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * rotationSensitivity ) );
 
         addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
@@ -47,6 +51,40 @@ public class Player extends GameObject
         addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
             System.out.println("aiminggg");
         } );
+    }
+
+    @Override
+    public void simulate(float deltaTime)
+    {
+        super.simulate(deltaTime);
+        if ( getPosition().getY() <= 0 )
+        {
+            setVelocity( getVelocity().setY( 0 ) );
+            setPosition( getPosition().setY( 0 ) );
+            isJumping = false;
+        }
+        else
+            setVelocity( getVelocity().setY( getVelocity().getY() - GRAVITY * deltaTime ) );
+    }
+
+    private void jump()
+    {
+        if ( !isJumping )
+        {
+            Vector3f velocity = getVelocity();
+            velocity.setY( velocity.getY() + JUMP_HEIGHT );
+            setVelocity( velocity );
+            isJumping = true;
+        }
+    }
+
+    private void crouch()
+    {
+        if ( !isCrouching )
+        {
+            // ...
+            isCrouching = true;
+        }
     }
 
     public void move( Vector3f direction, float amount )

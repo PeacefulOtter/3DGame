@@ -1,6 +1,6 @@
 TODO FILE 
 
-- Add a distance param to avoid checking for impossible collisions
+- Add a distance param to avoid checking for impossible collisions (Sweet and Prune algo)
 - Implement collision detection for all sorts of object
 - Add gravity to all physical objects
 - Fix camera not following the player
@@ -9,4 +9,5 @@ TODO FILE
 - Add bullet system
 - Create player animations and reload animations
 - Add some more gameplay (double jump, etc..)
-- Multiplayer
+- Multiplayers
+

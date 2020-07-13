@@ -114,12 +114,12 @@ public class CoreEngine
                 relativeTime -= FRAME_TIME;
                 render = true;
                 game.update( (float) FRAME_TIME );
+                game.simulate( (float) FRAME_TIME, physicsEngine );
                 Input.execInputs( (float) FRAME_TIME );
             }
 
             if ( render )
             {
-                game.simulate( (float) FRAME_TIME, physicsEngine );
                 game.render( renderingEngine );
                 frames++;
             }

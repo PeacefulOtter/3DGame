@@ -10,6 +10,17 @@ import peacefulotter.engine.physics.IntersectData;
 import peacefulotter.engine.physics.colliders.BoundingSphere;
 import peacefulotter.engine.physics.colliders.Collider;
 
+
+/*
+Vector3f direction = intersectData.getDirection().normalize();
+            Vector3f otherDirection = direction.reflect( getVelocity() ).normalize();
+            if ( !getVelocity().equals( Vector3f.getZero() ) )
+                setVelocity( getVelocity().reflect( direction ) );
+            if ( !other.getVelocity().equals( Vector3f.getZero() ) )
+                other.setVelocity( other.getVelocity().reflect( otherDirection ) );
+
+ */
+
 public class PhysicsObject extends GameObject implements Simulatable, Interactable, Interactor
 {
     private final InteractionHandler handler;
@@ -57,7 +68,6 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     @Override
     public void simulate( float deltaTime )
     {
-        System.out.println("simulate");
         if ( !velocity.equals( Vector3f.getZero() ) )
         {
             Vector3f newPos = getTransform().getTranslation().add( velocity.mul( deltaTime ) );
@@ -98,19 +108,14 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         other.interactWith( this, intersectData );
     }
 
-    private class ObjectInteractionHandler implements InteractionHandler
+    private static class ObjectInteractionHandler implements InteractionHandler
     {
         // public void interactWith( PhysicsObjectHerited other );
 
         @Override
         public void interactWith( PhysicsObject other, IntersectData intersectData )
         {
-            Vector3f direction = intersectData.getDirection().normalize();
-            Vector3f otherDirection = direction.reflect( getVelocity() ).normalize();
-            if ( !getVelocity().equals( Vector3f.getZero() ) )
-                setVelocity( getVelocity().reflect( direction ) );
-            if ( !other.getVelocity().equals( Vector3f.getZero() ) )
-                other.setVelocity( other.getVelocity().reflect( otherDirection ) );
+
         }
     }
 

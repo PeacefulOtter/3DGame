@@ -1,6 +1,8 @@
 package peacefulotter.engine.utils;
 
 import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.rendering.graphics.SimpleMaterial;
+import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.graphics.Vertex;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
@@ -134,5 +136,44 @@ public class ResourceLoader
         }
 
         return resource;
+    }
+
+    public List<SimpleMaterial> loadMaterial(String fileName )
+    {
+        List<SimpleMaterial> simpleMaterials = new ArrayList<>();
+        int index = -1;
+
+        try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MODELS_PATH + fileName ) ) ) )
+        {
+            String line;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                if ( line.startsWith( "newmtl" ) )
+                {
+                    simpleMaterials.add( new SimpleMaterial() );
+                    index++;
+                }
+                else if ( line.startsWith( "Ni" ) )
+                {
+                    simpleMaterials.get( index ).setSpecularIntensity( Float.parseFloat( line.split( " " )[ 1 ] ) );
+                }
+                else if ( line.startsWith( "Ns" ) )
+                {
+                    simpleMaterials.get( index ).setSpecularPower( Float.parseFloat( line.split( " " )[ 1 ] ) );
+                }
+                else if ( line.startsWith( "map_" ) )
+                {
+                    simpleMaterials.get( index ).setTexture( new Texture( line.split( " " )[ 1 ] ) );
+                }
+                System.out.println(line);
+            }
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+        System.out.println(simpleMaterials);
+        return simpleMaterials;
     }
 }

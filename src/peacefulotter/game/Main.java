@@ -12,7 +12,7 @@ public class Main
     public static void main( String[] args )
     {
         // System.out.println(glGetString(GL_VERSION));
-        new TestGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
+        new FPSGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
         // Runtime.getRuntime().addShutdownHook( new Disposable().createDisposeThread() );
     }
 

@@ -67,11 +67,11 @@ public class TestGame extends Game
         GameObject characterObject = new GameObject()
                 .addComponent( new MeshRenderer( new Mesh( "alien.obj" ), alienMaterial ) );
 
-        PhysicsObject sphereObject1 = new PhysicsObject( new Vector3f(-20f, 0, 20 ) )
+        PhysicsObject sphereObject1 = new PhysicsObject( new Vector3f(-5f, 0, 5 ) )
                 .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), bricks1 ) );
         sphereObject1.getTransform().translate( new Vector3f( 30, 0, 10 ) ).scale( 0.3f );
 
-        PhysicsObject sphereObject2 = new PhysicsObject( new Vector3f(20f, 0, 0 ) )
+        PhysicsObject sphereObject2 = new PhysicsObject( new Vector3f(5f, 0, 0 ) )
                 .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), alienMaterial ) );
         sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.3f );
 

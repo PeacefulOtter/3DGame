@@ -94,7 +94,6 @@ public class GameObject implements Initializable, Updatable, Renderable
 
     public void simulateAll( float deltaTime )
     {
-        System.out.println(physicsChildren);
         for ( PhysicsObject object : physicsChildren )
             object.simulateAll( deltaTime );
     }

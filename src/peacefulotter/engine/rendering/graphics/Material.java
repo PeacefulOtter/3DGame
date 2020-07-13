@@ -15,10 +15,11 @@ public class Material extends MappedValues
         super();
         textureMap = new HashMap<>();
         addTexture( "diffuse", diffuse );
-        addFloat( "specularIntensity", specularIntensity );
-        addFloat( "specularPower", specularPower );
         addTexture( "normalMap", normalMap );
         addTexture( "dispMap", dispMap );
+
+        addFloat( "specularIntensity", specularIntensity );
+        addFloat( "specularPower", specularPower );
 
         float baseBias = dispMapScale / 2.0f;
         addFloat( "dispMapScale", dispMapScale );
