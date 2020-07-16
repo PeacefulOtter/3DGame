@@ -5,6 +5,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Interactable;
 import peacefulotter.engine.elementary.Interactor;
 import peacefulotter.engine.elementary.Simulatable;
+import peacefulotter.engine.physics.CollisionDetector;
 import peacefulotter.engine.physics.InteractionHandler;
 import peacefulotter.engine.physics.IntersectData;
 import peacefulotter.engine.physics.colliders.BoundingSphere;
@@ -28,6 +29,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     private Vector3f position;
     private Vector3f velocity;
     private float radius;
+    private Collider collider;
 
     public PhysicsObject( Vector3f velocity )
     {
@@ -39,9 +41,12 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         this.position = position;
         this.velocity = velocity;
         this.handler = new ObjectInteractionHandler();
+        this.collider = new BoundingSphere( position, 6 );
     }
 
-    public Collider getCollider() { return new BoundingSphere( position, 6 ); }
+    public void setCollider( Collider collider ) { this.collider = collider; }
+
+    public Collider getCollider() { return collider; }
 
 
     @Override
@@ -66,14 +71,26 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     }
 
     @Override
+    public void update( float deltaTime )
+    {
+        super.update( deltaTime );
+        //System.out.println(position);
+        collider.setPosition( position );
+    }
+
+    @Override
+    public void updateAll( float deltaTime )
+    {
+        update( deltaTime );
+        super.updateAll( deltaTime );
+    }
+
+    @Override
     public void simulate( float deltaTime )
     {
-        if ( !velocity.equals( Vector3f.getZero() ) )
-        {
-            Vector3f newPos = getTransform().getTranslation().add( velocity.mul( deltaTime ) );
-            getTransform().setTranslation( newPos );
-            setPosition( newPos );
-        }
+        Vector3f newPos = getTransform().getTranslation().add( velocity.mul( deltaTime ) );
+        getTransform().setTranslation( newPos );
+        setPosition( newPos );
     }
 
     public void simulateAll( float deltaTime )
@@ -97,14 +114,14 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     @Override
     public void interactWith(Interactable other, IntersectData intersectData)
     {
-        //System.out.println( "interact with");
+        System.out.println( "interact with");
         other.acceptInteraction( handler, intersectData );
     }
 
     @Override
     public void acceptInteraction( InteractionHandler other, IntersectData intersectData )
     {
-        //System.out.println("accepting interaction");
+        System.out.println("accepting interaction");
         other.interactWith( this, intersectData );
     }
 
@@ -115,7 +132,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         @Override
         public void interactWith( PhysicsObject other, IntersectData intersectData )
         {
-
+            System.out.println("interactWith");
         }
     }
 
@@ -124,7 +141,4 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
 
     public Vector3f getVelocity() { return velocity; }
     public void setVelocity( Vector3f velocity ) { this.velocity = velocity; }
-
-    public float getRadius() { return radius; }
-    public void setRadius( float radius ) { this.radius = radius; }
 }

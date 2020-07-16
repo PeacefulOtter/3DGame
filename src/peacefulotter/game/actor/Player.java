@@ -2,7 +2,12 @@ package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.utils.IO.Input;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
@@ -18,6 +23,8 @@ public class Player extends PhysicsObject
     private float rotationSensitivity;
     private boolean isJumping, isCrouching;
 
+    private final Weapon weapon;
+
     public Player()
     {
         this( 35, 130 );
@@ -28,25 +35,27 @@ public class Player extends PhysicsObject
         super( Vector3f.getZero() );
         this.movingSensitivity = movingSensitivity;
         this.rotationSensitivity = rotationSensitivity;
+        this.weapon = new Weapon();
+        addComponent( weapon );
     }
 
     @Override
     public void init()
     {
-        Input.addKeyCallback( GLFW_KEY_W, (deltaTime ) -> move( getForward(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_W, (deltaTime ) -> move( getForward().setY(0), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(),   deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward(), deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward().setY(0), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(),   deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_SPACE,         ( deltaTime ) -> jump() );// move( getUp(), deltaTime ) );
         Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL,  ( deltaTime ) -> crouch() );
 
-        //Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
+        Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
         Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * rotationSensitivity ) );
-        //Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * rotationSensitivity ) );
+        Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * rotationSensitivity ) );
         Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * rotationSensitivity ) );
 
         addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
-            System.out.println("shoottingg");
+            weapon.fire( getForward() );
         } );
         addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
             System.out.println("aiminggg");
@@ -54,7 +63,14 @@ public class Player extends PhysicsObject
     }
 
     @Override
-    public void simulate(float deltaTime)
+    public void render( Shader shader, RenderingEngine renderingEngine )
+    {
+        super.render( shader, renderingEngine );
+        weapon.render( shader, renderingEngine );
+    }
+
+    @Override
+    public void simulate( float deltaTime )
     {
         super.simulate(deltaTime);
         if ( getPosition().getY() <= 0 )

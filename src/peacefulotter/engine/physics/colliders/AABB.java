@@ -9,7 +9,7 @@ public class AABB extends Collider
 
     public AABB( Vector3f minExtents, Vector3f maxExtents )
     {
-        super( ColliderTypes.AABB );
+        super( ColliderTypes.AABB, maxExtents.sub( minExtents ) );
         this.minExtents = minExtents;
         this.maxExtents = maxExtents;
     }

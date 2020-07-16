@@ -9,7 +9,7 @@ public class Plane extends Collider
 
     public Plane( Vector3f normal, float distance )
     {
-        super( ColliderTypes.PLANE );
+        super( ColliderTypes.PLANE, Vector3f.getZero() );
         this.normal = normal;
         this.distance = distance;
     }

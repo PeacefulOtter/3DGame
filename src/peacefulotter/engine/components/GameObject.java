@@ -5,7 +5,6 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Initializable;
 import peacefulotter.engine.elementary.Renderable;
 import peacefulotter.engine.elementary.Updatable;
-import peacefulotter.engine.physics.colliders.BoundingSpherePhysicsObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
