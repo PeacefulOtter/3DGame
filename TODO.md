@@ -9,6 +9,7 @@ TODO FILE
 - [X] Add gravity to all physical objects
 - [X] Fix camera not following the player
 - Add a skybox
+- Add crosshair
 - Add a general directional lighting to the scene
 - [X] Add bullet system
 - refactor obj loader

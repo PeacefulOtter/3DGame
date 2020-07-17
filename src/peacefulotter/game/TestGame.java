@@ -12,15 +12,6 @@ import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
 import peacefulotter.game.actor.Player;
 
-import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
-import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
-
-
-
-// Hide Mouse
-// int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
-// glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
-
 public class TestGame extends Game
 {
     public TestGame( String winName, int winWidth, int winHeight )

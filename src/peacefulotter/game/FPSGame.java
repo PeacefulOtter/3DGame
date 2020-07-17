@@ -29,12 +29,8 @@ public class FPSGame extends Game
         super( winName, winWidth, winHeight );
     }
 
-    GameObject plane2, plane3;
-
     public void init()
     {
-        // new ResourceLoader().loadMaterial( "reaper.mtl" );
-
         /* MATERIALS */
         Material bricks2 = new Material(
                 new Texture( "bricks2.jpg" ),

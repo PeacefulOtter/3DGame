@@ -1,6 +1,8 @@
 package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.PhysicsObject;
+import peacefulotter.engine.core.maths.Quaternion;
+import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
@@ -18,6 +20,7 @@ public class Player extends PhysicsObject
     private static final float MAX_RUNNING_VELOCITY = 30f;
     private static final float SLOW_FACTOR = 15f;
     private static final float ROTATION_SENSITIVITY = 180f;
+    private static final float CURSOR_SENSITIVITY = 0.3f;
     private static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
 
     private final float movingSensitivity, runningSensitivity;
@@ -28,7 +31,7 @@ public class Player extends PhysicsObject
 
     public Player()
     {
-        this( 50f, 70f );
+        this( 60f, 80f );
     }
 
     public Player( float movingSensitivity, float runningSensitivity )
@@ -70,13 +73,20 @@ public class Player extends PhysicsObject
         Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * ROTATION_SENSITIVITY ) );
         Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * ROTATION_SENSITIVITY ) );
 
-        addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
+        Input.addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
             Bullet b = weapon.fire( getForward() );
             if ( b != null ) addPhysicalChild( b );
         } );
-        addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
+        Input.addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
             System.out.println("aiminggg");
         } );
+        Input.addCursorPosCallback( ( cursorPosition ) -> {
+            System.out.println(Input.getCursorPosition().getX());
+            getTransform().setRotation(
+                    new Quaternion( Y_AXIS, Input.getCursorPosition().getX() * CURSOR_SENSITIVITY ) );
+        } );
+
+        Input.addKeyCallback( GLFW_KEY_LEFT_ALT,  ( deltaTime ) -> Input.setMouseDisable( false ) );
     }
 
     @Override
