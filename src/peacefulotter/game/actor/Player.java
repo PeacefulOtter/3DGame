@@ -6,9 +6,6 @@ import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.utils.IO.Input;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static peacefulotter.engine.utils.IO.Input.*;
@@ -17,23 +14,24 @@ public class Player extends PhysicsObject
 {
     private static final float GRAVITY = 55f;
     private static final float JUMP_HEIGHT = 20f;
+    private static final float MAX_VELOCITY = 15f;
     private static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
 
-    private final float movingSensitivity;
-    private float rotationSensitivity;
-    private boolean isJumping, isCrouching;
+    private final float movingSensitivity, runningSensitivity, rotationSensitivity;
+    private boolean isMoving, isRunning, isReloading, isJumping, isCrouching;
 
     private final Weapon weapon;
 
     public Player()
     {
-        this( 35, 130 );
+        this( 50f, 70f, 130 );
     }
 
-    public Player( float movingSensitivity, float rotationSensitivity )
+    public Player( float movingSensitivity, float runningSensitivity, float rotationSensitivity )
     {
         super( Vector3f.getZero() );
         this.movingSensitivity = movingSensitivity;
+        this.runningSensitivity = runningSensitivity;
         this.rotationSensitivity = rotationSensitivity;
         this.weapon = new Weapon();
         addComponent( weapon );
@@ -42,12 +40,22 @@ public class Player extends PhysicsObject
     @Override
     public void init()
     {
-        Input.addKeyCallback( GLFW_KEY_W, (deltaTime ) -> move( getForward().setY(0), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_D, ( deltaTime ) -> move( getRight(),   deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_S, ( deltaTime ) -> move( getBackward().setY(0), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_A, ( deltaTime ) -> move( getLeft(),   deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_SPACE,         ( deltaTime ) -> jump() );// move( getUp(), deltaTime ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL,  ( deltaTime ) -> crouch() );
+        Input.addKeyPressReleaseCallbacks( GLFW_KEY_W,
+                ( deltaTime ) -> move( getForward().setY(0), deltaTime ),
+                ( deltaTime ) -> stopMoving() );
+        Input.addKeyPressReleaseCallbacks( GLFW_KEY_D,
+                ( deltaTime ) -> move( getRight(), deltaTime ),
+                ( deltaTime ) -> stopMoving() );
+        Input.addKeyPressReleaseCallbacks( GLFW_KEY_S,
+                ( deltaTime ) -> move( getBackward().setY(0), deltaTime ),
+                ( deltaTime ) -> stopMoving() );
+        Input.addKeyPressReleaseCallbacks( GLFW_KEY_A,
+                ( deltaTime ) -> move( getLeft(), deltaTime ),
+                ( deltaTime ) -> stopMoving() );
+        Input.addKeyPressReleaseCallbacks( GLFW_KEY_LEFT_CONTROL,
+                ( deltaTime ) -> crouch(),
+                ( deltaTime ) -> stopCrouching() );
+        Input.addKeyCallback( GLFW_KEY_SPACE, ( deltaTime ) -> jump() );
 
         Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * rotationSensitivity ) );
         Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * rotationSensitivity ) );
@@ -55,7 +63,8 @@ public class Player extends PhysicsObject
         Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * rotationSensitivity ) );
 
         addMouseCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
-            weapon.fire( getForward() );
+            Bullet b = weapon.fire( getForward() );
+            if ( b != null ) addPhysicalChild( b );
         } );
         addMouseCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
             System.out.println("aiminggg");
@@ -72,7 +81,7 @@ public class Player extends PhysicsObject
     @Override
     public void simulate( float deltaTime )
     {
-        super.simulate(deltaTime);
+        super.simulate( deltaTime );
         if ( getPosition().getY() <= 0 )
         {
             setVelocity( getVelocity().setY( 0 ) );
@@ -81,6 +90,9 @@ public class Player extends PhysicsObject
         }
         else
             setVelocity( getVelocity().setY( getVelocity().getY() - GRAVITY * deltaTime ) );
+
+        if ( !isMoving )
+            setVelocity( getVelocity().add( getVelocity().rotate( Y_AXIS, 180 ).mul( deltaTime * 10 ) ) );
     }
 
     private void jump()
@@ -96,27 +108,25 @@ public class Player extends PhysicsObject
 
     private void crouch()
     {
-        if ( !isCrouching )
-        {
-            // ...
-            isCrouching = true;
-        }
+        // ...
+        isCrouching = true;
     }
 
-    public void move( Vector3f direction, float amount )
+    private void stopCrouching() { this.isCrouching = false; }
+
+    public void move( Vector3f direction, float deltaTime )
     {
-        getTransform().setTranslation(
-                getTransform().getTranslation().add(
-                        direction.mul( amount * movingSensitivity ) ) );
+        this.isMoving = true;
+        Vector3f newVelocity = getVelocity().add( direction.mul( deltaTime * movingSensitivity ) );
+        if ( newVelocity.length() <= MAX_VELOCITY )
+            setVelocity( newVelocity );
     }
+
+    public void stopMoving() { this.isMoving = false; }
 
     private void rotateX( float angleDeg ) { getTransform().rotate( getRight(), angleDeg ); }
 
     private void rotateY( float angleDeg ) { getTransform().rotate( Y_AXIS, angleDeg ); }
-
-    protected float getRotationSensitivity() { return rotationSensitivity; }
-    protected float getMovingSensitivity() { return movingSensitivity; }
-    protected void setRotationSensitivity( float sensitivity ) { this.rotationSensitivity = sensitivity; }
 
     public Vector3f getForward()  { return getTransform().getRotation().getForward(); }
     public Vector3f getBackward() { return getTransform().getRotation().getBack(); }

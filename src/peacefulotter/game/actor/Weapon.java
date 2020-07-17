@@ -40,13 +40,15 @@ public class Weapon extends GameComponent
             bullet.simulate( deltaTime );
     }
 
-    public void fire( Vector3f direction )
+    public Bullet fire( Vector3f direction )
     {
+        Bullet bullet = null;
         if ( timeSinceLastFire > FIRE_RATE )
         {
-            Bullet bullet = Bullet.BulletBuilder.createBullet( direction, getTransform().getTranslation() );
+            bullet = Bullet.BulletBuilder.createBullet( direction, getTransform().getTranslation() );
             bullets.add( bullet );
             timeSinceLastFire = 0;
         }
+        return bullet;
     }
 }

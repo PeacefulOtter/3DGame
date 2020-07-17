@@ -59,6 +59,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     @Override
     public PhysicsObject addPhysicalChild( PhysicsObject child )
     {
+        getCoreEngine().getPhysicsEngine().addPhysicObject( child );
         super.addChild( child );
         return this;
     }
@@ -112,16 +113,16 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     }
 
     @Override
-    public void interactWith(Interactable other, IntersectData intersectData)
+    public void interactWith( Interactable other, IntersectData intersectData )
     {
-        System.out.println( "interact with");
+        //System.out.println( "interact with");
         other.acceptInteraction( handler, intersectData );
     }
 
     @Override
     public void acceptInteraction( InteractionHandler other, IntersectData intersectData )
     {
-        System.out.println("accepting interaction");
+        //System.out.println("accepting interaction");
         other.interactWith( this, intersectData );
     }
 
@@ -132,7 +133,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         @Override
         public void interactWith( PhysicsObject other, IntersectData intersectData )
         {
-            System.out.println("interactWith");
+            //System.out.println("interactWith");
         }
     }
 

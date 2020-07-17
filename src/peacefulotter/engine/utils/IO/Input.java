@@ -22,6 +22,7 @@ public class Input
 
     private static final Set<Key> keys = new HashSet<>();
     private static final Set<Key> keysPressed = new HashSet<>();
+    private static final Set<Key> keysReleased = new HashSet<>();
     private static final List<Key> mouseButtons = new ArrayList<>();
 
     private static int mousePrimaryState = GLFW_RELEASE;
@@ -39,19 +40,24 @@ public class Input
     public static void execInputs( float deltaTime )
     {
         for ( Key k : keysPressed )
-        {
-            k.exec( deltaTime );
-        }
+            k.triggerPressCallback( deltaTime );
+
+        for ( Key k : keysReleased )
+            k.triggerReleaseCallback( deltaTime );
+        keysReleased.clear();
 
         for ( Key k : mouseButtons )
-        {
-            k.exec( deltaTime );
-        }
+            k.triggerPressCallback( deltaTime );
     }
 
     public static void addKeyCallback( int keyCode, IOExecutable executable )
     {
         keys.add( new Key( keyCode, executable, true ) );
+    }
+
+    public static void addKeyPressReleaseCallbacks( int keyCode, IOExecutable pressCallback, IOExecutable releaseCallback )
+    {
+        keys.add( new Key( keyCode, pressCallback, releaseCallback, true ) );
     }
 
     private static void initKeyCallbacks( long window )
@@ -65,7 +71,10 @@ public class Input
                     if ( action == GLFW_PRESS || action == GLFW_REPEAT )
                         keysPressed.add( k );
                     else
+                    {
+                        keysReleased.add( k );
                         keysPressed.remove( k );
+                    }
                 }
             }
         } );

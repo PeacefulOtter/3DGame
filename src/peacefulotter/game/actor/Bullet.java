@@ -1,7 +1,6 @@
 package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.GameComponent;
-import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.components.MeshRenderer;
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector3f;
@@ -28,7 +27,8 @@ public class Bullet extends PhysicsObject
         super( originPos, direction.mul( VELOCITY ) );
     }
 
-    public Collider getCollider() { return new BoundingSphere( getPosition(), BULLET_RADIUS ); }
+    public Collider getCollider() {
+        System.out.println(getPosition());return new BoundingSphere( getPosition(), BULLET_RADIUS ); }
 
     public static class BulletBuilder
     {
