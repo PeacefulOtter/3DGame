@@ -1,10 +1,9 @@
 package peacefulotter.engine.utils.IO;
 
 import peacefulotter.engine.core.maths.Matrix4f;
-import peacefulotter.engine.core.maths.Quaternion;
-import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
+import peacefulotter.engine.utils.ProfileTimer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,8 +12,10 @@ import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-public class Input
+public abstract class Input
 {
+    private static final ProfileTimer profiler = new ProfileTimer();
+
     public static final int MOUSE_PRIMARY = 0;
     public static final int MOUSE_SECONDARY = 1;
     public static final int MOUSE_SCROLL = 2;
@@ -25,41 +26,38 @@ public class Input
     public static final int MOUSE_PRESSED = 1;
 
     private static final Set<Key> keys = new HashSet<>();
-    private static final Set<Key> keysPressed = new HashSet<>();
-    private static final Set<Key> keysReleased = new HashSet<>();
     private static final List<Key> mouseButtons = new ArrayList<>();
-    private static final List<CursorPosExecutable> cursorPosCallbacks = new ArrayList<>();
+    private static final List<CursorPosExecutable> cursorCallbacks = new ArrayList<>();
 
     private static int mousePrimaryState = GLFW_RELEASE;
     private static int mouseSecondaryState = GLFW_RELEASE;
 
-    private static final Vector2f cursorPosition = new Vector2f( 0, 0 );
+    private static final double[] glfwCursorX = new double[ 1 ];
+    private static final double[] glfwCursorY = new double[ 1 ];
 
     private static long window;
-
-    private Input() {}
 
     public static void initInputs( long window )
     {
         Input.window = window;
-        initKeyCallbacks();
-        initMouseButtonsCallbacks();
-        initCursorCallback();
         setMouseDisable( true );
     }
 
     public static void execInputs( float deltaTime )
     {
-        for ( Key k : keysPressed )
-            k.triggerPressCallback( deltaTime );
+        profiler.startInvocation();
 
-        for ( Key k : keysReleased )
-            k.triggerReleaseCallback( deltaTime );
-        keysReleased.clear();
+        glfwPollEvents();
+        callKeyCallbacks( deltaTime );
+        callMouseButtonsCallbacks( deltaTime );
+        callCursorCallbacks( deltaTime );
 
-        for ( Key k : mouseButtons )
-            k.triggerPressCallback( deltaTime );
+        profiler.stopInvocation();
     }
+
+    /**
+     * KEYS CALLBACKS
+     */
 
     public static void addKeyCallback( int keyCode, IOExecutable executable )
     {
@@ -71,71 +69,64 @@ public class Input
         keys.add( new Key( keyCode, pressCallback, releaseCallback, true ) );
     }
 
-    private static void initKeyCallbacks()
+    private static void callKeyCallbacks( float deltaTime )
     {
-        glfwSetKeyCallback( window, ( wd, key, scancode, action, mods ) ->
+        for ( Key k : keys )
         {
-            System.out.println("keycallback");
-            for ( Key k : keys )
-            {
-                if ( k.getKeyCode() == key )
-                {
-                    if ( action == GLFW_PRESS || action == GLFW_REPEAT )
-                        keysPressed.add( k );
-                    else
-                    {
-                        keysReleased.add( k );
-                        keysPressed.remove( k );
-                    }
-                }
-            }
-        } );
+            int action = glfwGetKey( window, k.getKeyCode() );
+            k.callbackAction( action, deltaTime );
+        }
     }
 
 
-    public static void addMouseCallback( int keyCode, IOExecutable executable )
+    /**
+     * MOUSE BUTTONS CALLBACKS
+     */
+
+    public static void addMouseButtonCallback( int keyCode, IOExecutable executable )
     {
-        mouseButtons.add( new Key( keyCode, executable ) );
+        mouseButtons.add( new Key( keyCode, executable, true ) );
     }
 
-    private static void initMouseButtonsCallbacks()
+    private static void callMouseButtonsCallbacks( float deltaTime )
     {
-        glfwSetMouseButtonCallback( window, ( wd, button, action, mods ) -> {
-            for ( Key k : mouseButtons )
-            {
-                if ( k.getKeyCode() == button )
-                {
-                    k.setPressed( action == 1 );
-                }
-            }
-        } );
+        for ( Key k : mouseButtons )
+        {
+            int action = glfwGetMouseButton( window, k.getKeyCode() );
+            k.callbackAction( action, deltaTime );
+        }
     }
 
-    private static void initCursorCallback()
+
+    /**
+     * CURSOR CALLBACKS
+     */
+
+    public static void addCursorCallback( CursorPosExecutable callback )
     {
-        glfwSetCursorPosCallback( window, ( wd, xpos, ypos ) -> {
-            System.out.println("updating mouse position");
-            cursorPosition.setX( (float) xpos );
-            cursorPosition.setY( (float) ypos );
-            for ( CursorPosExecutable callback : cursorPosCallbacks )
-                callback.exec( cursorPosition );
-        } );
+        cursorCallbacks.add( callback );
     }
 
-    public static void addCursorPosCallback( CursorPosExecutable callback )
+    private static void callCursorCallbacks( float deltaTime )
     {
-        cursorPosCallbacks.add( callback );
+        System.out.println( "Calling cursor callbacks" + glfwCursorX[ 0 ] + " " + glfwCursorY[ 0 ] );
+        glfwGetCursorPos( window, glfwCursorX, glfwCursorY );
+        System.out.println( "Calling cursor callbacks AFTER" + glfwCursorX[ 0 ] + " " + glfwCursorY[ 0 ] );
+
+        for ( CursorPosExecutable callback : cursorCallbacks )
+            callback.exec( deltaTime, glfwCursorX[ 0 ], glfwCursorY[ 0 ] );
     }
 
-    public static Vector2f getCursorPosition() { return cursorPosition; }
+
+
 
     public static int getMousePrimaryState() { return mousePrimaryState; }
 
     public static Vector3f calcMouseRay( Matrix4f projectionViewMatrix )
     {
         // convert mouse position to opengl coordinate system
-        float x = ( 2f * cursorPosition.getX() ) / Window.getWidth() - 1f;
-        float y = ( 2f * cursorPosition.getY() ) / Window.getHeight() - 1f;
+        float x = ( 2f * (float)glfwCursorX[ 0 ] ) / Window.getWidth() - 1f;
+        float y = ( 2f * (float)glfwCursorY[ 0 ] ) / Window.getHeight() - 1f;
         Vector3f clipCoords = new Vector3f( x, y, -1f );
 
         // to eye coordinates
@@ -154,4 +145,8 @@ public class Input
         int hideMouse = disable ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
         glfwSetInputMode( window, GLFW_CURSOR, hideMouse );
     }
+
+
+
+    public static double displayInputTime( double dividend ) { return profiler.displayAndReset( "Input time", dividend ); }
 }

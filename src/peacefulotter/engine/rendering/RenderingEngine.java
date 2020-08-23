@@ -58,7 +58,7 @@ public class RenderingEngine extends MappedValues
     public void render( GameObject object )
     {
         if ( camera == null )
-            System.err.println( "Main camera not found." );
+            throw new NullPointerException( "Main camera not found." );
 
         profiler.startInvocation();
 
@@ -98,6 +98,5 @@ public class RenderingEngine extends MappedValues
         return samplerMap.get( samplerName );
     }
 
-    public double displayRenderTime() { return profiler.displayAndReset( "Render time" ); }
     public double displayRenderTime( double dividend ) { return profiler.displayAndReset( "Render time", dividend ); }
 }

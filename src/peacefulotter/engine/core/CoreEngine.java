@@ -102,6 +102,7 @@ public class CoreEngine
                 totalRecordedTime += game.displayUpdateTime( frames );
                 totalRecordedTime += renderingEngine.displayRenderTime( frames );
                 totalRecordedTime += GLprofiler.displayAndReset( "GL core engine time", frames );
+                totalRecordedTime += Input.displayInputTime( frames );
                 System.out.println("Other time : " + (totalTime - totalRecordedTime) + "ms" );
                 System.out.println("Total time : " + totalTime + "ms" );
 

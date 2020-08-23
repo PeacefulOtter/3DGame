@@ -1,8 +1,5 @@
 package peacefulotter.game;
 
-import peacefulotter.engine.core.Game;
-import peacefulotter.engine.elementary.Disposable;
-
 public class Main
 {
     private static final String WINDOW_TITLE = "My Game";

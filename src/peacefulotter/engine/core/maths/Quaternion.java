@@ -12,7 +12,7 @@ public class Quaternion
         setX( axis.getX() * sinHalfAngle );
         setY( axis.getY() * sinHalfAngle );
         setZ( axis.getZ() * sinHalfAngle );
-            setW( cosHalfAngle );
+        setW( cosHalfAngle );
     }
 
     public Quaternion( float x, float y, float z, float w )
@@ -24,7 +24,7 @@ public class Quaternion
     }
 
     //From Ken Shoemake's "Quaternion Calculus and Fast Animation" article
-    public Quaternion(Matrix4f rot)
+    public Quaternion( Matrix4f rot )
     {
         float trace = rot.getAt(0, 0) + rot.getAt(1, 1) + rot.getAt(2, 2);
 

@@ -2,6 +2,11 @@ package peacefulotter.engine.core.maths;
 
 public class Vector3f
 {
+    public static final Vector3f X_AXIS = new Vector3f( 1, 0, 0 );
+    public static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
+    public static final Vector3f Z_AXIS = new Vector3f( 0, 0, 1 );
+
+
     private float x, y, z;
 
     public Vector3f( float x, float y, float z )
