@@ -45,6 +45,11 @@ public class Vector3f
         return new Vector3f( x / length, y / length, z / length );
     }
 
+    public Vector3f resizeTo( float targetLength )
+    {
+        return mul( targetLength / length() );
+    }
+
     public Vector3f rotate( Vector3f axis, float angleDeg )
     {
         return rotate( new Quaternion( axis, angleDeg ) );

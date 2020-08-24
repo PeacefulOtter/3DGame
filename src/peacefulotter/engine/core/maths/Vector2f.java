@@ -25,6 +25,8 @@ public class Vector2f
     public Vector2f normalize()
     {
         float length = length();
+        if ( length == 0 )
+            return new Vector2f( x, y );
         return new Vector2f( x / length, y / length );
     }
 

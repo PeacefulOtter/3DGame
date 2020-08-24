@@ -48,6 +48,7 @@ public abstract class Input
         profiler.startInvocation();
 
         glfwPollEvents();
+
         callKeyCallbacks( deltaTime );
         callMouseButtonsCallbacks( deltaTime );
         callCursorCallbacks( deltaTime );
@@ -61,12 +62,22 @@ public abstract class Input
 
     public static void addKeyCallback( int keyCode, IOExecutable executable )
     {
-        keys.add( new Key( keyCode, executable, true ) );
+        addKeyCallback( keyCode, executable, true );
+    }
+
+    public static void addKeyCallback( int keyCode, IOExecutable executable, boolean canRepeat )
+    {
+        keys.add( new Key( keyCode, executable, canRepeat ) );
     }
 
     public static void addKeyPressReleaseCallbacks( int keyCode, IOExecutable pressCallback, IOExecutable releaseCallback )
     {
-        keys.add( new Key( keyCode, pressCallback, releaseCallback, true ) );
+        addKeyPressReleaseCallbacks( keyCode, pressCallback, releaseCallback, true );
+    }
+
+    public static void addKeyPressReleaseCallbacks( int keyCode, IOExecutable pressCallback, IOExecutable releaseCallback, boolean canRepeat )
+    {
+        keys.add( new Key( keyCode, pressCallback, releaseCallback, canRepeat ) );
     }
 
     private static void callKeyCallbacks( float deltaTime )
@@ -109,9 +120,7 @@ public abstract class Input
 
     private static void callCursorCallbacks( float deltaTime )
     {
-        System.out.println( "Calling cursor callbacks" + glfwCursorX[ 0 ] + " " + glfwCursorY[ 0 ] );
         glfwGetCursorPos( window, glfwCursorX, glfwCursorY );
-        System.out.println( "Calling cursor callbacks AFTER" + glfwCursorX[ 0 ] + " " + glfwCursorY[ 0 ] );
 
         for ( CursorPosExecutable callback : cursorCallbacks )
             callback.exec( deltaTime, glfwCursorX[ 0 ], glfwCursorY[ 0 ] );

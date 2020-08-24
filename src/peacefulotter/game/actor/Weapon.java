@@ -51,4 +51,6 @@ public class Weapon extends GameComponent
         }
         return bullet;
     }
+
+    public void reload() {}
 }

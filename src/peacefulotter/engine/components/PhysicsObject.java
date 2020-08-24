@@ -141,5 +141,5 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     public void setPosition( Vector3f position ) { this.position = position;  }
 
     public Vector3f getVelocity() { return velocity; }
-    public void setVelocity( Vector3f velocity ) { this.velocity = velocity; }
+    public void setVelocity( Vector3f velocity ) { this.velocity.set( velocity ); }
 }
