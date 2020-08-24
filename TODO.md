@@ -1,20 +1,25 @@
 TODO FILE 
 
+- /!\ Avoid player rotation with the camera around the getRight() axis
 - Add a distance param to avoid checking for impossible collisions (Sweet and Prune algo)
-- Implement collision detection for all sorts of object
+- /!\ Implement collision detection for all sorts of object
 - [X] Player walking more realistic (frictions, move)
-- Make the player rotation based on mouse input
-- add a basic map
-- Implement player running, crouching
+- [X] Make the player rotation based on mouse input
+- /!\ Add a basic map
+- [X] Implement player running
+- Implement player crouching
 - [X] Add gravity to all physical objects
 - [X] Fix camera not following the player
 - Add a skybox
 - Add crosshair
 - Add a general directional lighting to the scene
 - [X] Add bullet system
-- refactor obj loader
-- refactor material (does not need to include normal and height maps)
+- /!\ Refactor / Optimize lighting
+- /!\ Refactor obj loader
+- /!\ Refactor material (does not need to include normal and height maps)
 - Create player animations and reload animations
 - Add some more gameplay (double jump, etc..)
-- Multiplayers
-
+- Multiplayer
+    - [X] Basic TCP Server
+    - Implement it inside a network package
+    - Use it for the FPSGame (NetworkPlayer, NetworkMap, ..)
