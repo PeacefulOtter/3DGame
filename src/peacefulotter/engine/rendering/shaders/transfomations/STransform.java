@@ -7,9 +7,9 @@ import peacefulotter.engine.elementary.Updatable;
 
 public class STransform implements Updatable
 {
-    private final STranslation translation = new STranslation();
-    private final SRotation rotation = new SRotation();
-    private final SScale scale = new SScale();
+    private final STranslation translation;
+    private final SRotation rotation;
+    private final SScale scale;
 
     private STransform parent;
     private Matrix4f parentTranslation = new Matrix4f().initIdentity();
@@ -17,6 +17,19 @@ public class STransform implements Updatable
 
     private boolean hasChanged, hasChangedBis;
 
+    public STransform()
+    {
+        this.translation = new STranslation();
+        this.rotation = new SRotation();
+        this.scale = new SScale();
+    }
+
+    public STransform( STransform origin )
+    {
+        this.translation = new STranslation( origin.translation );
+        this.rotation = new SRotation( origin.rotation );
+        this.scale = new SScale( origin.scale );
+    }
 
     public Matrix4f getTransformationMatrix()
     {
@@ -67,14 +80,22 @@ public class STransform implements Updatable
     public STransform translate( Vector3f vector )
     {
         translation.translate( vector );
-        hasChanged = true;
+        if ( !vector.equals( Vector3f.getZero() ) )
+            hasChanged = true;
+        return this;
+    }
+
+    public STransform rotate( Quaternion q )
+    {
+        rotation.rotate( q );
         return this;
     }
 
     public STransform rotate( Vector3f axis, float angleDeg )
     {
         rotation.rotate( axis, angleDeg );
-        hasChanged = true;
+        if ( angleDeg != 0 )
+            hasChanged = true;
         return this;
     }
 
@@ -104,6 +125,7 @@ public class STransform implements Updatable
                 hasChangedBis = true;
             }
         }
+
         if ( parent != null && parent.hasChanged )
         {
             hasChanged = true;

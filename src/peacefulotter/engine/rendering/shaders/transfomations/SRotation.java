@@ -6,7 +6,17 @@ import peacefulotter.engine.core.maths.Vector3f;
 
 public class SRotation
 {
-    private Quaternion rotation = new Quaternion( 0, 0, 0, 1 );
+    private Quaternion rotation;
+
+    public SRotation()
+    {
+       rotation = new Quaternion( 0, 0, 0, 1 );
+    }
+
+    public SRotation( SRotation rotation )
+    {
+        this.rotation = new Quaternion( rotation.getRotationQuaternion() );
+    }
 
     public Quaternion getRotationQuaternion()
     {
@@ -22,6 +32,11 @@ public class SRotation
 
     public void rotate( Vector3f axis, float angleDeg )
     {
-        setRotation( new Quaternion( axis, angleDeg ).mul( rotation ) );
+        rotate( new Quaternion( axis, angleDeg ) );
+    }
+
+    public void rotate( Quaternion q )
+    {
+        setRotation( q.mul( rotation ) );
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PhysicsEngine
 {
-    private List<PhysicsObject> physicsObjects;
+    private final List<PhysicsObject> physicsObjects;
 
     public PhysicsEngine()
     {

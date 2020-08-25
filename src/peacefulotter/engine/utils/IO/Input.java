@@ -96,7 +96,12 @@ public abstract class Input
 
     public static void addMouseButtonCallback( int keyCode, IOExecutable executable )
     {
-        mouseButtons.add( new Key( keyCode, executable, true ) );
+        addMouseButtonCallback( keyCode, executable, true );
+    }
+
+    public static void addMouseButtonCallback( int keyCode, IOExecutable executable, boolean canRepeat )
+    {
+        mouseButtons.add( new Key( keyCode, executable, canRepeat ) );
     }
 
     private static void callMouseButtonsCallbacks( float deltaTime )

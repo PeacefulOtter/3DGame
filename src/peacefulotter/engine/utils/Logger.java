@@ -1,12 +1,11 @@
-package com.peacefulotter.Utils;
+package peacefulotter.engine.utils;
 
-import java.io.PrintStream;
 import java.time.LocalTime;
 import java.util.StringJoiner;
 
 public class Logger
 {
-    public static void log(String msg )
+    public static void log( String msg )
     {
         log( "", msg );
     }
@@ -15,6 +14,10 @@ public class Logger
     {
         log( "[" + c.getSimpleName() +  "]", msg );
     }
+
+    public static void log( Object obj ) { log( obj.toString() ); }
+
+    public static void log( Class<?> c, Object obj ) { log( c, obj.toString() ); }
 
     public static void log( String prefix, String msg )
     {

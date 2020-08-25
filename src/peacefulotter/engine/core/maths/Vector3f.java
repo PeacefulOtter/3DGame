@@ -6,8 +6,12 @@ public class Vector3f
     public static final Vector3f Y_AXIS = new Vector3f( 0, 1, 0 );
     public static final Vector3f Z_AXIS = new Vector3f( 0, 0, 1 );
 
-
     private float x, y, z;
+
+    public Vector3f( Vector3f vector )
+    {
+        this( vector.getX(), vector.getY(), vector.getZ() );
+    }
 
     public Vector3f( float x, float y, float z )
     {
@@ -45,9 +49,14 @@ public class Vector3f
         return new Vector3f( x / length, y / length, z / length );
     }
 
-    public Vector3f resizeTo( float targetLength )
+    /**
+     * Changed the vector length to the desired one without changing its direction
+     * @param desiredLength: the desired length
+     * @return the same vector but of length *desiredLength*
+     */
+    public Vector3f resizeTo( float desiredLength )
     {
-        return mul( targetLength / length() );
+        return mul( desiredLength / length() );
     }
 
     public Vector3f rotate( Vector3f axis, float angleDeg )

@@ -26,15 +26,19 @@ public abstract class Game implements Updatable
     }
 
     public void startEngine() { engine.start(); }
+
     public void setEngine( CoreEngine engine ) { root.setEngine( engine ); }
 
+
     public void init() { root.initAll(); }
+
     public void update( float deltaTime )
     {
         updateProfiler.startInvocation();
         root.updateAll( deltaTime );
         updateProfiler.stopInvocation();
     }
+
     public void simulate( float deltaTime, PhysicsEngine physicsEngine )
     {
         physicsProfiler.startInvocation();
@@ -43,7 +47,9 @@ public abstract class Game implements Updatable
     }
     public void render( RenderingEngine renderingEngine ) { renderingEngine.render( root ); }
 
+
     public void addObject( GameObject object ) { root.addChild( object ); }
+
     public void addObjects( GameObject ...objects )
     {
         for ( GameObject object : objects )
@@ -51,11 +57,13 @@ public abstract class Game implements Updatable
     }
 
     public void addPhysicalObject( PhysicsObject object ) { root.addPhysicalChild( object ); }
+
     public void addPhysicalObjects( PhysicsObject ...objects )
     {
         for ( PhysicsObject object : objects )
             addPhysicalObject( object );
     }
+
 
     public double displayUpdateTime( double dividend )
     {

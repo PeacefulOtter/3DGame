@@ -11,6 +11,7 @@ import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
 import peacefulotter.game.actor.Player;
+import peacefulotter.game.actor.Weapon;
 
 public class TestGame extends Game
 {
@@ -99,16 +100,19 @@ public class TestGame extends Game
         spotLightObject.addComponent( spotLight );
 
 
-        GameObject cameraObject = new Player();
+        Weapon weapon = new Weapon();
+        GameObject player = new Player( weapon );
         Camera camera = new Camera(
                 70f,
                 (float) Window.getWidth() / (float) Window.getHeight(),
                 0.01f, 1000f );
 
-        cameraObject.getTransform().translate( new Vector3f( 0, 6.5f, 0.3f ) );
-        cameraObject.addComponent( camera );
+        player.getTransform().translate( new Vector3f( 0, 6.5f, 0.3f ) );
+        player
+                .addComponent( weapon )
+                .addComponent( camera );
 
-        addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject, cameraObject );
+        addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject, player );
 
         super.init();
     }

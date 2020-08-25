@@ -32,7 +32,7 @@ public class ProfileTimer
         if ( dividend != 0 )
             time = ( 1000.0 * totalTime ) / dividend;
 
-        System.out.println( message + " : " + time + "ms" );
+        Logger.log( getClass(), message + " : " + time + "ms" );
         totalTime = 0;
         numInvocations = 0;
 

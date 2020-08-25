@@ -5,11 +5,11 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Interactable;
 import peacefulotter.engine.elementary.Interactor;
 import peacefulotter.engine.elementary.Simulatable;
-import peacefulotter.engine.physics.CollisionDetector;
 import peacefulotter.engine.physics.InteractionHandler;
 import peacefulotter.engine.physics.IntersectData;
 import peacefulotter.engine.physics.colliders.BoundingSphere;
 import peacefulotter.engine.physics.colliders.Collider;
+import peacefulotter.engine.utils.Logger;
 
 
 /*
@@ -24,12 +24,15 @@ Vector3f direction = intersectData.getDirection().normalize();
 
 public class PhysicsObject extends GameObject implements Simulatable, Interactable, Interactor
 {
+    private static final float GRAVITY = 48f;
+
     private final InteractionHandler handler;
+    private final Vector3f velocity;
+    private final float maxYVelocity;
 
     private Vector3f position;
-    private Vector3f velocity;
-    private float radius;
     private Collider collider;
+    private float velocityYAxis;
 
     public PhysicsObject( Vector3f velocity )
     {
@@ -38,10 +41,22 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
 
     public PhysicsObject( Vector3f position, Vector3f velocity )
     {
+        this( position, velocity, 50f );
+    }
+
+    public PhysicsObject( Vector3f velocity, float maxYVelocity )
+    {
+        this( Vector3f.getZero(), velocity, maxYVelocity );
+    }
+
+    public PhysicsObject( Vector3f position, Vector3f velocity, float maxYVelocity )
+    {
         this.position = position;
         this.velocity = velocity;
         this.handler = new ObjectInteractionHandler();
         this.collider = new BoundingSphere( position, 6 );
+        this.velocityYAxis = 0;
+        this.maxYVelocity = maxYVelocity;
     }
 
     public void setCollider( Collider collider ) { this.collider = collider; }
@@ -75,8 +90,28 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     public void update( float deltaTime )
     {
         super.update( deltaTime );
-        //System.out.println(position);
-        collider.setPosition( position );
+        updateVelocity( deltaTime );
+    }
+
+    protected void updateVelocity( float deltaTime )
+    {
+        // object is on the ground or slightly below
+        // !!!! GET THE MAP HEIGHT
+        int height = 0;
+        if ( position.getY() <= height && velocityYAxis <= 0 )
+        {
+            System.out.println("on the ground");
+            velocity.setY( height );
+            position.setY( height );
+            velocityYAxis = 0;
+        }
+        // else, object is in the air : apply gravity
+        else
+        {
+            velocityYAxis -= GRAVITY * deltaTime;
+            if ( velocityYAxis < -maxYVelocity )
+                velocityYAxis = -maxYVelocity;
+        }
     }
 
     @Override
@@ -92,6 +127,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         Vector3f newPos = getTransform().getTranslation().add( velocity.mul( deltaTime ) );
         getTransform().setTranslation( newPos );
         setPosition( newPos );
+        collider.setPosition( position );
     }
 
     public void simulateAll( float deltaTime )
@@ -142,4 +178,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
 
     public Vector3f getVelocity() { return velocity; }
     public void setVelocity( Vector3f velocity ) { this.velocity.set( velocity ); }
+
+    public float getVelocityYAxis() { return velocityYAxis; }
+    public void setVelocityYAxis( float velocity ) { velocityYAxis = velocity; }
 }

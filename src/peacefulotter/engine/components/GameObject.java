@@ -1,7 +1,6 @@
 package peacefulotter.engine.components;
 
 import peacefulotter.engine.core.CoreEngine;
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Initializable;
 import peacefulotter.engine.elementary.Renderable;
 import peacefulotter.engine.elementary.Updatable;
@@ -39,10 +38,20 @@ public class GameObject implements Initializable, Updatable, Renderable
         return this;
     }
 
+    public void removeChild( GameObject child )
+    {
+        children.remove( child );
+    }
+
     public GameObject addPhysicalChild( PhysicsObject child )
     {
         physicsChildren.add( child );
-        return addChild( (GameObject) child );
+        return addChild( child );
+    }
+
+    public void removePhysicalChild( PhysicsObject child )
+    {
+        physicsChildren.remove( child );
     }
 
     public void init()

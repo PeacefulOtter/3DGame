@@ -1,11 +1,14 @@
 package peacefulotter.game.actor;
 
+import peacefulotter.engine.components.Camera;
+import peacefulotter.engine.components.MeshRenderer;
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.RenderingEngine;
-import peacefulotter.engine.rendering.shaders.Shader;
+import peacefulotter.engine.rendering.graphics.Material;
+import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.engine.utils.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,12 +57,11 @@ import static peacefulotter.engine.utils.IO.Input.*;
 
 public class Player extends PhysicsObject
 {
-    private static final float GRAVITY = 55f;
-    private static final float JUMP_HEIGHT = 20f;
+    private static final float JUMP_HEIGHT = 40f;
     private static final float MOVEMENT_ACCELERATION = 3000f;
     private static final float RUNNING_ACCELERATION = 4000f;
-    private static final float MAX_WALKING_VELOCITY = 3000f;
-    private static final float MAX_RUNNING_VELOCITY = 5000f;
+    private static final float MAX_WALKING_VELOCITY = 5000f;
+    private static final float MAX_RUNNING_VELOCITY = 9000f;
     private static final float SLOW_FACTOR = 4000f;
     private static final float ROTATION_SENSITIVITY = 180f;
     private static final float CURSOR_SENSITIVITY = 50f;
@@ -67,14 +69,13 @@ public class Player extends PhysicsObject
     private double oldCursorX, oldCursorY;
     private boolean isRunning, isReloading, isJumping, isCrouching;
     private final Weapon weapon;
-    private float currentAcceleration, currentVelocity, lastVelocityAngle, velocityYAxis, currentMaxVelocity;
+    private float currentAcceleration, currentVelocity, currentMaxVelocity;
     private final Set<VelocityAngle> movingArrows, notMovingArrowsQueue;
 
-    public Player( )
+    public Player( Weapon weapon )
     {
         super( Vector3f.getZero() );
-        this.weapon = new Weapon();
-        addComponent( weapon );
+        this.weapon = weapon;
         this.currentAcceleration = MOVEMENT_ACCELERATION;
         this.currentMaxVelocity = MAX_WALKING_VELOCITY;
         this.movingArrows = new HashSet<>( 4 );
@@ -109,10 +110,9 @@ public class Player extends PhysicsObject
         Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * ROTATION_SENSITIVITY ) );
         Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * ROTATION_SENSITIVITY ) );
 
-        Input.addMouseButtonCallback( MOUSE_PRIMARY, ( deltaTime ) -> {
-            Bullet b = weapon.fire( getForward() );
-            if ( b != null ) addPhysicalChild( b );
-        } );
+        Input.addMouseButtonCallback( MOUSE_PRIMARY,
+                ( deltaTime ) -> weapon.fire( getForward() ),
+                Weapon.IS_AUTOMATIC );
 
         Input.addMouseButtonCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
             System.out.println("aiminggg");
@@ -138,51 +138,27 @@ public class Player extends PhysicsObject
     }
 
     @Override
-    public void render( Shader shader, RenderingEngine renderingEngine )
+    protected void updateVelocity( float deltaTime )
     {
-        super.render( shader, renderingEngine );
-        weapon.render( shader, renderingEngine );
-    }
+        super.updateVelocity( deltaTime );
 
-    @Override
-    public void simulate( float deltaTime )
-    {
-        super.simulate( deltaTime );
-
-        /**
-         * MOVE THIS PART TO THE PHYSICS ENGINE
-         */
         // player is on the ground or slightly below
-        if ( getPosition().getY() <= 0 && velocityYAxis <= 0 )
+        if ( getPosition().getY() <= 0 && getVelocityYAxis() <= 0 )
         {
-            setVelocity( getVelocity().setY( 0 ) );
-            setPosition( getPosition().setY( 0 ) );
-            velocityYAxis = 0;
-
             isJumping = false;
 
             notMovingArrowsQueue.forEach( this::stopMoving );
             notMovingArrowsQueue.clear();
         }
-        // else, apply gravity
-        else
-            velocityYAxis -= GRAVITY * deltaTime;
 
+        float newAngle = ( isMoving() && !isJumping ) ? VelocityAngle.getAngle() : calcActualAngle();
 
-        updateVelocity( deltaTime );
-
-        float newAngle = ( isMoving() && !isJumping ) ? VelocityAngle.getAngle() : lastVelocityAngle;
-
-        // System.out.println( "Using : " + lastVelocityAngle );
+        Logger.log( getClass(), getVelocity() + " " + getPosition() + " " + getVelocityYAxis() );
         setVelocity( getForward()
-                        .rotate( Vector3f.Y_AXIS, newAngle )
-                        .mul( deltaTime * currentVelocity )
-                        .setY( velocityYAxis ) );
+                .rotate( Vector3f.Y_AXIS, newAngle )
+                .mul( deltaTime * currentVelocity )
+                .setY( getVelocityYAxis() ) );
 
-    }
-
-    private void updateVelocity( float deltaTime )
-    {
         if ( isJumping ) return;
 
         if ( isMoving() )
@@ -236,6 +212,15 @@ public class Player extends PhysicsObject
         }
     }
 
+    private float calcActualAngle()
+    {
+        Vector2f v2 = getVelocity().getXZ().normalize();
+        Vector2f v1 = getForward().getXZ();
+        float actualAngle = (float) Math.atan2( v1.getY(), v1.getX() ) - (float) Math.atan2( v2.getY(), v2.getX() );
+        actualAngle *= 180f / (float) Math.PI;
+        return actualAngle;
+    }
+
     private boolean isMoving()
     {
         return movingArrows.size() > 0;
@@ -259,12 +244,6 @@ public class Player extends PhysicsObject
             notMovingArrowsQueue.add( arrow );
             return;
         }
-
-        Vector2f v2 = getVelocity().getXZ().normalize();
-        Vector2f v1 = getForward().getXZ();
-        lastVelocityAngle = (float) Math.atan2( v1.getY(), v1.getX() ) - (float) Math.atan2( v2.getY(), v2.getX() );
-        lastVelocityAngle *= 180f / (float) Math.PI;
-        System.out.println( "Saved " + lastVelocityAngle );
 
         movingArrows.remove( arrow );
         arrow.active = false;
@@ -292,7 +271,7 @@ public class Player extends PhysicsObject
     {
         if ( isJumping ) return;
 
-        velocityYAxis += JUMP_HEIGHT;
+        setVelocityYAxis( getVelocityYAxis() + JUMP_HEIGHT );
         isJumping = true;
     }
 
@@ -314,4 +293,60 @@ public class Player extends PhysicsObject
     public Vector3f getBackward() { return getTransform().getRotation().getBack(); }
     public Vector3f getRight()    { return getTransform().getRotation().getRight(); }
     public Vector3f getLeft()     { return getTransform().getRotation().getLeft(); }
+
+
+    public static class PlayerBuilder
+    {
+        private Weapon weapon;
+        private Camera camera;
+        private Mesh mesh;
+        private Material material;
+
+        public PlayerBuilder setWeapon( Weapon weapon )
+        {
+            this.weapon = weapon;
+            return this;
+        }
+
+        public PlayerBuilder setCamera( Camera camera )
+        {
+            this.camera = camera;
+            return this;
+        }
+
+        public PlayerBuilder setMesh( Mesh mesh )
+        {
+            this.mesh = mesh;
+            return this;
+        }
+
+        public PlayerBuilder setMaterial( Material material )
+        {
+            this.material = material;
+            return this;
+        }
+
+        public Player build()
+        {
+            if ( weapon == null )
+                throw new NullPointerException( "Player needs a weapon" );
+            if ( mesh == null || material == null )
+                throw new NullPointerException( "Player needs a mesh and a material" );
+
+            weapon.setInnerTranslation( new Vector3f( 3f, -6f, 3f ) );
+            weapon.setInnerScale( 0.1f );
+            //weaponTransform.scale( 0.1f );
+            Player player = new Player( weapon );
+            player.addComponent( new MeshRenderer( mesh, material ) );
+            player.addComponent( weapon );
+
+            if ( camera != null )
+            {
+                player.addComponent( camera );
+                camera.setInnerTranslation( new Vector3f( 0, 6.5f, 0f ) );
+            }
+
+            return player;
+        }
+    }
 }

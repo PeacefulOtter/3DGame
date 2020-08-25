@@ -1,4 +1,6 @@
-package peacefulotter.game;
+package peacefulotter;
+
+import peacefulotter.game.FPSGame;
 
 public class Main
 {

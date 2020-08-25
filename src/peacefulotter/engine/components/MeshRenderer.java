@@ -1,5 +1,6 @@
 package peacefulotter.engine.components;
 
+import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
@@ -15,12 +16,6 @@ public class MeshRenderer extends GameComponent
         this.mesh = mesh;
         this.material = material;
     }
-
-    @Override
-    public void init() { }
-
-    @Override
-    public void update(float delta ) { }
 
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine )

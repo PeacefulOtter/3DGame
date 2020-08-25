@@ -15,6 +15,11 @@ public class Quaternion
         setW( cosHalfAngle );
     }
 
+    public Quaternion( Quaternion q )
+    {
+        this( q.x, q.y, q.z, q.w );
+    }
+
     public Quaternion( float x, float y, float z, float w )
     {
         this.x = x;

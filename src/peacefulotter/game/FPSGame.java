@@ -14,6 +14,7 @@ import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
 import peacefulotter.engine.utils.ResourceLoader;
 import peacefulotter.game.actor.Player;
+import peacefulotter.game.actor.Weapon;
 
 import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
@@ -56,7 +57,7 @@ public class FPSGame extends Game
         sphereObj.addComponent( new MeshRenderer( new Mesh( "sphere.obj" ), bricks2 ) );
         sphereObj.getTransform().translate( new Vector3f( 0, 6, 0) ).scale( 0.04f );
 
-        PhysicsObject dummyObj =  new PhysicsObject( Vector3f.getZero() );
+        /*PhysicsObject dummyObj =  new PhysicsObject( Vector3f.getZero() );
         GameObject dummyReaper = new GameObject()
                 .addComponent( new MeshRenderer( new Mesh( "reaper.obj" ), alienMaterial ) );
         dummyObj
@@ -64,27 +65,17 @@ public class FPSGame extends Game
                 .addChild( sphereObj );
         dummyObj.getTransform()
                 .translate( new Vector3f( 0, 0, 5 ) )
-                .rotate( new Vector3f(0, 1, 0 ), 180);
+                .rotate( new Vector3f(0, 1, 0 ), 180);*/
 
 
         /* PLAYERS */
-        PhysicsObject characterObject = new Player();
-        GameComponent reaperObject = new MeshRenderer( new Mesh( "reaper.obj" ), alienMaterial );
-        GameObject weaponObject = new GameObject();
-        weaponObject.addComponent( new MeshRenderer( new Mesh( "m4a1.obj" ), alienMaterial ) );
-        weaponObject.getTransform().translate( new Vector3f( 1, 4.5f, 0.3f ) );
 
-        Camera camera = new Camera(
-                70f,
-                (float) Window.getWidth() / (float) Window.getHeight(),
-                0.01f, 1000f );
-        camera.setInnerTranslation( new Vector3f( 0, 6.5f, 0f ) );
-
-        characterObject
-                .addComponent( reaperObject )
-                .addChild( weaponObject )
-                .addComponent( camera );
-
+        PhysicsObject player = new Player.PlayerBuilder()
+                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                .setMesh( new Mesh( "reaper.obj" ) )
+                .setMaterial( alienMaterial )
+                .setWeapon( new Weapon() )
+                .build();
 
 
         /* LIGHTS */
@@ -97,7 +88,7 @@ public class FPSGame extends Game
 
 
         addObjects( map, dirLightObject );
-        addPhysicalObjects( dummyObj, characterObject );
+        addPhysicalObject( player );
 
         super.init();
     }

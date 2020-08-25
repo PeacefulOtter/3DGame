@@ -4,6 +4,7 @@ package peacefulotter.engine.core;
 import org.lwjgl.opengl.GL;
 import peacefulotter.engine.physics.PhysicsEngine;
 import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ProfileTimer;
 import peacefulotter.engine.utils.Time;
 import peacefulotter.engine.rendering.RenderingEngine;
@@ -15,6 +16,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class CoreEngine
 {
+    private static final boolean ENABLE_PROFILER_LOGS = false;
+
     private final Game game;
     private final long currentWindow;
     private final RenderingEngine renderingEngine;
@@ -97,14 +100,17 @@ public class CoreEngine
                 // profiling
                 double totalTime = ( 1000.0 * framesCounter ) / (double) frames;
                 double totalRecordedTime = 0;
-                System.out.println();
-                totalRecordedTime += game.displayPhysicsTime( frames );
-                totalRecordedTime += game.displayUpdateTime( frames );
-                totalRecordedTime += renderingEngine.displayRenderTime( frames );
-                totalRecordedTime += GLprofiler.displayAndReset( "GL core engine time", frames );
-                totalRecordedTime += Input.displayInputTime( frames );
-                System.out.println("Other time : " + (totalTime - totalRecordedTime) + "ms" );
-                System.out.println("Total time : " + totalTime + "ms" );
+                if ( ENABLE_PROFILER_LOGS )
+                {
+                    System.out.println();
+                    totalRecordedTime += game.displayPhysicsTime( frames );
+                    totalRecordedTime += game.displayUpdateTime( frames );
+                    totalRecordedTime += renderingEngine.displayRenderTime( frames );
+                    totalRecordedTime += GLprofiler.displayAndReset( "GL core engine time", frames );
+                    totalRecordedTime += Input.displayInputTime( frames );
+                    Logger.log( getClass(), "Other time : " + (totalTime - totalRecordedTime) + "ms" );
+                    Logger.log( getClass(), "Total time : " + totalTime + "ms" );
+                }
 
                 frames = 0;
                 framesCounter = 0;

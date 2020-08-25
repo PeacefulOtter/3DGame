@@ -11,7 +11,9 @@ TODO FILE
 - [X] Add gravity to all physical objects
 - [X] Fix camera not following the player
 - Add a skybox
-- Add crosshair
+- Avoir player rotating indefinitely around getRight() axis, must be stopped at +-PI
+- Maybe create a Mesh and Material bank
+- Add HUD (health, ammo, crosshair) = display images and fonts
 - Add a general directional lighting to the scene
 - [X] Add bullet system
 - /!\ Refactor / Optimize lighting

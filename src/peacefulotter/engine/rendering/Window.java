@@ -86,6 +86,8 @@ public class Window
 
     public static void setHeight( int height ) { Window.height = height; }
 
+    public static float getRatio() { return (float) width / (float) height; }
+
     public static void setAttributes( String winName, int winWidth, int winHeight )
     {
         setName( winName ); setWidth( winWidth ); setHeight( winHeight );

@@ -5,7 +5,16 @@ import peacefulotter.engine.core.maths.Vector3f;
 
 public class STranslation
 {
-    private Vector3f translation = Vector3f.getZero();
+    private Vector3f translation;
+
+    public STranslation()
+    {
+        this.translation = Vector3f.getZero();
+    }
+    public STranslation( STranslation translation )
+    {
+        this.translation = new Vector3f( translation.getTranslationVector() );
+    }
 
     public Vector3f getTranslationVector() { return translation; }
 

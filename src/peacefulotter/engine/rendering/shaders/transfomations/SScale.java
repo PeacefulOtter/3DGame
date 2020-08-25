@@ -5,7 +5,17 @@ import peacefulotter.engine.core.maths.Vector3f;
 
 public class SScale
 {
-    private Vector3f scale = new Vector3f( 1, 1, 1 );
+    private Vector3f scale;
+
+    public SScale()
+    {
+        this.scale = new Vector3f( 1, 1, 1 );
+    }
+
+    public SScale( SScale scale )
+    {
+        this.scale = new Vector3f( scale.getScaleVector() );
+    }
 
     public Vector3f getScaleVector() { return scale; }
 
