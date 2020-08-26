@@ -24,8 +24,8 @@ public class Mesh
         MeshResource res = loadedModels.get( fileName );
         if ( res == null )
         {
-            Object[] o = new ResourceLoader().loadMesh( fileName );
-            addVertices( (Vertex[]) o[ 0 ], (int[]) o[ 1 ], (Boolean)o[ 2 ] );
+            Vertices v = new ResourceLoader().loadMesh( fileName );
+            addVertices( v.vertices, v.indices );
             loadedModels.put( fileName, resource );
         }
         else
@@ -34,24 +34,32 @@ public class Mesh
 
     public Mesh( Vertex[] vertices, int[] indices )
     {
-        this( vertices, indices, false );
+        addVertices( vertices, indices );
     }
 
-    public Mesh( Vertex[] vertices, int[] indices, boolean calcNormals )
+    public static class Vertices
     {
-        addVertices( vertices, indices, calcNormals );
+        private final Vertex[] vertices;
+        private final int[] indices;
+
+        public Vertices( Vertex[] vertices, int[] indices )
+        {
+            this.vertices = vertices;
+            this.indices = indices;
+        }
+
+        public Vertex[] getVertices() { return vertices; }
+        public int[] getIndices() { return indices; }
     }
 
-    private void addVertices( Vertex[] vertices, int[] indices, boolean calcNormals )
+    private void addVertices( Vertex[] vertices, int[] indices )
     {
-        if ( calcNormals )
-            calcNormals( vertices, indices );
+        calcNormals( vertices, indices );
 
         resource = new MeshResource( indices.length );
 
         glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
         glBufferData( GL_ARRAY_BUFFER, BufferUtil.createFlippedBuffer( vertices ), GL_STATIC_DRAW );
-
 
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, resource.getIbo() );
         glBufferData( GL_ELEMENT_ARRAY_BUFFER, BufferUtil.createFlippedBuffer( indices ), GL_STATIC_DRAW );

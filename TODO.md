@@ -1,8 +1,8 @@
 TODO FILE 
 
 - /!\ fix velocity getForward() !!!
-- /!\ Weapon should be fixed with the player => use transform with getRight() and getForward()
-- /!\ Avoid player rotation with the camera around the getRight() axis
+- [X] Weapon should be fixed with the player
+- [X] Avoid player rotation with the camera around the getRight() axis
 - Add a distance param to avoid checking for impossible collisions (Sweet and Prune algo)
 - /!\ Implement collision detection for all sorts of object
 - [X] Player walking more realistic (frictions, move)

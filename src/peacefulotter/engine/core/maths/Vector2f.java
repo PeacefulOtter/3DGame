@@ -2,6 +2,7 @@ package peacefulotter.engine.core.maths;
 
 public class Vector2f
 {
+    private static final float TO_RADIANS = 180f / (float) Math.PI;
     private float x, y;
 
     public Vector2f( float x, float y )
@@ -11,6 +12,12 @@ public class Vector2f
     }
 
     public static Vector2f getZero() { return new Vector2f( 0, 0 ); }
+
+    public static float calcAngle( Vector2f v1, Vector2f v2 )
+    {
+        float actualAngle = (float) Math.atan2( v1.getY(), v1.getX() ) - (float) Math.atan2( v2.getY(), v2.getX() );
+        return actualAngle * TO_RADIANS;
+    }
 
     public float length()
     {

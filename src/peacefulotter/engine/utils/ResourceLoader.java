@@ -1,6 +1,9 @@
 package peacefulotter.engine.utils;
 
+import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.graphics.Vertex;
@@ -55,7 +58,8 @@ public class ResourceLoader
         return sj.toString();
     }
 
-    public Object[] loadMesh( String fileName )
+
+    public Mesh.Vertices loadMesh( String fileName )
     {
         String[] splitArray = fileName.split( "\\." );
         String extension = splitArray[ splitArray.length - 1 ];
@@ -70,23 +74,33 @@ public class ResourceLoader
         OBJModel objModel = new OBJModel( MODELS_PATH + fileName );
         IndexedModel indexedModel = objModel.toIndexedModel();
         indexedModel.calcNormals();
-        int modelSize = indexedModel.getPositions().size();
-        
-        List<Vertex> vertices = new ArrayList<>();
+
+        return loadVertices(
+                indexedModel.getPositions(),
+                indexedModel.getTexCoords(),
+                indexedModel.getNormals(), // indexedModel.getTangents(),
+                indexedModel.getIndices() );
+    }
+
+    public static Mesh.Vertices loadVertices(
+            List<Vector3f> positions,
+            List<Vector2f> texCoords,
+            List<Vector3f> normals,
+            List<Integer> indices )
+    {
+        int modelSize = positions.size();
+        Vertex[] vertices = new Vertex[ modelSize ];
         for ( int i = 0; i < modelSize; i++ )
         {
-            vertices.add( new Vertex(
-                    indexedModel.getPositions().get( i ),
-                    indexedModel.getTexCoords().get( i ),
-                    indexedModel.getNormals().get( i ),
-                    indexedModel.getTangents().get( i ) ) );
+            vertices[ i ] = new Vertex(
+                    positions.get( i ),
+                    texCoords.get( i ),
+                    normals.get( i ) ); // tangents.get( i )
         }
 
-        return new Object[] {
-                Arrays.copyOf( vertices.toArray(), vertices.size(), Vertex[].class ),
-                Util.toIntArray( indexedModel.getIndices() ),
-                true };
+        return new Mesh.Vertices( vertices, Util.toIntArray( indices ) );
     }
+
 
     public TextureResource loadTexture( String fileName )
     {
@@ -138,7 +152,8 @@ public class ResourceLoader
         return resource;
     }
 
-    public List<SimpleMaterial> loadMaterial(String fileName )
+
+    public List<SimpleMaterial> loadMaterial( String fileName )
     {
         List<SimpleMaterial> simpleMaterials = new ArrayList<>();
         int index = -1;

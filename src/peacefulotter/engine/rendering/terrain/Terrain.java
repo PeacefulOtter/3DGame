@@ -1,0 +1,86 @@
+package peacefulotter.engine.rendering.terrain;
+
+import peacefulotter.engine.components.GameObject;
+import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.graphics.Material;
+import peacefulotter.engine.rendering.graphics.Mesh;
+import peacefulotter.engine.utils.ResourceLoader;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Terrain extends GameObject
+{
+    private static final int SIZE = 800;
+    private static final int VERTEX_COUNT = 128;
+
+    private final float x, z;
+    private final Mesh mesh;
+    private final Material material;
+
+    public Terrain(int gridX, int gridZ, Material material )
+    {
+        this.x = gridX * SIZE;
+        this.z = gridZ * SIZE;
+        this.mesh = generateTerrain();
+        this.material = material;
+    }
+
+
+    private Mesh generateTerrain()
+    {
+        int count = VERTEX_COUNT * VERTEX_COUNT;
+        List<Vector3f> vertices = new ArrayList<>( count );
+        List<Vector3f> normals = new ArrayList<>( count );
+        List<Vector2f> textureCoords = new ArrayList<>( count );
+        List<Integer> indices = new ArrayList<>( 6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1) );
+
+        for( int i = 0; i < VERTEX_COUNT; i++ )
+        {
+            for( int j = 0; j < VERTEX_COUNT; j++ )
+            {
+                vertices.add( new Vector3f( (float)j/((float)VERTEX_COUNT - 1) * SIZE, 0, (float)i/((float)VERTEX_COUNT - 1) * SIZE ) );
+                normals.add( new Vector3f( 0, 1, 0 ) );
+                textureCoords.add( new Vector2f( (float)j/((float)VERTEX_COUNT - 1), (float)i/((float)VERTEX_COUNT - 1) ) );
+            }
+        }
+
+        for( int gz = 0; gz < VERTEX_COUNT - 1; gz++ )
+        {
+            for( int gx = 0; gx < VERTEX_COUNT - 1; gx++ )
+            {
+                int topLeft = (gz*VERTEX_COUNT)+gx;
+                int topRight = topLeft + 1;
+                int bottomLeft = ((gz+1)*VERTEX_COUNT)+gx;
+                int bottomRight = bottomLeft + 1;
+                indices.add( topLeft );
+                indices.add( bottomLeft );
+                indices.add( topRight );
+                indices.add( topRight );
+                indices.add( bottomLeft );
+                indices.add( bottomRight );
+            }
+        }
+
+        Mesh.Vertices v = ResourceLoader.loadVertices( vertices, textureCoords, normals, indices );
+        return new Mesh( v.getVertices(), v.getIndices() );
+    }
+
+    public float getX()
+    {
+        return x;
+    }
+
+    public float getZ()
+    {
+        return z;
+    }
+
+    public Mesh getMesh()
+    {
+        return mesh;
+    }
+
+    public Material getMaterial() { return material; }
+}

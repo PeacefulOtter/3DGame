@@ -61,11 +61,11 @@ public class TestGame extends Game
 
         PhysicsObject sphereObject1 = new PhysicsObject( new Vector3f(-5f, 0, 5 ) )
                 .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), bricks1 ) );
-        sphereObject1.getTransform().translate( new Vector3f( 30, 0, 10 ) ).scale( 0.3f );
+        sphereObject1.getTransform().translate( new Vector3f( 30, 0, 10 ) ).scale( 0.1f );
 
         PhysicsObject sphereObject2 = new PhysicsObject( new Vector3f(5f, 0, 0 ) )
                 .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), alienMaterial ) );
-        sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.3f );
+        sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.1f );
 
         addPhysicalObjects( sphereObject1, sphereObject2 );
 
@@ -108,7 +108,8 @@ public class TestGame extends Game
                 .build( true );
         player.getTransform().translate( new Vector3f( 0, 6.5f, 0.3f ) );
 
-        addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject, player );
+        addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject );
+        addPhysicalObject( player );
 
         super.init();
     }

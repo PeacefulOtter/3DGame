@@ -46,15 +46,18 @@ public class FPSGame extends Game
                 2, 12, 0.04f, -1f );
 
         /* MAP */
+        /*World world = new World( bricks2 );
+        world.getTransform()
+                .scale( 0.1f );*/
         Mesh mesh = new Mesh( "plane3.obj" );
-        GameObject map = new GameObject()
+        GameObject world = new GameObject()
                 .addComponent( new MeshRenderer( mesh, bricks2 ) );
-        map.getTransform().scale( 2 );
+        world.getTransform().scale( 4 );
 
 
         /* DUMMY */
-        /*Player dummy = new Player.PlayerBuilder()
-                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN ) )
+        Player dummy = new Player.PlayerBuilder()
+                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
                 .build( false );
@@ -67,7 +70,7 @@ public class FPSGame extends Game
         dummy.addChild( sphereObj );
         dummy.getTransform()
                 .translate( new Vector3f( 0, 0, 5 ) )
-                .rotate( new Vector3f(0, 1, 0 ), 180);*/
+                .rotate( new Vector3f(0, 1, 0 ), 180);
 
 
         /* PLAYER z */
@@ -82,13 +85,13 @@ public class FPSGame extends Game
         /* LIGHTS */
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
-                new Vector3f( 1f, 0.9f,0.8f ),
-                0.15f );
+                new Vector3f( 1f, 0.9f,0.7f ),
+                0.10f );
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
 
-        addObjects( map, dirLightObject );
+        addObjects( world, dirLightObject );
         addPhysicalObject( player );
 
         super.init();

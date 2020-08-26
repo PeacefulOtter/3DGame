@@ -24,7 +24,7 @@ public class Vertex
 
     public Vertex( Vector3f pos, Vector2f textureCoordinates, Vector3f normal )
     {
-        this( pos, textureCoordinates, normal, Vector3f.getZero() );
+        this( pos, textureCoordinates, normal, new Vector3f( 1, 1, 1 ) );
     }
 
     public Vertex( Vector3f pos, Vector2f textureCoordinates, Vector3f normal, Vector3f tangent )

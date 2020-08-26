@@ -1,6 +1,5 @@
 package peacefulotter.engine.rendering.shaders.transfomations;
 
-import jdk.swing.interop.SwingInterOpUtils;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
@@ -8,7 +7,6 @@ import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.utils.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class STransform implements Updatable
@@ -72,24 +70,30 @@ public class STransform implements Updatable
 
     public Vector3f getScale() { return scale.getScaleVector(); }
 
-    public STransform setTranslation( Vector3f vector )
+    public STransform setTranslation( Vector3f newTranslation )
     {
-        translation.setTranslation( vector );
-        hasChanged = true;
+        Vector3f oldTranslation = translation.getTranslationVector();
+        translation.setTranslation( newTranslation );
+        if ( !oldTranslation.equals( newTranslation ) )
+            hasChanged = true;
         return this;
     }
 
-    public STransform setRotation( Quaternion quaternion )
+    public STransform setRotation( Quaternion newRotation )
     {
-        rotation.setRotation( quaternion );
-        hasChanged = true;
+        Quaternion oldRotation = rotation.getRotationQuaternion();
+        rotation.setRotation( newRotation );
+        if ( !oldRotation.equals( newRotation ) )
+            hasChanged = true;
         return this;
     }
 
-    public STransform setScale( Vector3f vector )
+    public STransform setScale( Vector3f newScale )
     {
-        scale.setScale( vector );
-        hasChanged = true;
+        Vector3f oldScale = scale.getScaleVector();
+        scale.setScale( newScale );
+        if ( !oldScale.equals( newScale ) )
+            hasChanged = true;
         return this;
     }
 
@@ -128,9 +132,9 @@ public class STransform implements Updatable
 
     public void notifyParentChange( STransform parentTransform )
     {
-        hasChanged = true;
         parentTranslation = parentTransform.getTransformationMatrix();
         parentRotation = parentTransform.getTransformedRotation();
+        hasChanged = true;
     }
 
     public boolean hasChanged() { return hasChanged; }

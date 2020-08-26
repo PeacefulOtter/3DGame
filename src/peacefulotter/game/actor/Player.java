@@ -127,7 +127,6 @@ public class Player extends PhysicsObject
                 rotateY( (float) -( oldCursorX - x ) * CURSOR_SENSITIVITY * deltaTime );
                 oldCursorX = x;
             }
-
             else if ( y != oldCursorY )
             {
                 rotateX( (float) -( oldCursorY - y ) * CURSOR_SENSITIVITY * deltaTime );
@@ -216,11 +215,9 @@ public class Player extends PhysicsObject
 
     private float calcActualAngle()
     {
-        Vector2f v2 = getVelocity().getXZ().normalize();
         Vector2f v1 = getForward().getXZ();
-        float actualAngle = (float) Math.atan2( v1.getY(), v1.getX() ) - (float) Math.atan2( v2.getY(), v2.getX() );
-        actualAngle *= 180f / (float) Math.PI;
-        return actualAngle;
+        Vector2f v2 = getVelocity().getXZ().normalize();
+        return Vector2f.calcAngle( v1, v2 );
     }
 
     private boolean isMoving()
@@ -335,16 +332,15 @@ public class Player extends PhysicsObject
             if ( mesh == null || material == null )
                 throw new NullPointerException( "Player needs a mesh and a material" );
 
-
             Player player = new Player( weapon, isUser );
             player
-                    .addComponent( new MeshRenderer( mesh, material ) )
+                    .addComponent( new MeshRenderer( mesh, material ).fixedTilt() )
                     .addChild( weapon );
 
             if ( camera != null )
             {
-                player.addComponent( camera );
                 camera.setInnerTranslation( Camera.PLAYER_CAMERA() );
+                player.addComponent( camera );
             }
 
             return player;
