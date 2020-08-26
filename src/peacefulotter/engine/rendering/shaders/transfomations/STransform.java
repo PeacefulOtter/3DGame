@@ -1,34 +1,50 @@
 package peacefulotter.engine.rendering.shaders.transfomations;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Updatable;
+import peacefulotter.engine.utils.Logger;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class STransform implements Updatable
 {
+    private final List<STransform> children;
+
     private final STranslation translation;
     private final SRotation rotation;
     private final SScale scale;
 
-    private STransform parent;
-    private Matrix4f parentTranslation = new Matrix4f().initIdentity();
-    private Quaternion parentRotation = new Quaternion( 0, 0, 0, 1 );
+    private Matrix4f parentTranslation;
+    private Quaternion parentRotation;
 
-    private boolean hasChanged, hasChangedBis;
+    private boolean hasChanged;
 
     public STransform()
     {
         this.translation = new STranslation();
         this.rotation = new SRotation();
         this.scale = new SScale();
+        this.parentTranslation = new Matrix4f().initIdentity();
+        this.parentRotation = new Quaternion( 0, 0, 0, 1 );
+        this.children = new ArrayList<>();
     }
 
+    /** Copy Constructor **/
     public STransform( STransform origin )
     {
         this.translation = new STranslation( origin.translation );
         this.rotation = new SRotation( origin.rotation );
         this.scale = new SScale( origin.scale );
+        this.parentTranslation = new Matrix4f( origin.parentTranslation.getM() );
+        this.parentRotation = new Quaternion( origin.parentRotation );
+        this.children = new ArrayList<>();
+        children.addAll( origin.children );
+        this.hasChanged = origin.hasChanged;
     }
 
     public Matrix4f getTransformationMatrix()
@@ -80,14 +96,14 @@ public class STransform implements Updatable
     public STransform translate( Vector3f vector )
     {
         translation.translate( vector );
-        if ( !vector.equals( Vector3f.getZero() ) )
-            hasChanged = true;
+        hasChanged = true;
         return this;
     }
 
     public STransform rotate( Quaternion q )
     {
         rotation.rotate( q );
+        hasChanged = true;
         return this;
     }
 
@@ -108,29 +124,25 @@ public class STransform implements Updatable
         return this;
     }
 
-    public void setParent( STransform parent ) { this.parent = parent; }
+    public void addChild( STransform child ) { children.add( child ); }
+
+    public void notifyParentChange( STransform parentTransform )
+    {
+        hasChanged = true;
+        parentTranslation = parentTransform.getTransformationMatrix();
+        parentRotation = parentTransform.getTransformedRotation();
+    }
+
+    public boolean hasChanged() { return hasChanged; }
 
     @Override
     public void update( float deltaTime )
     {
+        // if the transform changed, update the children transform
         if ( hasChanged )
         {
-            if ( hasChangedBis )
-            {
-                hasChanged = false;
-                hasChangedBis = false;
-            }
-            else
-            {
-                hasChangedBis = true;
-            }
-        }
-
-        if ( parent != null && parent.hasChanged )
-        {
-            hasChanged = true;
-            parentTranslation = parent.getTransformationMatrix();
-            parentRotation = parent.getTransformedRotation();
+            children.forEach( child -> child.notifyParentChange( this ) );
+            hasChanged = false;
         }
     }
 
@@ -142,5 +154,11 @@ public class STransform implements Updatable
     public Quaternion getLookAtDirection( Vector3f point, Vector3f up )
     {
         return new Quaternion( new Matrix4f().initRotation( point.sub( getTranslation() ).normalize(), up ) );
+    }
+
+    @Override
+    public String toString()
+    {
+        return getTranslation() + " " + getRotation() + " " + getScale();
     }
 }

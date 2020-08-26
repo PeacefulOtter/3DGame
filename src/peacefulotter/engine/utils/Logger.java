@@ -36,6 +36,7 @@ public class Logger
 
     private static String getTime()
     {
-        return LocalTime.now().toString().split( "\\." )[ 0 ];
+        String time = LocalTime.now().toString();
+        return time.substring( 0, time.length() - 3 );
     }
 }

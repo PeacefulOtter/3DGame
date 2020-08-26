@@ -23,7 +23,6 @@ public class GameObject implements Initializable, Updatable, Renderable
 
     private CoreEngine engine;
 
-
     public GameObject addComponent( GameComponent component )
     {
         components.add( component );
@@ -34,7 +33,7 @@ public class GameObject implements Initializable, Updatable, Renderable
     public GameObject addChild( GameObject child )
     {
         children.add( child );
-        child.getTransform().setParent( getTransform() );
+        getTransform().addChild( child.getTransform() );
         return this;
     }
 
@@ -46,6 +45,7 @@ public class GameObject implements Initializable, Updatable, Renderable
     public GameObject addPhysicalChild( PhysicsObject child )
     {
         physicsChildren.add( child );
+        getTransform().addChild( child.getTransform() );
         return addChild( child );
     }
 
@@ -53,6 +53,7 @@ public class GameObject implements Initializable, Updatable, Renderable
     {
         physicsChildren.remove( child );
     }
+
 
     public void init()
     {

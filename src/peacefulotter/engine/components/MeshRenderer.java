@@ -1,6 +1,5 @@
 package peacefulotter.engine.components;
 
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;

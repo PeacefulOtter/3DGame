@@ -169,4 +169,10 @@ public class Quaternion
         Quaternion quat = (Quaternion)obj;
         return quat.x == x && quat.y == y && quat.z == z && quat.w == w;
     }
+
+    @Override
+    public String toString()
+    {
+        return "(" + x + ":" + y + ":" + z + ":" + w + ")";
+    }
 }

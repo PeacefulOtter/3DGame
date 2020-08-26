@@ -8,7 +8,6 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.utils.IO.Input;
-import peacefulotter.engine.utils.Logger;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -69,13 +68,15 @@ public class Player extends PhysicsObject
     private double oldCursorX, oldCursorY;
     private boolean isRunning, isReloading, isJumping, isCrouching;
     private final Weapon weapon;
+    private final boolean isUser;
     private float currentAcceleration, currentVelocity, currentMaxVelocity;
     private final Set<VelocityAngle> movingArrows, notMovingArrowsQueue;
 
-    public Player( Weapon weapon )
+    private Player( Weapon weapon, boolean isUser )
     {
         super( Vector3f.getZero() );
         this.weapon = weapon;
+        this.isUser = isUser;
         this.currentAcceleration = MOVEMENT_ACCELERATION;
         this.currentMaxVelocity = MAX_WALKING_VELOCITY;
         this.movingArrows = new HashSet<>( 4 );
@@ -85,6 +86,8 @@ public class Player extends PhysicsObject
     @Override
     public void init()
     {
+        if ( !isUser ) return;
+
         Input.addKeyPressReleaseCallbacks( GLFW_KEY_W,
                 ( deltaTime ) -> move( VelocityAngle.FORWARD ),
                 ( deltaTime ) -> stopMoving( VelocityAngle.FORWARD ) );
@@ -153,7 +156,6 @@ public class Player extends PhysicsObject
 
         float newAngle = ( isMoving() && !isJumping ) ? VelocityAngle.getAngle() : calcActualAngle();
 
-        Logger.log( getClass(), getVelocity() + " " + getPosition() + " " + getVelocityYAxis() );
         setVelocity( getForward()
                 .rotate( Vector3f.Y_AXIS, newAngle )
                 .mul( deltaTime * currentVelocity )
@@ -326,24 +328,23 @@ public class Player extends PhysicsObject
             return this;
         }
 
-        public Player build()
+        public Player build( boolean isUser )
         {
             if ( weapon == null )
                 throw new NullPointerException( "Player needs a weapon" );
             if ( mesh == null || material == null )
                 throw new NullPointerException( "Player needs a mesh and a material" );
 
-            weapon.setInnerTranslation( new Vector3f( 3f, -6f, 3f ) );
-            weapon.setInnerScale( 0.1f );
-            //weaponTransform.scale( 0.1f );
-            Player player = new Player( weapon );
-            player.addComponent( new MeshRenderer( mesh, material ) );
-            player.addComponent( weapon );
+
+            Player player = new Player( weapon, isUser );
+            player
+                    .addComponent( new MeshRenderer( mesh, material ) )
+                    .addChild( weapon );
 
             if ( camera != null )
             {
                 player.addComponent( camera );
-                camera.setInnerTranslation( new Vector3f( 0, 6.5f, 0f ) );
+                camera.setInnerTranslation( Camera.PLAYER_CAMERA() );
             }
 
             return player;

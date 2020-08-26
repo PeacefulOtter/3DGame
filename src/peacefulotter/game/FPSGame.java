@@ -53,29 +53,30 @@ public class FPSGame extends Game
 
 
         /* DUMMY */
+        /*Player dummy = new Player.PlayerBuilder()
+                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN ) )
+                .setMesh( new Mesh( "reaper.obj" ) )
+                .setMaterial( alienMaterial )
+                .build( false );
+
         GameObject sphereObj = new GameObject();
         sphereObj.addComponent( new MeshRenderer( new Mesh( "sphere.obj" ), bricks2 ) );
-        sphereObj.getTransform().translate( new Vector3f( 0, 6, 0) ).scale( 0.04f );
+        sphereObj.getTransform().setTranslation( new Vector3f( 0, 6, 0 ) );
+        sphereObj.getTransform().setScale( new Vector3f( 0.04f, 0.04f, 0.04f ) );
 
-        /*PhysicsObject dummyObj =  new PhysicsObject( Vector3f.getZero() );
-        GameObject dummyReaper = new GameObject()
-                .addComponent( new MeshRenderer( new Mesh( "reaper.obj" ), alienMaterial ) );
-        dummyObj
-                .addChild( dummyReaper )
-                .addChild( sphereObj );
-        dummyObj.getTransform()
+        dummy.addChild( sphereObj );
+        dummy.getTransform()
                 .translate( new Vector3f( 0, 0, 5 ) )
                 .rotate( new Vector3f(0, 1, 0 ), 180);*/
 
 
-        /* PLAYERS */
-
+        /* PLAYER z */
         PhysicsObject player = new Player.PlayerBuilder()
                 .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
-                .setWeapon( new Weapon() )
-                .build();
+                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
+                .build( true );
 
 
         /* LIGHTS */

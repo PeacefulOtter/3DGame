@@ -1,5 +1,7 @@
 TODO FILE 
 
+- /!\ fix velocity getForward() !!!
+- /!\ Weapon should be fixed with the player => use transform with getRight() and getForward()
 - /!\ Avoid player rotation with the camera around the getRight() axis
 - Add a distance param to avoid checking for impossible collisions (Sweet and Prune algo)
 - /!\ Implement collision detection for all sorts of object
@@ -11,8 +13,9 @@ TODO FILE
 - [X] Add gravity to all physical objects
 - [X] Fix camera not following the player
 - Add a skybox
-- Avoir player rotating indefinitely around getRight() axis, must be stopped at +-PI
+- Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
 - Maybe create a Mesh and Material bank
+- Add precision to the weapons depending on player velocity
 - Add HUD (health, ammo, crosshair) = display images and fonts
 - Add a general directional lighting to the scene
 - [X] Add bullet system

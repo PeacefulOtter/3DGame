@@ -100,8 +100,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         int height = 0;
         if ( position.getY() <= height && velocityYAxis <= 0 )
         {
-            System.out.println("on the ground");
-            velocity.setY( height );
+             velocity.setY( height );
             position.setY( height );
             velocityYAxis = 0;
         }

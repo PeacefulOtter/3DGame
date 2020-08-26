@@ -100,17 +100,13 @@ public class TestGame extends Game
         spotLightObject.addComponent( spotLight );
 
 
-        Weapon weapon = new Weapon();
-        GameObject player = new Player( weapon );
-        Camera camera = new Camera(
-                70f,
-                (float) Window.getWidth() / (float) Window.getHeight(),
-                0.01f, 1000f );
-
+        PhysicsObject player = new Player.PlayerBuilder()
+                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                .setMesh( new Mesh( "reaper.obj" ) )
+                .setMaterial( alienMaterial )
+                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
+                .build( true );
         player.getTransform().translate( new Vector3f( 0, 6.5f, 0.3f ) );
-        player
-                .addComponent( weapon )
-                .addComponent( camera );
 
         addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject, player );
 
