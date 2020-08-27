@@ -5,6 +5,7 @@ import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
+import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.utils.ResourceLoader;
 
 import java.util.ArrayList;
@@ -31,21 +32,21 @@ public class Terrain extends GameObject
     private Mesh generateTerrain()
     {
         int count = VERTEX_COUNT * VERTEX_COUNT;
-        List<Vector3f> vertices = new ArrayList<>( count );
-        List<Vector3f> normals = new ArrayList<>( count );
-        List<Vector2f> textureCoords = new ArrayList<>( count );
-        List<Integer> indices = new ArrayList<>( 6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1) );
+        int indicesCapacity = 6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1);
+        IndexedModel model = new IndexedModel( count, indicesCapacity );
 
         for( int i = 0; i < VERTEX_COUNT; i++ )
         {
             for( int j = 0; j < VERTEX_COUNT; j++ )
             {
-                vertices.add( new Vector3f( (float)j/((float)VERTEX_COUNT - 1) * SIZE, 0, (float)i/((float)VERTEX_COUNT - 1) * SIZE ) );
-                normals.add( new Vector3f( 0, 1, 0 ) );
-                textureCoords.add( new Vector2f( (float)j/((float)VERTEX_COUNT - 1), (float)i/((float)VERTEX_COUNT - 1) ) );
+                model.getPositions().add( new Vector3f( (float)j/((float)VERTEX_COUNT - 1) * SIZE, 0, (float)i/((float)VERTEX_COUNT - 1) * SIZE ) );
+                model.getTexCoords().add( new Vector2f( (float)j/((float)VERTEX_COUNT - 1), (float)i/((float)VERTEX_COUNT - 1) ) );
+                model.getNormals().add( new Vector3f( 0, 1, 0 ) );
+                model.getTangents().add( Vector3f.getZero() );
             }
         }
 
+        List<Integer> indices = model.getIndices();
         for( int gz = 0; gz < VERTEX_COUNT - 1; gz++ )
         {
             for( int gx = 0; gx < VERTEX_COUNT - 1; gx++ )
@@ -63,7 +64,10 @@ public class Terrain extends GameObject
             }
         }
 
-        Mesh.Vertices v = ResourceLoader.loadVertices( vertices, textureCoords, normals, indices );
+        model.calcTangents();
+
+        Mesh.Vertices v = ResourceLoader.loadVertices( model );
+
         return new Mesh( v.getVertices(), v.getIndices() );
     }
 

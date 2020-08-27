@@ -1,6 +1,6 @@
 TODO FILE 
 
-- /!\ fix velocity getForward() !!!
+- [X] fix velocity getForward()
 - [X] Weapon should be fixed with the player
 - [X] Avoid player rotation with the camera around the getRight() axis
 - Add a distance param to avoid checking for impossible collisions (Sweet and Prune algo)
@@ -13,12 +13,12 @@ TODO FILE
 - [X] Add gravity to all physical objects
 - [X] Fix camera not following the player
 - Add a skybox
-- Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
+- [X] Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
 - Maybe create a Mesh and Material bank
 - Add precision to the weapons depending on player velocity
 - Add HUD (health, ammo, crosshair) = display images and fonts
-- Add a general directional lighting to the scene
-- [X] Add bullet system
+- [X] Add a general directional lighting to the scene
+- [ ] Add bullet system
 - /!\ Refactor / Optimize lighting
 - /!\ Refactor obj loader
 - /!\ Refactor material (does not need to include normal and height maps)

@@ -8,12 +8,13 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.game.inputs.FreeMovement;
+import peacefulotter.game.inputs.FreeRotation;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static peacefulotter.engine.utils.IO.Input.*;
 
 // returns true if the player is at his max velocity
@@ -48,58 +49,51 @@ import static peacefulotter.engine.utils.IO.Input.*;
         }
         */
 
-/* stopMoving()
- setVelocity( getVelocity().sub( direction.mul( arrow.velocityLength ) ) );
- arrow.reset();
- */
 
 
 public class Player extends PhysicsObject
 {
     private static final float JUMP_HEIGHT = 40f;
-    private static final float MOVEMENT_ACCELERATION = 3000f;
     private static final float RUNNING_ACCELERATION = 4000f;
-    private static final float MAX_WALKING_VELOCITY = 5000f;
     private static final float MAX_RUNNING_VELOCITY = 9000f;
-    private static final float SLOW_FACTOR = 4000f;
-    private static final float ROTATION_SENSITIVITY = 180f;
-    private static final float CURSOR_SENSITIVITY = 50f;
 
-    private double oldCursorX, oldCursorY;
-    private boolean isRunning, isReloading, isJumping, isCrouching;
+    public static final float MAX_WALKING_VELOCITY = 5000f;
+    public static final float WALKING_ACCELERATION = 3000f;
+    public static final float ROTATION_SENSITIVITY = 180f;
+    public static final float CURSOR_SENSITIVITY = 50f;
+    public static final float SLOW_FACTOR = 4000f;
+
     private final Weapon weapon;
     private final boolean isUser;
-    private float currentAcceleration, currentVelocity, currentMaxVelocity;
-    private final Set<VelocityAngle> movingArrows, notMovingArrowsQueue;
+    private final Set<VelocityAngle> notMovingArrowsQueue;
+    private final FreeMovement freeMovement;
+    private final FreeRotation freeRotation;
+
+    private boolean isRunning, isReloading, isJumping, isCrouching;
 
     private Player( Weapon weapon, boolean isUser )
     {
-        super( Vector3f.getZero() );
         this.weapon = weapon;
         this.isUser = isUser;
-        this.currentAcceleration = MOVEMENT_ACCELERATION;
-        this.currentMaxVelocity = MAX_WALKING_VELOCITY;
-        this.movingArrows = new HashSet<>( 4 );
         this.notMovingArrowsQueue = new HashSet<>( 4 );
+        if ( isUser )
+        {
+            this.freeMovement = new FreeMovement( this, MAX_WALKING_VELOCITY, WALKING_ACCELERATION, SLOW_FACTOR );
+            this.freeRotation = new FreeRotation( this, ROTATION_SENSITIVITY, CURSOR_SENSITIVITY );
+        }
+        else { this.freeMovement = null; this.freeRotation = null; }
     }
 
     @Override
     public void init()
     {
         if ( !isUser ) return;
+        assert freeMovement != null;
+        assert freeRotation != null;
 
-        Input.addKeyPressReleaseCallbacks( GLFW_KEY_W,
-                ( deltaTime ) -> move( VelocityAngle.FORWARD ),
-                ( deltaTime ) -> stopMoving( VelocityAngle.FORWARD ) );
-        Input.addKeyPressReleaseCallbacks( GLFW_KEY_D,
-                ( deltaTime ) -> move( VelocityAngle.RIGHT ),
-                ( deltaTime ) -> stopMoving( VelocityAngle.RIGHT ) );
-        Input.addKeyPressReleaseCallbacks( GLFW_KEY_S,
-                ( deltaTime ) -> move( VelocityAngle.BACKWARD ),
-                ( deltaTime ) -> stopMoving( VelocityAngle.BACKWARD ) );
-        Input.addKeyPressReleaseCallbacks( GLFW_KEY_A,
-                ( deltaTime ) -> move( VelocityAngle.LEFT  ),
-                ( deltaTime ) -> stopMoving( VelocityAngle.LEFT ) );
+        freeMovement.init();
+        freeRotation.init();
+
         Input.addKeyPressReleaseCallbacks( GLFW_KEY_LEFT_CONTROL,
                 ( deltaTime ) -> crouch(),
                 ( deltaTime ) -> stopCrouching() );
@@ -108,31 +102,13 @@ public class Player extends PhysicsObject
                 ( deltaTime ) -> stopRunning() );
         Input.addKeyCallback( GLFW_KEY_SPACE, ( deltaTime ) -> jump(), false );
 
-        Input.addKeyCallback( GLFW_KEY_UP,    ( deltaTime ) -> rotateX( -deltaTime * ROTATION_SENSITIVITY ) );
-        Input.addKeyCallback( GLFW_KEY_RIGHT, ( deltaTime ) -> rotateY(  deltaTime * ROTATION_SENSITIVITY ) );
-        Input.addKeyCallback( GLFW_KEY_DOWN,  ( deltaTime ) -> rotateX(  deltaTime * ROTATION_SENSITIVITY ) );
-        Input.addKeyCallback( GLFW_KEY_LEFT,  ( deltaTime ) -> rotateY( -deltaTime * ROTATION_SENSITIVITY ) );
-
         Input.addMouseButtonCallback( MOUSE_PRIMARY,
                 ( deltaTime ) -> weapon.fire( getForward() ),
                 Weapon.IS_AUTOMATIC );
 
-        Input.addMouseButtonCallback( MOUSE_SECONDARY, ( deltaTime ) -> {
-            System.out.println("aiminggg");
-        } );
-
-        Input.addCursorCallback( ( deltaTime, x, y ) -> {
-            if ( x != oldCursorX )
-            {
-                rotateY( (float) -( oldCursorX - x ) * CURSOR_SENSITIVITY * deltaTime );
-                oldCursorX = x;
-            }
-            else if ( y != oldCursorY )
-            {
-                rotateX( (float) -( oldCursorY - y ) * CURSOR_SENSITIVITY * deltaTime );
-                oldCursorY = y;
-            }
-        } );
+        Input.addMouseButtonCallback( MOUSE_SECONDARY, ( deltaTime ) ->
+            System.out.println("aiminggg")
+        );
 
 
         Input.addKeyCallback( GLFW_KEY_LEFT_ALT,  ( deltaTime ) -> Input.setMouseDisable( false ) );
@@ -142,6 +118,9 @@ public class Player extends PhysicsObject
     @Override
     protected void updateVelocity( float deltaTime )
     {
+        if ( !isUser ) return;
+        assert freeMovement != null;
+
         super.updateVelocity( deltaTime );
 
         // player is on the ground or slightly below
@@ -149,91 +128,20 @@ public class Player extends PhysicsObject
         {
             isJumping = false;
 
-            notMovingArrowsQueue.forEach( this::stopMoving );
+            notMovingArrowsQueue.forEach( freeMovement::stopMoving );
             notMovingArrowsQueue.clear();
         }
 
-        float newAngle = ( isMoving() && !isJumping ) ? VelocityAngle.getAngle() : calcActualAngle();
-
-        setVelocity( getForward()
-                .rotate( Vector3f.Y_AXIS, newAngle )
-                .mul( deltaTime * currentVelocity )
-                .setY( getVelocityYAxis() ) );
-
-        if ( isJumping ) return;
-
-        if ( isMoving() )
-        {
-            if ( currentVelocity < currentMaxVelocity )
-                currentVelocity += currentAcceleration * deltaTime;
-            if ( currentVelocity > currentMaxVelocity )
-                currentVelocity = currentMaxVelocity;
-        }
-        else
-        {
-            if ( currentVelocity > 0 )
-                currentVelocity -= SLOW_FACTOR * deltaTime;
-            if ( currentVelocity < 0 )
-                currentVelocity = 0;
-        }
+        freeMovement.updateVelocity( deltaTime, isJumping );
     }
 
-    // keeps track of the velocity of each direction
-    private enum VelocityAngle
+    @Override
+    public boolean move( VelocityAngle arrow )
     {
-        FORWARD( 0 ), RIGHT( 90 ), BACKWARD( 180 ), LEFT( -90 );
-
-        private final int rotation;
-        private boolean active;
-
-        VelocityAngle( int rotation )
-        {
-            this.rotation = rotation;
-        }
-
-        public static float getAngle()
-        {
-            int angle = 0;
-
-            if ( RIGHT.active )
-                angle += RIGHT.rotation;
-            if ( LEFT.active )
-                angle += LEFT.rotation;
-            if ( FORWARD.active && !BACKWARD.active )
-            {
-                angle += Math.signum( -angle ) * 45;
-            }
-            else if ( BACKWARD.active && !FORWARD.active )
-            {
-                angle += Math.signum( angle ) * 45;
-                if ( angle == 0 )
-                    angle = 180;
-            }
-            return angle;
-        }
+        return !isJumping;
     }
-
-    private float calcActualAngle()
-    {
-        Vector2f v1 = getForward().getXZ();
-        Vector2f v2 = getVelocity().getXZ().normalize();
-        return Vector2f.calcAngle( v1, v2 );
-    }
-
-    private boolean isMoving()
-    {
-        return movingArrows.size() > 0;
-    }
-
-    private void move( VelocityAngle arrow )
-    {
-        if ( isJumping ) return;
-
-        movingArrows.add( arrow );
-        arrow.active = true;
-    }
-
-    private void stopMoving( VelocityAngle arrow )
+    @Override
+    public boolean stopMoving( VelocityAngle arrow )
     {
         // since this method is only triggered once when a key is released, if the player jumps
         // its movement continues until he lands. This is the reason why we need to keep track
@@ -241,19 +149,17 @@ public class Player extends PhysicsObject
         if ( isJumping )
         {
             notMovingArrowsQueue.add( arrow );
-            return;
+            return false;
         }
-
-        movingArrows.remove( arrow );
-        arrow.active = false;
+        return true;
     }
 
     private void run()
     {
         if ( isJumping ) return;
 
-        currentAcceleration = RUNNING_ACCELERATION;
-        currentMaxVelocity = MAX_RUNNING_VELOCITY;
+        freeMovement.setCurrentMaxVelocity( MAX_RUNNING_VELOCITY );
+        freeMovement.setCurrentAcceleration( RUNNING_ACCELERATION );
         isRunning = true;
     }
 
@@ -261,14 +167,15 @@ public class Player extends PhysicsObject
     {
         if ( isJumping ) return;
 
-        currentAcceleration = MOVEMENT_ACCELERATION;
-        currentMaxVelocity = MAX_WALKING_VELOCITY;
-        this.isRunning = false;
+        freeMovement.setCurrentMaxVelocity( MAX_WALKING_VELOCITY );
+        freeMovement.setCurrentAcceleration(WALKING_ACCELERATION);
+        isRunning = false;
     }
 
     private void jump()
     {
         if ( isJumping ) return;
+        if ( isCrouching ) { stopCrouching(); return; }
 
         setVelocityYAxis( getVelocityYAxis() + JUMP_HEIGHT );
         isJumping = true;
@@ -282,11 +189,11 @@ public class Player extends PhysicsObject
 
     private void stopCrouching() { this.isCrouching = false; }
 
-    private void reloadWeapon() { weapon.reload(); }
-
-    private void rotateX( float angleDeg ) { getTransform().rotate( getRight(), angleDeg ); }
-
-    private void rotateY( float angleDeg ) { getTransform().rotate( Vector3f.Y_AXIS, angleDeg ); }
+    private void reloadWeapon()
+    {
+        if ( isRunning || isJumping ) return;
+        weapon.reload();
+    }
 
     public Vector3f getForward()  { return getTransform().getRotation().getForward(); }
     public Vector3f getBackward() { return getTransform().getRotation().getBack(); }

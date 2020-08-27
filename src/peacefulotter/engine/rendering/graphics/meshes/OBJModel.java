@@ -157,9 +157,6 @@ public class OBJModel
         for ( int i = 0; i < model.getPositions().size(); i++ )
             model.getTangents().add( normalModel.getTangents().get( indexMap.get( i ) ) );
 
-        // for( int i = 0; i < model.getTexCoords().size(); i++ )
-        //    model.getTexCoords().get( i ).setY( 1.0f - model.getTexCoords().get( i ).getY() );
-
         return model;
     }
 }

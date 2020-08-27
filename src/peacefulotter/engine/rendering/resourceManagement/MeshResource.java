@@ -1,6 +1,7 @@
 package peacefulotter.engine.rendering.resourceManagement;
 
 import peacefulotter.engine.elementary.Disposable;
+import peacefulotter.engine.utils.Logger;
 
 import static org.lwjgl.opengl.GL15.*;
 
@@ -19,7 +20,7 @@ public class MeshResource extends Disposable
 
     public void dispose()
     {
-        System.out.println("hereeee");
+        Logger.log( getClass(), "Dispose called");
         // glDeleteBuffers( vbo );
         // glDeleteBuffers( ibo );
     }

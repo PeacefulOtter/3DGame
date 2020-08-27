@@ -54,8 +54,6 @@ public class Mesh
 
     private void addVertices( Vertex[] vertices, int[] indices )
     {
-        calcNormals( vertices, indices );
-
         resource = new MeshResource( indices.length );
 
         glBindBuffer( GL_ARRAY_BUFFER, resource.getVbo() );
@@ -85,34 +83,5 @@ public class Mesh
         glDisableVertexAttribArray( 1 );
         glDisableVertexAttribArray( 2 );
         glDisableVertexAttribArray( 3 );
-    }
-
-    private void calcNormals( Vertex[] vertices, int[] indices )
-    {
-        int indicesLength = indices.length;
-
-        for ( int i = 0; i < indicesLength; i += 3 )
-        {
-            int i0 = indices[ i ];
-            int i1 = indices[ i + 1 ];
-            int i2 = indices[ i + 2 ];
-
-            Vertex vertex0 = vertices[ i0 ];
-            Vertex vertex1 = vertices[ i1 ];
-            Vertex vertex2 = vertices[ i2 ];
-
-            Vector3f v0 = vertex0.getPos();
-            Vector3f v1 = vertex1.getPos().sub( v0 );
-            Vector3f v2 = vertex2.getPos().sub( v0 );
-
-            Vector3f normal = v1.cross( v2 ).normalize();
-
-            vertex0.setNormal( vertex0.getNormal().add( normal ) );
-            vertex1.setNormal( vertex1.getNormal().add( normal ) );
-            vertex2.setNormal( vertex2.getNormal().add( normal ) );
-        }
-
-        for ( Vertex vertex : vertices )
-            vertex.setNormal( vertex.getNormal().normalize() );
     }
 }

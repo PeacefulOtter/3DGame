@@ -10,6 +10,7 @@ import peacefulotter.engine.physics.IntersectData;
 import peacefulotter.engine.physics.colliders.BoundingSphere;
 import peacefulotter.engine.physics.colliders.Collider;
 import peacefulotter.engine.utils.Logger;
+import peacefulotter.game.actor.VelocityAngle;
 
 
 /*
@@ -33,6 +34,11 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     private Vector3f position;
     private Collider collider;
     private float velocityYAxis;
+
+    public PhysicsObject()
+    {
+        this( Vector3f.getZero(), Vector3f.getZero() );
+    }
 
     public PhysicsObject( Vector3f velocity )
     {
@@ -171,6 +177,10 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
             //System.out.println("interactWith");
         }
     }
+
+    public boolean isMoving() { return false; }
+    public boolean move( VelocityAngle arrow ) { return true; }
+    public boolean stopMoving( VelocityAngle arrow ) { return true; }
 
     public Vector3f getPosition() { return position; }
     public void setPosition( Vector3f position ) { this.position = position;  }

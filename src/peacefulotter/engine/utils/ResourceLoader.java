@@ -75,27 +75,26 @@ public class ResourceLoader
         IndexedModel indexedModel = objModel.toIndexedModel();
         indexedModel.calcNormals();
 
-        return loadVertices(
-                indexedModel.getPositions(),
-                indexedModel.getTexCoords(),
-                indexedModel.getNormals(), // indexedModel.getTangents(),
-                indexedModel.getIndices() );
+        return loadVertices( indexedModel );
     }
 
-    public static Mesh.Vertices loadVertices(
-            List<Vector3f> positions,
-            List<Vector2f> texCoords,
-            List<Vector3f> normals,
-            List<Integer> indices )
+    public static Mesh.Vertices loadVertices( IndexedModel indexedModel )
     {
-        int modelSize = positions.size();
+        List<Vector3f> positions = indexedModel.getPositions();
+        List<Vector2f> texCoords = indexedModel.getTexCoords();
+        List<Vector3f> normals = indexedModel.getNormals();
+        List<Vector3f> tangents = indexedModel.getTangents();
+        List<Integer>  indices = indexedModel.getIndices();
+
+        int modelSize = indexedModel.getPositions().size();
         Vertex[] vertices = new Vertex[ modelSize ];
         for ( int i = 0; i < modelSize; i++ )
         {
             vertices[ i ] = new Vertex(
                     positions.get( i ),
                     texCoords.get( i ),
-                    normals.get( i ) ); // tangents.get( i )
+                    normals.get( i ),
+                    tangents.get( i ) );
         }
 
         return new Mesh.Vertices( vertices, Util.toIntArray( indices ) );

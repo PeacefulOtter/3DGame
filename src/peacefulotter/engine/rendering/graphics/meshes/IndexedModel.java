@@ -2,23 +2,36 @@ package peacefulotter.engine.rendering.graphics.meshes;
 
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.graphics.Vertex;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IndexedModel
 {
-    private final List<Vector3f> positions = new ArrayList<>();
-    private final List<Vector2f> texCoords = new ArrayList<>();
-    private final List<Vector3f> normals   = new ArrayList<>();
-    private final List<Vector3f> tangents  = new ArrayList<>();
-    private final List<Integer>  indices   = new ArrayList<>();
+    private final List<Vector3f> positions;
+    private final List<Vector2f> texCoords;
+    private final List<Vector3f> normals;
+    private final List<Vector3f> tangents;
+    private final List<Integer>  indices;
 
+    public IndexedModel()
+    {
+        this( 2, 2 );
+    }
+
+    public IndexedModel( int listCapacity, int indicesCapacity )
+    {
+        this.positions = new ArrayList<>( listCapacity );
+        this.texCoords = new ArrayList<>( listCapacity );
+        this.normals   = new ArrayList<>( listCapacity );
+        this.tangents  = new ArrayList<>( listCapacity );
+        this.indices   = new ArrayList<>( indicesCapacity );
+    }
 
     public void calcNormals()
     {
         int indicesLength = indices.size();
-        // int positionsLength = positions.size();
 
         for ( int i = 0; i < indicesLength; i += 3 )
         {
@@ -108,9 +121,6 @@ public class IndexedModel
             tangents.set( i1, tangents.get( i1 ).add( tangent ).normalize() );
             tangents.set( i2, tangents.get( i2 ).add( tangent ).normalize() );
         }
-
-        //for( int i = 0; i < tangents.size(); i++ )
-        //    tangents.set( i, tangents.get( i ).normalize() );
     }
 
 

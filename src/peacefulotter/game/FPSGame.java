@@ -13,6 +13,7 @@ import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
 import peacefulotter.engine.utils.ResourceLoader;
+import peacefulotter.game.actor.Ghost;
 import peacefulotter.game.actor.Player;
 import peacefulotter.game.actor.Weapon;
 
@@ -46,10 +47,8 @@ public class FPSGame extends Game
                 2, 12, 0.04f, -1f );
 
         /* MAP */
-        /*World world = new World( bricks2 );
-        world.getTransform()
-                .scale( 0.1f );*/
-        Mesh mesh = new Mesh( "plane3.obj" );
+        World world = new World( bricks2 );
+        /* Mesh mesh = new Mesh( "plane3.obj" );
         GameObject world = new GameObject()
                 .addComponent( new MeshRenderer( mesh, bricks2 ) );
         world.getTransform().scale( 4 );
@@ -75,11 +74,14 @@ public class FPSGame extends Game
 
         /* PLAYER z */
         PhysicsObject player = new Player.PlayerBuilder()
-                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                //.setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
                 .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
-                .build( true );
+                .build( false );
+
+        Ghost ghost = new Ghost();
+        ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
 
 
         /* LIGHTS */
@@ -90,9 +92,8 @@ public class FPSGame extends Game
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
-
         addObjects( world, dirLightObject );
-        addPhysicalObject( player );
+        addPhysicalObjects( player, ghost );
 
         super.init();
     }
