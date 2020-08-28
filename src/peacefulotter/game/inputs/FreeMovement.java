@@ -47,7 +47,7 @@ public class FreeMovement implements Initializable
                 ( deltaTime ) -> stopMoving( VelocityAngle.LEFT ) );
     }
 
-    public void updateVelocity( float deltaTime, boolean isJumping )
+    public void updateVelocity( boolean isJumping )
     {
         float newAngle = ( isMoving() && !isJumping )
                 ? VelocityAngle.getAngle()
@@ -56,25 +56,25 @@ public class FreeMovement implements Initializable
         // this represents the getForward but without caring about the player horizontal angle
         // forward = getRight - 90° = (-right.z, y, right.x)
         Vector3f right = parent.getTransform().getRotation().getRight();
-        Vector3f direction = new Vector3f( -right.getZ(), parent.getVelocityYAxis(), right.getX() );
+        Vector3f direction = new Vector3f( -right.getZ(), 0, right.getX() );
 
         parent.setVelocity( direction
                 .rotate( Vector3f.Y_AXIS, newAngle )
-                .mul( deltaTime * currentVelocity ) );
+                .mul( currentVelocity ).setY( parent.getVelocityYAxis() ) );
 
         if ( isJumping ) return;
 
         if ( isMoving() )
         {
             if ( currentVelocity < currentMaxVelocity )
-                currentVelocity += currentAcceleration * deltaTime;
+                currentVelocity += currentAcceleration;
             if ( currentVelocity > currentMaxVelocity )
                 currentVelocity = currentMaxVelocity;
         }
         else
         {
             if ( currentVelocity > 0 )
-                currentVelocity -= slowFactor * deltaTime;
+                currentVelocity -= slowFactor;
             if ( currentVelocity < 0 )
                 currentVelocity = 0;
         }

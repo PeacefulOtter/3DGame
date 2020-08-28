@@ -59,11 +59,11 @@ public class TestGame extends Game
         GameObject characterObject = new GameObject()
                 .addComponent( new MeshRenderer( new Mesh( "alien.obj" ), alienMaterial ) );
 
-        PhysicsObject sphereObject1 = new PhysicsObject( new Vector3f(-5f, 0, 5 ) )
+        PhysicsObject sphereObject1 = new PhysicsObject( new Vector3f(-5f, 0, 5 ), false )
                 .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), bricks1 ) );
         sphereObject1.getTransform().translate( new Vector3f( 30, 0, 10 ) ).scale( 0.1f );
 
-        PhysicsObject sphereObject2 = new PhysicsObject( new Vector3f(5f, 0, 0 ) )
+        PhysicsObject sphereObject2 = new PhysicsObject( new Vector3f(5f, 0, 0 ), false )
                 .addComponent( new MeshRenderer(  new Mesh( "sphere.obj" ), alienMaterial ) );
         sphereObject2.getTransform().translate( new Vector3f( 10, 0, 30 ) ).scale( 0.1f );
 
@@ -104,9 +104,8 @@ public class TestGame extends Game
                 .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
-                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
+                .setWeapon( new Weapon() )
                 .build( true );
-        player.getTransform().translate( new Vector3f( 0, 6.5f, 0.3f ) );
 
         addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject );
         addPhysicalObject( player );

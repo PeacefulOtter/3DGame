@@ -54,14 +54,14 @@ import static peacefulotter.engine.utils.IO.Input.*;
 public class Player extends PhysicsObject
 {
     private static final float JUMP_HEIGHT = 40f;
-    private static final float RUNNING_ACCELERATION = 4000f;
-    private static final float MAX_RUNNING_VELOCITY = 9000f;
+    private static final float MAX_RUNNING_VELOCITY = 50f;
+    private static final float RUNNING_ACCELERATION = 15f;
 
-    public static final float MAX_WALKING_VELOCITY = 5000f;
-    public static final float WALKING_ACCELERATION = 3000f;
+    public static final float MAX_WALKING_VELOCITY = 30f;
+    public static final float WALKING_ACCELERATION = 1f;
     public static final float ROTATION_SENSITIVITY = 180f;
     public static final float CURSOR_SENSITIVITY = 50f;
-    public static final float SLOW_FACTOR = 4000f;
+    public static final float SLOW_FACTOR = 7f;
 
     private final Weapon weapon;
     private final boolean isUser;
@@ -73,6 +73,7 @@ public class Player extends PhysicsObject
 
     private Player( Weapon weapon, boolean isUser )
     {
+        super( true );
         this.weapon = weapon;
         this.isUser = isUser;
         this.notMovingArrowsQueue = new HashSet<>( 4 );
@@ -132,7 +133,7 @@ public class Player extends PhysicsObject
             notMovingArrowsQueue.clear();
         }
 
-        freeMovement.updateVelocity( deltaTime, isJumping );
+        freeMovement.updateVelocity( isJumping );
     }
 
     @Override
@@ -243,11 +244,12 @@ public class Player extends PhysicsObject
             player
                     .addComponent( new MeshRenderer( mesh, material ).fixedTilt() )
                     .addChild( weapon );
+            weapon.getTransform().translate( Weapon.PLAYER_ORIGIN() );
 
             if ( camera != null )
             {
-                camera.setInnerTranslation( Camera.PLAYER_CAMERA() );
                 player.addComponent( camera );
+                camera.getComponentTransform().setTranslation( Camera.PLAYER_CAMERA_TRANSLATION() );
             }
 
             return player;

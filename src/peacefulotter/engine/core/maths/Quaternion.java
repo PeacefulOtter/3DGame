@@ -166,8 +166,8 @@ public class Quaternion
     {
         if ( !( obj instanceof Quaternion ) )
             return false;
-        Quaternion quat = (Quaternion)obj;
-        return quat.x == x && quat.y == y && quat.z == z && quat.w == w;
+        Quaternion q = (Quaternion)obj;
+        return q.x == x && q.y == y && q.z == z && q.w == w;
     }
 
     @Override

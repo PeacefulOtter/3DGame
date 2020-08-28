@@ -1,8 +1,6 @@
 package peacefulotter.engine.components;
 
 import peacefulotter.engine.core.CoreEngine;
-import peacefulotter.engine.core.maths.Quaternion;
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Initializable;
 import peacefulotter.engine.elementary.Renderable;
 import peacefulotter.engine.elementary.Updatable;
@@ -11,16 +9,13 @@ import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
 /**
- * A Component = no children, and transformation is based on the parent transformation
+ * A Component = no children, and transformation is partially based on the parent transformation
  */
 public abstract class GameComponent implements Initializable, Updatable, Renderable
 {
-    private GameObject parent;
-    private STransform actualTransform;
+    private final STransform componentTransform = new STransform();
 
-    private Vector3f innerTranslation = Vector3f.getZero();
-    private Quaternion innerRotation = new Quaternion( 0, 0, 0, 1 );
-    private float innerScale = 1;
+    private boolean hasParent;
 
     @Override
     public void init() { }
@@ -31,41 +26,24 @@ public abstract class GameComponent implements Initializable, Updatable, Rendera
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine ) { }
 
-    public void setParent( GameObject parent ) { this.parent = parent; }
-
-    public boolean hasParent() { return parent != null; }
+    public void setParent( STransform parent )
+    {
+        if ( parent != null )
+        {
+            parent.addChild( componentTransform );
+            hasParent = true;
+        } else { hasParent = false; }
+    }
 
     public STransform getTransform()
     {
-        if ( !hasParent() )
+        if ( !hasParent )
             throw new NullPointerException( "GameComponents must be added to a GameObject before getting its Transformation" );
 
-        if ( actualTransform == null || actualTransform.hasChanged() )
-        {
-            actualTransform = new STransform( parent.getTransform() )
-                    .translate( innerTranslation )
-                    .rotate( innerRotation )
-                    .scale( innerScale );
-        }
-
-        return actualTransform;
+        return componentTransform;
     }
 
     public void addToEngine( CoreEngine engine ) { }
 
-
-    public void setInnerTranslation( Vector3f innerTranslation )
-    {
-        this.innerTranslation = innerTranslation;
-    }
-
-    public void setInnerRotation( Quaternion innerRotation )
-    {
-        this.innerRotation = innerRotation;
-    }
-
-    public void setInnerScale( float percentage )
-    {
-        this.innerScale = percentage;
-    }
+    public STransform getComponentTransform() { return componentTransform; }
 }

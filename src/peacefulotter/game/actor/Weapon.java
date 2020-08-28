@@ -36,13 +36,9 @@ public class Weapon extends GameObject
     private int magazinesLeft, bulletsLeft;
 
 
-    public Weapon() { this( Vector3f.getZero() ); }
-
-    public Weapon( Vector3f innerTranslation )
+    public Weapon()
     {
         MeshRenderer mr = new MeshRenderer( WEAPON_MESH, WEAPON_MATERIAL );
-        mr.setInnerTranslation( innerTranslation );
-        mr.setInnerScale( 0.08f );
         addComponent( mr );
 
         magazinesLeft = MAGAZINE_NUMBER;

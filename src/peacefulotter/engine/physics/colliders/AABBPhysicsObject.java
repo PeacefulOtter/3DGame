@@ -14,7 +14,7 @@ public class AABBPhysicsObject extends PhysicsObject
 
     public AABBPhysicsObject( Vector3f position, Vector3f velocity, Vector3f minExtents, Vector3f maxExtents )
     {
-        super( position, velocity );
+        super( position, velocity, false );
         this.minExtents = minExtents;
         this.maxExtents = maxExtents;
     }

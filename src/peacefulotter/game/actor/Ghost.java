@@ -10,34 +10,49 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class Ghost extends PhysicsObject
 {
+    private static final float MAX_VELOCITY = 50;
+    private static final float MAX_ACCELERATION = 10;
+    private static final float SLOW_FACTOR = 8;
+    private static final float HEIGHT_SLOW_FACTOR = 1;
+    private static final float HEIGHT_ACCELERATION = 3;
+
     private final FreeMovement freeMovement;
     private final FreeRotation freeRotation;
+    private final boolean isUser;
 
-    public Ghost()
+    public Ghost( boolean isUser )
     {
-        freeMovement = new FreeMovement( this, Player.MAX_WALKING_VELOCITY, Player.WALKING_ACCELERATION, Player.SLOW_FACTOR );
+        super( false );
+        this.isUser = isUser;
+        freeMovement = new FreeMovement( this, MAX_VELOCITY, MAX_ACCELERATION, SLOW_FACTOR );
         freeRotation = new FreeRotation( this, Player.ROTATION_SENSITIVITY, Player.CURSOR_SENSITIVITY );
     }
 
     @Override
     public void init()
     {
+        if ( !isUser ) return;
+
         freeMovement.init();
         freeRotation.init();
 
-        Input.addKeyCallback( GLFW_KEY_SPACE, this::gainHeight );
-        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL, ( deltaTime ) -> gainHeight( -deltaTime ) );
+        Input.addKeyCallback( GLFW_KEY_SPACE, ( deltaTime -> gainHeight( 1 ) ) );
+        Input.addKeyCallback( GLFW_KEY_LEFT_CONTROL, ( deltaTime ) -> gainHeight( -1 ) );
     }
 
     @Override
     protected void updateVelocity( float deltaTime )
     {
-        freeMovement.updateVelocity( deltaTime, false );
+        if ( !isUser ) return;
+
+        super.updateVelocity( deltaTime );
+        freeMovement.updateVelocity( false );
+        setVelocityYAxis( getVelocityYAxis() - Math.signum( getVelocityYAxis() ) * HEIGHT_SLOW_FACTOR );
     }
 
-    private void gainHeight( float deltaTime )
+    private void gainHeight( int direction )
     {
-        setVelocityYAxis( getVelocityYAxis() + deltaTime * Player.WALKING_ACCELERATION);
+        setVelocityYAxis( getVelocityYAxis() + direction * HEIGHT_ACCELERATION );
     }
 
     @Override

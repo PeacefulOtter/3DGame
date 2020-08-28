@@ -30,39 +30,40 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     private final InteractionHandler handler;
     private final Vector3f velocity;
     private final float maxYVelocity;
+    private final boolean applyGravity;
 
-    private Vector3f position;
     private Collider collider;
     private float velocityYAxis;
 
-    public PhysicsObject()
+    public PhysicsObject( boolean applyGravity )
     {
-        this( Vector3f.getZero(), Vector3f.getZero() );
+        this( Vector3f.getZero(), Vector3f.getZero(), applyGravity );
     }
 
-    public PhysicsObject( Vector3f velocity )
+    public PhysicsObject( Vector3f velocity, boolean applyGravity )
     {
-        this( Vector3f.getZero(), velocity );
+        this( Vector3f.getZero(), velocity, applyGravity );
     }
 
-    public PhysicsObject( Vector3f position, Vector3f velocity )
+    public PhysicsObject( Vector3f position, Vector3f velocity, boolean applyGravity )
     {
-        this( position, velocity, 50f );
+        this( position, velocity, 50f, applyGravity );
     }
 
-    public PhysicsObject( Vector3f velocity, float maxYVelocity )
+    public PhysicsObject( Vector3f velocity, float maxYVelocity, boolean applyGravity )
     {
-        this( Vector3f.getZero(), velocity, maxYVelocity );
+        this( Vector3f.getZero(), velocity, maxYVelocity, applyGravity );
     }
 
-    public PhysicsObject( Vector3f position, Vector3f velocity, float maxYVelocity )
+    public PhysicsObject( Vector3f position, Vector3f velocity, float maxYVelocity, boolean applyGravity )
     {
-        this.position = position;
+        getTransform().setTranslation( position );
         this.velocity = velocity;
         this.handler = new ObjectInteractionHandler();
         this.collider = new BoundingSphere( position, 6 );
         this.velocityYAxis = 0;
         this.maxYVelocity = maxYVelocity;
+        this.applyGravity = applyGravity;
     }
 
     public void setCollider( Collider collider ) { this.collider = collider; }
@@ -78,17 +79,17 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     }
 
     @Override
-    public PhysicsObject addPhysicalChild( PhysicsObject child )
+    public PhysicsObject addComponent( GameComponent component )
     {
-        getCoreEngine().getPhysicsEngine().addPhysicObject( child );
-        super.addChild( child );
+        super.addComponent( component );
         return this;
     }
 
     @Override
-    public PhysicsObject addComponent( GameComponent component )
+    public PhysicsObject addPhysicalChild( PhysicsObject child )
     {
-        super.addComponent( component );
+        getCoreEngine().getPhysicsEngine().addPhysicObject( child );
+        super.addChild( child );
         return this;
     }
 
@@ -104,14 +105,15 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
         // object is on the ground or slightly below
         // !!!! GET THE MAP HEIGHT
         int height = 0;
+        Vector3f position = getPosition();
         if ( position.getY() <= height && velocityYAxis <= 0 )
         {
-             velocity.setY( height );
+            velocity.setY( height );
             position.setY( height );
             velocityYAxis = 0;
         }
         // else, object is in the air : apply gravity
-        else
+        else if ( applyGravity )
         {
             velocityYAxis -= GRAVITY * deltaTime;
             if ( velocityYAxis < -maxYVelocity )
@@ -131,8 +133,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     {
         Vector3f newPos = getTransform().getTranslation().add( velocity.mul( deltaTime ) );
         getTransform().setTranslation( newPos );
-        setPosition( newPos );
-        collider.setPosition( position );
+        collider.setPosition( newPos );
     }
 
     public void simulateAll( float deltaTime )
@@ -182,8 +183,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     public boolean move( VelocityAngle arrow ) { return true; }
     public boolean stopMoving( VelocityAngle arrow ) { return true; }
 
-    public Vector3f getPosition() { return position; }
-    public void setPosition( Vector3f position ) { this.position = position;  }
+    public Vector3f getPosition() { return getTransform().getTranslation(); }
 
     public Vector3f getVelocity() { return velocity; }
     public void setVelocity( Vector3f velocity ) { this.velocity.set( velocity ); }

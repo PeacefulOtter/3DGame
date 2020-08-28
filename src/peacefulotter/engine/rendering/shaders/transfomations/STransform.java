@@ -1,5 +1,6 @@
 package peacefulotter.engine.rendering.shaders.transfomations;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
@@ -119,12 +120,14 @@ public class STransform implements Updatable
         return this;
     }
 
-    public STransform scale( float percentage ) { return scale( percentage, percentage, percentage ); }
+    public STransform scale( float newScale ) { return scale( new Vector3f( newScale, newScale, newScale ) ); }
 
-    public STransform scale( float scaleX, float scaleY, float scaleZ )
+    public STransform scale( Vector3f newScale )
     {
-        scale.setScale( new Vector3f( scaleX, scaleY, scaleZ ) );
-        hasChanged = true;
+        Vector3f oldScale = getScale();
+        scale.setScale( newScale );
+        if ( !oldScale.equals( newScale ) )
+            hasChanged = true;
         return this;
     }
 
@@ -134,6 +137,7 @@ public class STransform implements Updatable
     {
         parentTranslation = parentTransform.getTransformationMatrix();
         parentRotation = parentTransform.getTransformedRotation();
+        scale( getScale().add( parentTransform.getScale() ) );
         hasChanged = true;
     }
 

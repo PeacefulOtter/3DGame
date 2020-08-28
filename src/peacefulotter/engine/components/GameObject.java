@@ -26,7 +26,7 @@ public class GameObject implements Initializable, Updatable, Renderable
     public GameObject addComponent( GameComponent component )
     {
         components.add( component );
-        component.setParent( this );
+        component.setParent( getTransform() );
         return this;
     }
 

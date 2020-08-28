@@ -2,6 +2,7 @@ package peacefulotter.engine.components;
 
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
+import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 import peacefulotter.engine.rendering.terrain.Terrain;
 
 import java.util.ArrayList;
@@ -19,10 +20,7 @@ public class TerrainRenderer extends GameComponent
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine )
     {
-        terrains.forEach( terrain -> {
-            shader.bind();
-            shader.updateUniforms( getTransform(), terrain.getMaterial(), renderingEngine );
-            terrain.getMesh().draw();
-        } );
+        STransform transform = getTransform();
+        terrains.forEach( terrain -> terrain.render( shader, renderingEngine, transform ) );
     }
 }

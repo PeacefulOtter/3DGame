@@ -1,17 +1,18 @@
 package peacefulotter.engine.rendering.terrain;
 
-import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
+import peacefulotter.engine.rendering.shaders.Shader;
+import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 import peacefulotter.engine.utils.ResourceLoader;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Terrain extends GameObject
+public class Terrain
 {
     private static final int SIZE = 800;
     private static final int VERTEX_COUNT = 128;
@@ -20,7 +21,7 @@ public class Terrain extends GameObject
     private final Mesh mesh;
     private final Material material;
 
-    public Terrain(int gridX, int gridZ, Material material )
+    public Terrain( int gridX, int gridZ, Material material )
     {
         this.x = gridX * SIZE;
         this.z = gridZ * SIZE;
@@ -28,6 +29,12 @@ public class Terrain extends GameObject
         this.material = material;
     }
 
+    public void render( Shader shader, RenderingEngine renderingEngine, STransform transform )
+    {
+        shader.bind();
+        shader.updateUniforms( transform, material, renderingEngine );
+        mesh.draw();
+    }
 
     private Mesh generateTerrain()
     {

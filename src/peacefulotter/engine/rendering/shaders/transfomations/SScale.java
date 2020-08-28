@@ -19,7 +19,7 @@ public class SScale
 
     public Vector3f getScaleVector() { return scale; }
 
-    public void setScale( Vector3f scale ) { this.scale = scale; }
+    public void setScale( Vector3f scale ) { this.scale = new Vector3f( scale ); }
 
     public Matrix4f getScaleMatrix()
     {

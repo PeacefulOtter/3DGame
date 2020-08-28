@@ -10,7 +10,7 @@ import peacefulotter.engine.rendering.shaders.transfomations.STransform;
 
 public class Camera extends GameComponent
 {
-    public static Vector3f PLAYER_CAMERA() { return new Vector3f(0, 6.5f, 0f ); }
+    public static Vector3f PLAYER_CAMERA_TRANSLATION() { return new Vector3f(0, 6.5f, 0f ); }
     private final Matrix4f projection;
 
     public Camera( float fovDeg, float aspectRatio, float zNear, float zFar )
@@ -27,8 +27,8 @@ public class Camera extends GameComponent
     public Matrix4f getViewProjection()
     {
         STransform cameraTransform = getTransform();
-        Vector3f pos = cameraTransform.getTranslation().mul( -1 );
-        Matrix4f cameraRotation = cameraTransform.getRotation().conjugate().toRotationMatrix();
+        Vector3f pos = cameraTransform.getTransformedTranslation().mul( -1 );
+        Matrix4f cameraRotation = cameraTransform.getTransformedRotation().conjugate().toRotationMatrix();
         Matrix4f cameraTranslation = new Matrix4f().initTranslation( pos.getX(), pos.getY(), pos.getZ() );
 
         return projection.mul( cameraRotation.mul( cameraTranslation ) );
@@ -41,8 +41,6 @@ public class Camera extends GameComponent
         // spotLight.getPointLight().setPosition( position );
         // spotLight.setDirection( forward );
     }
-
-    //public void setInnerTranslation( Vector3f innerTranslation ) { this.innerTranslation = innerTranslation; }
 
     public static class CameraBuilder
     {

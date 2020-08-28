@@ -55,7 +55,7 @@ public class FPSGame extends Game
 
 
         /* DUMMY */
-        Player dummy = new Player.PlayerBuilder()
+        /*Player dummy = new Player.PlayerBuilder()
                 .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
@@ -69,19 +69,21 @@ public class FPSGame extends Game
         dummy.addChild( sphereObj );
         dummy.getTransform()
                 .translate( new Vector3f( 0, 0, 5 ) )
-                .rotate( new Vector3f(0, 1, 0 ), 180);
+                .rotate( new Vector3f(0, 1, 0 ), 180);*/
 
 
-        /* PLAYER z */
+        /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
                 //.setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
-                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
-                .build( false );
+                .setWeapon( new Weapon() )
+                .build( true );
+        player.getTransform().scale( 20 );
 
-        Ghost ghost = new Ghost();
+        Ghost ghost = new Ghost( false );
         ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
+        ghost.getTransform().translate( new Vector3f( 0, 4, 0 ) );
 
 
         /* LIGHTS */
