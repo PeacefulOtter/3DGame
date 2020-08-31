@@ -30,11 +30,6 @@ public class SRotation
         return rotation.toRotationMatrix();
     }
 
-    public void rotate( Vector3f axis, float angleDeg )
-    {
-        rotate( new Quaternion( axis, angleDeg ) );
-    }
-
     public void rotate( Quaternion q )
     {
         setRotation( q.mul( rotation ) );

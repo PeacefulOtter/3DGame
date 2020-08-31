@@ -1,9 +1,6 @@
 package peacefulotter.engine.components;
 
 import peacefulotter.engine.core.CoreEngine;
-import peacefulotter.engine.elementary.Initializable;
-import peacefulotter.engine.elementary.Renderable;
-import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.transfomations.STransform;
@@ -13,7 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class GameObject implements Initializable, Updatable, Renderable
+/**
+ * A GameObject is a GameComponent that can have children
+ */
+public class GameObject extends GameComponent
 {
     private final STransform transform = new STransform();
 
@@ -26,14 +26,14 @@ public class GameObject implements Initializable, Updatable, Renderable
     public GameObject addComponent( GameComponent component )
     {
         components.add( component );
-        component.setParent( getTransform() );
+        component.getTransform().setParent( getTransform() );
         return this;
     }
 
     public GameObject addChild( GameObject child )
     {
         children.add( child );
-        getTransform().addChild( child.getTransform() );
+        child.getTransform().setParent( getTransform() );
         return this;
     }
 
@@ -45,7 +45,7 @@ public class GameObject implements Initializable, Updatable, Renderable
     public GameObject addPhysicalChild( PhysicsObject child )
     {
         physicsChildren.add( child );
-        getTransform().addChild( child.getTransform() );
+        child.getTransform().setParent( getTransform() );
         return addChild( child );
     }
 
@@ -53,7 +53,6 @@ public class GameObject implements Initializable, Updatable, Renderable
     {
         physicsChildren.remove( child );
     }
-
 
     public void init()
     {
@@ -64,7 +63,7 @@ public class GameObject implements Initializable, Updatable, Renderable
     @Override
     public void update( float deltaTime )
     {
-        getTransform().update( deltaTime );
+        super.update( deltaTime );
 
         for ( GameComponent component: components )
             component.update( deltaTime );
@@ -112,6 +111,7 @@ public class GameObject implements Initializable, Updatable, Renderable
         List<GameObject> objects = new ArrayList<>();
         objects.add( this );
         children.forEach( ( object ) -> objects.addAll( object.getAttachedObjects() ) );
+        physicsChildren.forEach( ( object ) -> objects.addAll( object.getAttachedObjects() ) );
         return objects;
     }
 

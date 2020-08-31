@@ -25,7 +25,7 @@ Vector3f direction = intersectData.getDirection().normalize();
 
 public class PhysicsObject extends GameObject implements Simulatable, Interactable, Interactor
 {
-    private static final float GRAVITY = 48f;
+    private static final float GRAVITY = 200f;
 
     private final InteractionHandler handler;
     private final Vector3f velocity;
@@ -47,7 +47,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
 
     public PhysicsObject( Vector3f position, Vector3f velocity, boolean applyGravity )
     {
-        this( position, velocity, 50f, applyGravity );
+        this( position, velocity, 150f, applyGravity );
     }
 
     public PhysicsObject( Vector3f velocity, float maxYVelocity, boolean applyGravity )
@@ -131,8 +131,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
     @Override
     public void simulate( float deltaTime )
     {
-        Vector3f newPos = getTransform().getTranslation().add( velocity.mul( deltaTime ) );
-        getTransform().setTranslation( newPos );
+        Vector3f newPos = getTransform().translate( velocity.mul( deltaTime ) ).getTranslation();
         collider.setPosition( newPos );
     }
 

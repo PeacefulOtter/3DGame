@@ -53,15 +53,15 @@ import static peacefulotter.engine.utils.IO.Input.*;
 
 public class Player extends PhysicsObject
 {
-    private static final float JUMP_HEIGHT = 40f;
-    private static final float MAX_RUNNING_VELOCITY = 50f;
-    private static final float RUNNING_ACCELERATION = 15f;
+    private static final float JUMP_HEIGHT = 200;
+    private static final float MAX_RUNNING_VELOCITY = 200;
+    private static final float RUNNING_ACCELERATION = 1;
 
-    public static final float MAX_WALKING_VELOCITY = 30f;
-    public static final float WALKING_ACCELERATION = 1f;
-    public static final float ROTATION_SENSITIVITY = 180f;
-    public static final float CURSOR_SENSITIVITY = 50f;
-    public static final float SLOW_FACTOR = 7f;
+    public static final float MAX_WALKING_VELOCITY = 100;
+    public static final float WALKING_ACCELERATION = 1;
+    public static final float ROTATION_SENSITIVITY = 180;
+    public static final float CURSOR_SENSITIVITY = 50;
+    public static final float SLOW_FACTOR = 7;
 
     private final Weapon weapon;
     private final boolean isUser;
@@ -73,7 +73,7 @@ public class Player extends PhysicsObject
 
     private Player( Weapon weapon, boolean isUser )
     {
-        super( true );
+        super( Vector3f.getZero(), JUMP_HEIGHT, true );
         this.weapon = weapon;
         this.isUser = isUser;
         this.notMovingArrowsQueue = new HashSet<>( 4 );
@@ -120,8 +120,6 @@ public class Player extends PhysicsObject
     protected void updateVelocity( float deltaTime )
     {
         if ( !isUser ) return;
-        assert freeMovement != null;
-
         super.updateVelocity( deltaTime );
 
         // player is on the ground or slightly below
@@ -249,7 +247,7 @@ public class Player extends PhysicsObject
             if ( camera != null )
             {
                 player.addComponent( camera );
-                camera.getComponentTransform().setTranslation( Camera.PLAYER_CAMERA_TRANSLATION() );
+                camera.getTransform().setTranslation( Camera.PLAYER_CAMERA_TRANSLATION() );
             }
 
             return player;

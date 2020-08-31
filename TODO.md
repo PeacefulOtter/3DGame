@@ -1,5 +1,6 @@
 TODO FILE 
 
+- /!\ There are serious issues about the STransform class, the getters don't return an immutable Transform which may/will lead to huge troubles
 - [X] fix velocity getForward()
 - [X] Weapon should be fixed with the player
 - [X] Avoid player rotation with the camera around the getRight() axis
@@ -16,12 +17,12 @@ TODO FILE
 - [X] Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
 - Maybe create a Mesh and Material bank
 - Add precision to the weapons depending on player velocity
-- Add HUD (health, ammo, crosshair) = display images and fonts
+- /!\ Add HUD (health, ammo, crosshair) = display images and fonts
 - [X] Add a general directional lighting to the scene
 - [ ] Add bullet system
-- /!\ Refactor / Optimize lighting
+- /!~\ Refactor / Optimize lighting
 - /!\ Refactor obj loader
-- /!\ Refactor material (does not need to include normal and height maps)
+- /!~\ Refactor material (does not need to include normal and height maps)
 - Create player animations and reload animations
 - Add some more gameplay (double jump, etc..)
 - Multiplayer

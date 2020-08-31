@@ -74,7 +74,7 @@ public class FPSGame extends Game
 
         /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
-                //.setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
                 .setWeapon( new Weapon() )
@@ -82,8 +82,8 @@ public class FPSGame extends Game
         player.getTransform().scale( 20 );
 
         Ghost ghost = new Ghost( false );
-        ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
-        ghost.getTransform().translate( new Vector3f( 0, 4, 0 ) );
+        //ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
+        ghost.getTransform().translate( new Vector3f( 0, 10, 0 ) );
 
 
         /* LIGHTS */

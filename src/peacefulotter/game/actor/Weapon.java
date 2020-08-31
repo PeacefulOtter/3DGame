@@ -12,7 +12,7 @@ import peacefulotter.engine.utils.Logger;
 public class Weapon extends GameObject
 {
     // proper to all weapons
-    public static Vector3f PLAYER_ORIGIN() { return new Vector3f( 0.5f, 5f, -0.5f ); }
+    public static Vector3f PLAYER_ORIGIN() { return new Vector3f( 0.7f, 4.8f, -0.3f ); }
     private static final Material WEAPON_MATERIAL = new Material(
             new Texture( "metal.jpg" ),
             new Texture( "metal_normal.jpg" ),
@@ -38,6 +38,7 @@ public class Weapon extends GameObject
 
     public Weapon()
     {
+        getTransform().scale( 0.11f );
         MeshRenderer mr = new MeshRenderer( WEAPON_MESH, WEAPON_MATERIAL );
         addComponent( mr );
 

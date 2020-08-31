@@ -52,6 +52,4 @@ public class FreeRotation implements Initializable
     {
         parent.getTransform().rotate( Vector3f.Y_AXIS, angleDeg );
     }
-
-
 }

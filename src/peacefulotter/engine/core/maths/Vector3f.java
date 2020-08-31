@@ -22,6 +22,14 @@ public class Vector3f
 
     public static Vector3f getZero() { return new Vector3f( 0, 0, 0 ); }
 
+    public static float calcAngle( Vector3f v1, Vector3f v2 )
+    {
+        float dot = v1.dot( v2 );
+        float l1 = v1.length();
+        float l2 = v2.length();
+        return (float) ( Math.acos( dot / ( l1 * l2 ) ) * 180 / Math.PI );
+    }
+
     public float length()
     {
         return (float) Math.sqrt( x*x + y*y + z*z );

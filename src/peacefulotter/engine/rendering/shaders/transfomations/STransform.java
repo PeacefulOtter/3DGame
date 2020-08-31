@@ -1,36 +1,33 @@
 package peacefulotter.engine.rendering.shaders.transfomations;
 
-import jdk.swing.interop.SwingInterOpUtils;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.utils.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class STransform implements Updatable
 {
-    private final List<STransform> children;
-
     private final STranslation translation;
     private final SRotation rotation;
     private final SScale scale;
 
-    private Matrix4f parentTranslation;
-    private Quaternion parentRotation;
+    private Matrix4f transformationMatrix = new Matrix4f().initIdentity();
+    private Vector3f transformedTranslation = Vector3f.getZero();
+    private Quaternion transformedRotation = new Quaternion( 0, 0, 0, 1 );
 
-    private boolean hasChanged;
+    private STransform parent;
+    private boolean translationChanged, rotationChanged, scaleChanged;
 
     public STransform()
     {
         this.translation = new STranslation();
         this.rotation = new SRotation();
         this.scale = new SScale();
-        this.parentTranslation = new Matrix4f().initIdentity();
-        this.parentRotation = new Quaternion( 0, 0, 0, 1 );
-        this.children = new ArrayList<>();
+        calculateTransformationMatrix();
+        calculateTransformedTranslation();
+        calculateTransformedRotation();
     }
 
     /** Copy Constructor **/
@@ -39,30 +36,65 @@ public class STransform implements Updatable
         this.translation = new STranslation( origin.translation );
         this.rotation = new SRotation( origin.rotation );
         this.scale = new SScale( origin.scale );
-        this.parentTranslation = new Matrix4f( origin.parentTranslation.getM() );
-        this.parentRotation = new Quaternion( origin.parentRotation );
-        this.children = new ArrayList<>();
-        children.addAll( origin.children );
-        this.hasChanged = origin.hasChanged;
+        if ( origin.parent != null )
+            this.parent = new STransform( origin.parent );
+    }
+
+    private void calculateTransformationMatrix()
+    {
+        Matrix4f base = translation.getTranslationMatrix().mul(
+                            rotation.getRotationMatrix().mul(
+                                scale.getScaleMatrix() ) );
+        if ( parent != null )
+            transformationMatrix = parent.getTransformationMatrix().mul( base );
+        else
+            transformationMatrix = base;
     }
 
     public Matrix4f getTransformationMatrix()
     {
-        return parentTranslation.mul(
-                translation.getTranslationMatrix().mul(
-                    rotation.getRotationMatrix().mul(
-                        scale.getScaleMatrix() ) ) );
+        //return new Matrix4f( transformationMatrix.getM() );
+        if ( parent != null )
+            return parent.getTransformationMatrix().mul(
+                    translation.getTranslationMatrix().mul(
+                        rotation.getRotationMatrix().mul(
+                            scale.getScaleMatrix() ) ) );
+        return translation.getTranslationMatrix().mul(
+                rotation.getRotationMatrix().mul(
+                        scale.getScaleMatrix() ) );
     }
 
+    private void calculateTransformedTranslation()
+    {
+        if ( parent != null )
+            transformedTranslation = parent.getTransformationMatrix().transform( getTranslation() );
+        else
+            transformedTranslation = getTranslation();
+    }
 
     public Vector3f getTransformedTranslation()
     {
-        return parentTranslation.transform( getTranslation() );
+        //return new Vector3f( transformedTranslation );
+        if ( parent != null )
+            return parent.getTransformationMatrix().transform( getTranslation() );
+        return getTranslation();
+    }
+
+    private void calculateTransformedRotation()
+    {
+        if ( parent != null )
+            transformedRotation = parent.getTransformedRotation().mul( getRotation() );
+        else
+            transformedRotation = getRotation();
     }
 
     public Quaternion getTransformedRotation()
     {
-        return parentRotation.mul( getRotation() );
+        //return new Quaternion( transformedRotation );
+        if ( parent != null )
+            return parent.getTransformedRotation().mul( getRotation() );
+
+        return getRotation();
     }
 
     public Vector3f getTranslation() { return translation.getTranslationVector(); }
@@ -73,86 +105,105 @@ public class STransform implements Updatable
 
     public STransform setTranslation( Vector3f newTranslation )
     {
-        Vector3f oldTranslation = translation.getTranslationVector();
-        translation.setTranslation( newTranslation );
-        if ( !oldTranslation.equals( newTranslation ) )
-            hasChanged = true;
+        if ( !getTranslation().equals( newTranslation ) )
+        {
+            translation.setTranslation( newTranslation );
+            translationChanged = true;
+        }
         return this;
     }
 
     public STransform setRotation( Quaternion newRotation )
     {
-        Quaternion oldRotation = rotation.getRotationQuaternion();
-        rotation.setRotation( newRotation );
-        if ( !oldRotation.equals( newRotation ) )
-            hasChanged = true;
+        if ( !getRotation().equals( newRotation ) )
+        {
+            rotation.setRotation( newRotation );
+            rotationChanged = true;
+        }
         return this;
     }
 
     public STransform setScale( Vector3f newScale )
     {
-        Vector3f oldScale = scale.getScaleVector();
-        scale.setScale( newScale );
-        if ( !oldScale.equals( newScale ) )
-            hasChanged = true;
+        if ( !getScale().equals( newScale ) )
+        {
+            scale.setScale( newScale );
+            scaleChanged = true;
+        }
         return this;
     }
 
     public STransform translate( Vector3f vector )
     {
+
         translation.translate( vector );
-        hasChanged = true;
+        translationChanged = true;
         return this;
     }
 
     public STransform rotate( Quaternion q )
     {
         rotation.rotate( q );
-        hasChanged = true;
+        rotationChanged = true;
         return this;
     }
 
     public STransform rotate( Vector3f axis, float angleDeg )
     {
-        rotation.rotate( axis, angleDeg );
         if ( angleDeg != 0 )
-            hasChanged = true;
+        {
+            rotationChanged = true;
+            return rotate( new Quaternion( axis, angleDeg ) );
+        }
         return this;
     }
 
-    public STransform scale( float newScale ) { return scale( new Vector3f( newScale, newScale, newScale ) ); }
+    public STransform scale( float newScale )
+    {
+        return scale( new Vector3f( newScale, newScale, newScale ) );
+    }
 
     public STransform scale( Vector3f newScale )
     {
-        Vector3f oldScale = getScale();
-        scale.setScale( newScale );
-        if ( !oldScale.equals( newScale ) )
-            hasChanged = true;
+        if ( !newScale.equals( Vector3f.getZero() ) )
+        {
+            setScale( getScale().add( newScale ) );
+            scale.setScale( newScale );
+            scaleChanged = true;
+        }
         return this;
     }
 
-    public void addChild( STransform child ) { children.add( child ); }
-
-    public void notifyParentChange( STransform parentTransform )
-    {
-        parentTranslation = parentTransform.getTransformationMatrix();
-        parentRotation = parentTransform.getTransformedRotation();
-        scale( getScale().add( parentTransform.getScale() ) );
-        hasChanged = true;
-    }
-
-    public boolean hasChanged() { return hasChanged; }
 
     @Override
     public void update( float deltaTime )
     {
-        // if the transform changed, update the children transform
-        if ( hasChanged )
-        {
-            children.forEach( child -> child.notifyParentChange( this ) );
-            hasChanged = false;
-        }
+        //System.out.println(this);
+        //System.out.println( translationChanged + " " + rotationChanged + " " + scaleChanged );
+        if ( translationChanged || rotationChanged || scaleChanged )
+            calculateTransformationMatrix();
+        if ( translationChanged )
+            calculateTransformedTranslation();
+        if ( rotationChanged )
+            calculateTransformedRotation();
+        // translationChanged = false;
+        // rotationChanged = false;
+        // scaleChanged = false;
     }
+
+
+    public boolean hasParent() { return parent != null; }
+
+    public STransform getParent() { return new STransform( parent ); }
+
+    public void setParent( STransform transform )
+    {
+        parent = transform;
+        calculateTransformationMatrix();
+        calculateTransformedTranslation();
+        calculateTransformedRotation();
+    }
+
 
     public void lookAt( Vector3f point, Vector3f up )
     {
@@ -167,6 +218,6 @@ public class STransform implements Updatable
     @Override
     public String toString()
     {
-        return getTranslation() + " " + getRotation() + " " + getScale();
+        return  "[T] " + getTranslation() + " | [R] " + getRotation() + " | [S] " + getScale();
     }
 }
