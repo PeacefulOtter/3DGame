@@ -1,5 +1,6 @@
 TODO FILE 
 
+- [RenderingEngine] Use Render to texture
 - /!\ There are serious issues about the STransform class, the getters don't return an immutable Transform which may/will lead to huge troubles
 - [X] fix velocity getForward()
 - [X] Weapon should be fixed with the player

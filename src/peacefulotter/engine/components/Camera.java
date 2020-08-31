@@ -6,7 +6,7 @@ import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
-import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.core.transfomations.STransform;
 
 public class Camera extends GameComponent
 {

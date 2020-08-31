@@ -25,6 +25,7 @@ public class ResourceLoader
     private static final String SHADER_PATH = "/shaders/";
     private static final String MODELS_PATH = "/models/";
     private static final String TEXTURES_PATH = "/textures/";
+    private static final String MATERIALS_PATH = "/materials/";
 
     private static final String INCLUDE_DIRECTIVE = "#include";
     private static final int INCLUDE_DIRECTIVE_LENGTH = INCLUDE_DIRECTIVE.length();
@@ -97,7 +98,7 @@ public class ResourceLoader
                     tangents.get( i ) );
         }
 
-        return new Mesh.Vertices( vertices, Util.toIntArray( indices ) );
+        return new Mesh.Vertices( vertices, Utils.toIntArray( indices ) );
     }
 
 
@@ -152,34 +153,35 @@ public class ResourceLoader
     }
 
 
-    public List<SimpleMaterial> loadMaterial( String fileName )
+    public Map<String, SimpleMaterial> loadMaterial( String fileName )
     {
-        List<SimpleMaterial> simpleMaterials = new ArrayList<>();
-        int index = -1;
+        Map<String, SimpleMaterial> materialMap = new HashMap<>();
 
-        try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MODELS_PATH + fileName ) ) ) )
+        try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MATERIALS_PATH + fileName ) ) ) )
         {
             String line;
+            SimpleMaterial.MaterialBuilder builder = new SimpleMaterial.MaterialBuilder();
             while ( ( line = reader.readLine() ) != null )
             {
                 if ( line.startsWith( "newmtl" ) )
                 {
-                    simpleMaterials.add( new SimpleMaterial() );
-                    index++;
+                    builder = new SimpleMaterial.MaterialBuilder();
                 }
                 else if ( line.startsWith( "Ni" ) )
                 {
-                    simpleMaterials.get( index ).setSpecularIntensity( Float.parseFloat( line.split( " " )[ 1 ] ) );
+                    builder.setSpecularIntensity( Float.parseFloat( line.split( " " )[ 1 ] ) );
                 }
                 else if ( line.startsWith( "Ns" ) )
                 {
-                    simpleMaterials.get( index ).setSpecularPower( Float.parseFloat( line.split( " " )[ 1 ] ) );
+                    builder.setSpecularPower( Float.parseFloat( line.split( " " )[ 1 ] ) );
                 }
                 else if ( line.startsWith( "map_" ) )
                 {
-                    simpleMaterials.get( index ).setTexture( new Texture( line.split( " " )[ 1 ] ) );
+                    String[] s = line.split( " " )[ 1 ].split("\\.");
+                    builder.setTexture( new Texture( line.split( " " )[ 1 ] ) );
+                    builder.setNormalTexture( new Texture( s[ 0 ] + "_normal." + s[ 1 ] ) );
+                    materialMap.put( s[ 0 ], builder.build() );
                 }
-                System.out.println(line);
             }
         }
         catch ( IOException e )
@@ -187,7 +189,7 @@ public class ResourceLoader
             e.printStackTrace();
             System.exit( 1 );
         }
-        System.out.println(simpleMaterials);
-        return simpleMaterials;
+
+        return materialMap;
     }
 }

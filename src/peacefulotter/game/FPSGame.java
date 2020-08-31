@@ -10,12 +10,16 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
+import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
 import peacefulotter.engine.utils.ResourceLoader;
 import peacefulotter.game.actor.Ghost;
 import peacefulotter.game.actor.Player;
 import peacefulotter.game.actor.Weapon;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
 import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
@@ -46,6 +50,17 @@ public class FPSGame extends Game
                 new Texture( "metal_height.png" ),
                 2, 12, 0.04f, -1f );
 
+        // List<Material> reaperMaterials = new ArrayList<>();
+        /*List<SimpleMaterial> reaperSimpleMaterials = new ResourceLoader().loadMaterial( "reaper.mtl" );
+        reaperSimpleMaterials.forEach( ( mat ) -> {
+            Texture t = mat.getTexture();
+            Texture n = mat.getNormal();
+            float intensity = mat.getSpecularIntensity();
+            float power = mat.getSpecularPower();
+            System.out.println(intensity + " " + power);
+            reaperMaterials.add( new Material( t, n, n, intensity + 1, power / 2, 0.04f, -1f ) );
+        } );*/
+
         /* MAP */
         World world = new World( bricks2 );
         /* Mesh mesh = new Mesh( "plane3.obj" );
@@ -74,15 +89,15 @@ public class FPSGame extends Game
 
         /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
-                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                //.setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMesh( new Mesh( "reaper.obj" ) )
                 .setMaterial( alienMaterial )
                 .setWeapon( new Weapon() )
-                .build( true );
+                .build( false );
         player.getTransform().scale( 20 );
 
-        Ghost ghost = new Ghost( false );
-        //ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
+        Ghost ghost = new Ghost( true );
+        ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
         ghost.getTransform().translate( new Vector3f( 0, 10, 0 ) );
 
 

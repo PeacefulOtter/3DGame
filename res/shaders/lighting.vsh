@@ -13,7 +13,7 @@ uniform mat4 T_MVP;
 void main()
 {
     gl_Position = T_MVP * vec4(position, 1.0);
-    texCoord0 = texCoord; 
+    texCoord0 = texCoord;
     worldPos0 = (T_model * vec4(position, 1.0)).xyz;
     
     vec3 n = normalize((T_model * vec4(normal, 0.0)).xyz);

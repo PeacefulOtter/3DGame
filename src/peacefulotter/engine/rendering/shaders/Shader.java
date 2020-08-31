@@ -10,7 +10,7 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.resourceManagement.ShaderResource;
-import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.core.transfomations.STransform;
 
 import java.util.List;
 

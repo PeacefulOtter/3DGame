@@ -2,7 +2,10 @@ package peacefulotter.engine.rendering.graphics.meshes;
 
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.utils.Util;
+import peacefulotter.engine.rendering.graphics.SimpleMaterial;
+import peacefulotter.engine.utils.Logger;
+import peacefulotter.engine.utils.ResourceLoader;
+import peacefulotter.engine.utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +19,7 @@ public class OBJModel
     private final List<Vector2f> texCoords = new ArrayList<>();
     private final List<Vector3f> normals   = new ArrayList<>();
     private final List<OBJIndex> indices   = new ArrayList<>();
-    private boolean hasTexCoords, hasNormals;
+    private boolean hasTexCoords, hasNormals, hasMaterial;
 
     private InputStream resourceStream( String resourceName )
     {
@@ -26,18 +29,31 @@ public class OBJModel
 
     public OBJModel( String filePath )
     {
+        Map<String, SimpleMaterial> materialMap = new HashMap<>();
+
         try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( filePath ) ) ) )
         {
             String line;
             while ( ( line = reader.readLine() ) != null )
             {
                 String[] split = line.split( " " );
-                split = Util.removeEmptyStrings( split );
-                if ( split.length < 3 )
-                    continue;
+                split = Utils.removeEmptyStrings( split );
+                if ( split.length == 0 ) continue;
                 String prefix = split[ 0 ];
 
-                if ( prefix.equals( "v" ) )
+                if ( prefix.equals( "mtllib" ) )
+                {
+                    materialMap = new ResourceLoader().loadMaterial( split[ 1 ] );
+                    Logger.log( getClass(), "OBJModel has material(s)" );
+                    hasMaterial = true;
+                }
+                else if ( hasMaterial && prefix.equals( "usemtl" ) )
+                {
+                    String materialFileName = split[ 1 ].split( "\\." )[ 0 ];
+                    if ( materialMap.containsKey( materialFileName ) )
+                        Logger.log( getClass(), "Found SimpleMaterial named : " + materialFileName );
+                }
+                else if ( prefix.equals( "v" ) )
                 {
                     positions.add( new Vector3f(
                             Float.parseFloat( split[ 1 ] ),

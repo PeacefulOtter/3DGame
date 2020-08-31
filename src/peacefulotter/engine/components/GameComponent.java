@@ -8,7 +8,7 @@ import peacefulotter.engine.elementary.Renderable;
 import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
-import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.core.transfomations.STransform;
 
 /**
  * Represents the most basic object of the engine, something that can be initialized, updated and rendered.

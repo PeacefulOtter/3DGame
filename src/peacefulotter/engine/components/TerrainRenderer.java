@@ -2,7 +2,7 @@ package peacefulotter.engine.components;
 
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.shaders.Shader;
-import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.terrain.Terrain;
 
 import java.util.ArrayList;

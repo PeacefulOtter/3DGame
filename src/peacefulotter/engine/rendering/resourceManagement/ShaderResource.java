@@ -160,7 +160,6 @@ public class ShaderResource extends Disposable
                 while( !Character.isWhitespace( shaderText.charAt( componentNameStart ) ) )
                     componentNameStart--;
 
-                // int componentTypeEnd = componentNameStart - 1;
                 int componentTypeStart = componentNameStart - 1;
 
                 while ( !Character.isWhitespace( shaderText.charAt( componentTypeStart - 1 ) ) )

@@ -9,8 +9,9 @@ public class Material extends MappedValues
 {
     private final Map<String, Texture> textureMap;
 
-    public Material( Texture diffuse, Texture normalMap, Texture dispMap,
-                     float specularIntensity, float specularPower, float dispMapScale, float dispMapOffset )
+    public Material(
+            Texture diffuse, Texture normalMap, Texture dispMap,
+            float specularIntensity, float specularPower, float dispMapScale, float dispMapOffset )
     {
         super();
         textureMap = new HashMap<>();

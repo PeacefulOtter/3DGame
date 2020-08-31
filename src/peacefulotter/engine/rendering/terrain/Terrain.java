@@ -7,13 +7,14 @@ import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.shaders.Shader;
-import peacefulotter.engine.rendering.shaders.transfomations.STransform;
+import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.utils.ResourceLoader;
 
 import java.util.List;
 
 public class Terrain
 {
+    private static final int REPETITION = 5;
     private static final int SIZE = 800;
     private static final int VERTEX_COUNT = 128;
 
@@ -47,7 +48,7 @@ public class Terrain
             for( int j = 0; j < VERTEX_COUNT; j++ )
             {
                 model.getPositions().add( new Vector3f( (float)j/((float)VERTEX_COUNT - 1) * SIZE, 0, (float)i/((float)VERTEX_COUNT - 1) * SIZE ) );
-                model.getTexCoords().add( new Vector2f( (float)j/((float)VERTEX_COUNT - 1), (float)i/((float)VERTEX_COUNT - 1) ) );
+                model.getTexCoords().add( new Vector2f( (float)j/((float)VERTEX_COUNT - 1), (float)i/((float)VERTEX_COUNT - 1) ).mul( REPETITION ) );
                 model.getNormals().add( new Vector3f( 0, 1, 0 ) );
                 model.getTangents().add( Vector3f.getZero() );
             }
