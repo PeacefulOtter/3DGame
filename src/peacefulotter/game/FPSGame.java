@@ -3,26 +3,18 @@ package peacefulotter.game;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
-import peacefulotter.engine.components.lights.SpotLight;
+import peacefulotter.engine.components.renderer.MeshRenderer;
+import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
-import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
-import peacefulotter.engine.utils.ResourceLoader;
 import peacefulotter.game.actor.Ghost;
 import peacefulotter.game.actor.Player;
 import peacefulotter.game.actor.Weapon;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static peacefulotter.engine.utils.IO.Input.MOUSE_PRIMARY;
-import static peacefulotter.engine.utils.IO.Input.MOUSE_SECONDARY;
 
 // Hide Mouse
 // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
@@ -50,23 +42,21 @@ public class FPSGame extends Game
                 new Texture( "metal_height.png" ),
                 2, 12, 0.04f, -1f );
 
-        // List<Material> reaperMaterials = new ArrayList<>();
-        /*List<SimpleMaterial> reaperSimpleMaterials = new ResourceLoader().loadMaterial( "reaper.mtl" );
-        reaperSimpleMaterials.forEach( ( mat ) -> {
-            Texture t = mat.getTexture();
-            Texture n = mat.getNormal();
-            float intensity = mat.getSpecularIntensity();
-            float power = mat.getSpecularPower();
-            System.out.println(intensity + " " + power);
-            reaperMaterials.add( new Material( t, n, n, intensity + 1, power / 2, 0.04f, -1f ) );
-        } );*/
 
         /* MAP */
-        World world = new World( bricks2 );
-        /* Mesh mesh = new Mesh( "plane3.obj" );
-        GameObject world = new GameObject()
-                .addComponent( new MeshRenderer( mesh, bricks2 ) );
-        world.getTransform().scale( 4 );
+        World world = World.UniqueWorld.INSTANCE.getWorld();
+
+        Mesh tree1 = new Mesh( "tree1/", "Tree_OBJ.obj" );
+        GameObject tree = new GameObject().addComponent( new MeshRenderer( tree1, alienMaterial ) );
+        tree.getTransform().scale( 0.03f ).translate( new Vector3f( 200, 0, 400 ) );
+        // MultiMeshRenderer mmr = new MultiMeshRenderer( "tree1/", "Tree_OBJ.obj" );
+        // GameObject tree = new GameObject().addComponent( mmr );
+        // tree.getTransform().scale( 0.03f ).translate( new Vector3f( 200, 0, 400 ) );
+
+
+        //Mesh house = new Mesh( "house/", "house3.obj" );
+        //GameObject houseObject = new GameObject().addComponent( new MeshRenderer( house, alienMaterial ) );
+        //houseObject.getTransform().scale( 30 ).rotate( Vector3f.Y_AXIS, 180 );
 
 
         /* DUMMY */
@@ -87,14 +77,13 @@ public class FPSGame extends Game
                 .rotate( new Vector3f(0, 1, 0 ), 180);*/
 
 
+
         /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
                 //.setCamera( Camera.CameraBuilder.getDefaultCamera() )
-                .setMesh( new Mesh( "reaper.obj" ) )
-                .setMaterial( alienMaterial )
+                .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
                 .setWeapon( new Weapon() )
                 .build( false );
-        player.getTransform().scale( 20 );
 
         Ghost ghost = new Ghost( true );
         ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
@@ -109,7 +98,12 @@ public class FPSGame extends Game
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
-        addObjects( world, dirLightObject );
+        GameObject pointLightObject = new GameObject();
+        PointLight pointLight = new PointLight( new Vector3f( 0.3f, 1f, 0.5f ), 0.05f, Attenuation.DEFAULT );
+        pointLight.getTransform().translate( new Vector3f( 200, 90, 400 ) );
+        pointLightObject.addComponent( pointLight );
+
+        addObjects( world, tree, dirLightObject, pointLightObject );
         addPhysicalObjects( player, ghost );
 
         super.init();

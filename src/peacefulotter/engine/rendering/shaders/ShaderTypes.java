@@ -8,7 +8,8 @@ public enum ShaderTypes
     AMBIENT( "forward-ambient" ),
     DIRECTIONAL( "forward-directional" ),
     POINT( "forward-point" ),
-    SPOT( "forward-spot" );
+    SPOT( "forward-spot" ),
+    TERRAIN( "terrain" );
 
     private final Shader shader;
 

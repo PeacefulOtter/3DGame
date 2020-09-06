@@ -1,13 +1,10 @@
 package peacefulotter.engine.rendering.graphics;
 
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
-import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.resourceManagement.MeshResource;
 import peacefulotter.engine.utils.ResourceLoader;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -19,38 +16,44 @@ public class Mesh
 
     private MeshResource resource;
 
-    public Mesh( String fileName )
+    public Mesh( String fileName ) { this( "", fileName ); }
+
+    public Mesh( String subfolder, String fileName )
     {
-        MeshResource res = loadedModels.get( fileName );
+        String path = subfolder + fileName;
+        MeshResource res = checkLoadedModels( path );
         if ( res == null )
         {
-            Vertices v = new ResourceLoader().loadMesh( fileName );
+            Vertices v = new ResourceLoader().loadMesh( subfolder, fileName );
             addVertices( v.vertices, v.indices );
-            loadedModels.put( fileName, resource );
+            loadedModels.put( path, resource );
         }
         else
             resource = res;
     }
 
-    public Mesh( Vertex[] vertices, int[] indices )
+    public Mesh( String identifier, Vertices vertices )
     {
-        addVertices( vertices, indices );
+        this( identifier, vertices.getVertices(), vertices.getIndices() );
     }
 
-    public static class Vertices
+    public Mesh( String identifier, Vertex[] vertices, int[] indices )
     {
-        private final Vertex[] vertices;
-        private final int[] indices;
-
-        public Vertices( Vertex[] vertices, int[] indices )
+        MeshResource res = checkLoadedModels( identifier );
+        if ( res == null )
         {
-            this.vertices = vertices;
-            this.indices = indices;
+            addVertices( vertices, indices );
+            loadedModels.put( identifier, resource );
         }
-
-        public Vertex[] getVertices() { return vertices; }
-        public int[] getIndices() { return indices; }
+        else
+            resource = res;
     }
+
+    public MeshResource checkLoadedModels( String id )
+    {
+        return loadedModels.get( id );
+    }
+
 
     private void addVertices( Vertex[] vertices, int[] indices )
     {
@@ -83,5 +86,20 @@ public class Mesh
         glDisableVertexAttribArray( 1 );
         glDisableVertexAttribArray( 2 );
         glDisableVertexAttribArray( 3 );
+    }
+
+    public static class Vertices
+    {
+        private final Vertex[] vertices;
+        private final int[] indices;
+
+        public Vertices( Vertex[] vertices, int[] indices )
+        {
+            this.vertices = vertices;
+            this.indices = indices;
+        }
+
+        public Vertex[] getVertices() { return vertices; }
+        public int[] getIndices() { return indices; }
     }
 }

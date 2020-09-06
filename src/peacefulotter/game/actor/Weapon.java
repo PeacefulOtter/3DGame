@@ -1,7 +1,7 @@
 package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.GameObject;
-import peacefulotter.engine.components.MeshRenderer;
+import peacefulotter.engine.components.renderer.MeshRenderer;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.graphics.Material;

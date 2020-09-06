@@ -10,7 +10,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class Ghost extends PhysicsObject
 {
-    private static final float MAX_VELOCITY = 50;
+    private static final float MAX_VELOCITY = 180;
     private static final float MAX_ACCELERATION = 10;
     private static final float SLOW_FACTOR = 8;
     private static final float HEIGHT_SLOW_FACTOR = 1;

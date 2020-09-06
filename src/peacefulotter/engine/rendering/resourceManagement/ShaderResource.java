@@ -1,6 +1,7 @@
 package peacefulotter.engine.rendering.resourceManagement;
 
 import peacefulotter.engine.elementary.Disposable;
+import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ResourceLoader;
 
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class ShaderResource extends Disposable
         uniformsMap = new HashMap<>();
         uniformsStruct = new ArrayList<>();
 
-        System.out.println( "===== loading : " + shaderName);
+        Logger.log( getClass(), "========= Loading..  " + shaderName );
 
         String vertexShaderText = new ResourceLoader().loadShader( shaderName + ".vs" );
         String fragmentShaderText = new ResourceLoader().loadShader( shaderName + ".fs" );
@@ -51,7 +52,9 @@ public class ShaderResource extends Disposable
 
         compileShader();
 
+        Logger.log( getClass(), " == Now Adding all uniforms for the VERTEX shader." );
         addAllUniforms( vertexShaderText );
+        Logger.log( getClass(), " == Now Adding all uniforms for the FRAGMENT shader." );
         addAllUniforms( fragmentShaderText );
     }
 
@@ -87,7 +90,7 @@ public class ShaderResource extends Disposable
     private void addAllAttributes( String shaderText )
     {
         List<String> attributesLine = allAllProperty( shaderText, ATTRIBUTE_TAG, ATTRIBUTE_TAG_LENGTH );
-        System.out.println("Attributes " + attributesLine);
+        Logger.log( getClass(), "Attributes : " + attributesLine );
         int i = 0;
         for ( String attributeLine : attributesLine )
             setAttribLocation( getPropertyName( attributeLine ), i++ );
@@ -96,7 +99,7 @@ public class ShaderResource extends Disposable
     private void addAllUniforms( String shaderText )
     {
         List<String> uniformsLine = allAllProperty( shaderText, UNIFORM_TAG, UNIFORM_TAG_LENGTH );
-        System.out.println("Uniforms " + uniformsLine);
+        Logger.log( getClass(), "Uniforms : " + uniformsLine);
         for ( String uniformLine : uniformsLine )
         {
             String uniformName = getPropertyName( uniformLine );
@@ -108,14 +111,12 @@ public class ShaderResource extends Disposable
 
     private void addUniform( String uniformName, String uniformType, Map<String, List<GLSLStruct>> structs )
     {
-        System.out.println("Trying to add to uniforms : " + uniformName);
-        // System.out.println(structs.keySet());
-        // System.out.println(structs.values());
+        Logger.log( getClass(), "Trying to add uniform : " + uniformName);
         boolean addThis = true;
         List<GLSLStruct> structComponents = structs.get( uniformType );
+
         if ( structComponents != null )
         {
-            System.out.println("struct detected");
             addThis = false;
             for ( GLSLStruct structComponent: structComponents )
             {
@@ -128,7 +129,7 @@ public class ShaderResource extends Disposable
 
         if ( addThis )
         {
-            System.out.println(" now Adding " + uniformName + ".");
+            Logger.log( getClass(), "Now adding " + uniformName + ".");
             int uniformLoc = glGetUniformLocation( program, uniformName );
 
             if ( uniformLoc == -1 )
@@ -150,7 +151,7 @@ public class ShaderResource extends Disposable
             int braceEnd = shaderText.indexOf( "}", braceBegin );
 
             String structName = shaderText.trim().substring( begin, braceBegin ).trim();
-            System.out.println("StructName " + structName);
+            Logger.log( getClass(), "StructName : " + structName);
             List<GLSLStruct> componentStructs = new ArrayList<>();
 
             int componentSemicolonPosition = shaderText.indexOf( ";", braceBegin );
@@ -199,7 +200,7 @@ public class ShaderResource extends Disposable
 
     private void setAttribLocation( String attributeName, int location )
     {
-        System.out.println( "setAttribLocation ; " + attributeName + " " + location );
+        Logger.log( getClass(), "setAttribLocation : " + attributeName + " at " + location );
         glBindAttribLocation( program, location, attributeName );
     }
 

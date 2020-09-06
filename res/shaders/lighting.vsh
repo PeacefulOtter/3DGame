@@ -6,20 +6,32 @@ in vec3 tangent;
 out vec2 texCoord0;
 out vec3 worldPos0;
 out mat3 tbnMatrix;
+out float visibility;
 
-uniform mat4 T_model;
-uniform mat4 T_MVP;
+uniform mat4 T_transformationMatrix;
+uniform mat4 T_projectionMatrix;
+uniform mat4 T_viewMatrix;
+
+const float density = 0.0005;
+const float gradient = 5;
 
 void main()
 {
-    gl_Position = T_MVP * vec4(position, 1.0);
+    vec4 worldPosition = T_transformationMatrix * vec4(position, 1.0);
+    vec4 positionRelativeToCam = T_viewMatrix * worldPosition;
+    gl_Position = T_projectionMatrix * positionRelativeToCam;
+
     texCoord0 = texCoord;
-    worldPos0 = (T_model * vec4(position, 1.0)).xyz;
+    worldPos0 = (T_transformationMatrix * vec4(position, 1.0)).xyz;
     
-    vec3 n = normalize((T_model * vec4(normal, 0.0)).xyz);
-    vec3 t = normalize((T_model * vec4(tangent, 0.0)).xyz);
+    vec3 n = normalize((T_transformationMatrix * vec4(normal, 0.0)).xyz);
+    vec3 t = normalize((T_transformationMatrix * vec4(tangent, 0.0)).xyz);
     t = normalize(t - dot(t, n) * n);
     
     vec3 biTangent = cross(t, n);
     tbnMatrix = mat3(t, biTangent, n);
+
+    float distance = length( positionRelativeToCam.xyz );
+    visibility = exp(-pow((distance*density), gradient));
+    visibility = clamp(visibility, 0.0, 1.0);
 }

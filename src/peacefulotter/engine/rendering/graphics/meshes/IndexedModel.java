@@ -109,7 +109,6 @@ public class IndexedModel
             float deltaV2 = texCoords.get(i2).getY() - texCoords.get(i0).getY();
 
             float dividend = (deltaU1*deltaV2 - deltaU2*deltaV1);
-            //TODO: The first 0.0f may need to be changed to 1.0f here.
             float f = dividend == 0 ? 0.0f : 1.0f/dividend;
 
             Vector3f tangent = new Vector3f(0,0,0);
@@ -128,5 +127,5 @@ public class IndexedModel
     public List<Vector2f> getTexCoords() { return texCoords; }
     public List<Vector3f> getNormals()   { return normals; }
     public List<Vector3f> getTangents()  { return tangents; }
-    public List<Integer> getIndices()    { return indices; }
+    public List<Integer>  getIndices()   { return indices; }
 }

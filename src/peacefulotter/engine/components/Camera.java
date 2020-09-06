@@ -24,14 +24,18 @@ public class Camera extends GameComponent
         engine.getRenderingEngine().setCamera( this );
     }
 
-    public Matrix4f getViewProjection()
+    public Matrix4f getProjectionMatrix()
+    {
+        return projection;
+    }
+
+    public Matrix4f getViewMatrix()
     {
         STransform cameraTransform = getTransform();
         Vector3f pos = cameraTransform.getTransformedTranslation().mul( -1 );
         Matrix4f cameraRotation = cameraTransform.getTransformedRotation().conjugate().toRotationMatrix();
         Matrix4f cameraTranslation = new Matrix4f().initTranslation( pos.getX(), pos.getY(), pos.getZ() );
-
-        return projection.mul( cameraRotation.mul( cameraTranslation ) );
+        return cameraRotation.mul( cameraTranslation );
     }
 
 
@@ -46,7 +50,7 @@ public class Camera extends GameComponent
     {
         public static Camera getDefaultCamera()
         {
-            return new Camera( 70f, Window.getRatio(), 0.01f, 1000f );
+            return new Camera( 70f, Window.getRatio(), 0.01f, 5000f );
         }
     }
 }

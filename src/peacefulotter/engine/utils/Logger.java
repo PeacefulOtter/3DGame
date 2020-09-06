@@ -5,6 +5,8 @@ import java.util.StringJoiner;
 
 public class Logger
 {
+    private static final boolean LOG_ACTIVE = true;
+
     public static void log( String msg )
     {
         log( "", msg );
@@ -19,8 +21,10 @@ public class Logger
 
     public static void log( Class<?> c, Object obj ) { log( c, obj.toString() ); }
 
+    /* Main method */
     public static void log( String prefix, String msg )
     {
+        if ( !LOG_ACTIVE ) return;
         System.out.println( getTime() + " " + prefix + " " + msg );
     }
 

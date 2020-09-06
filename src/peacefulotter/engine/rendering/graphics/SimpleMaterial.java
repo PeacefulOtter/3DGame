@@ -1,38 +1,31 @@
 package peacefulotter.engine.rendering.graphics;
 
+// A basic material used when loading a texture from a .mtl file
 public class SimpleMaterial
 {
-    private final Texture texture, normal;
+    private final Texture texture;
     private final float specularIntensity, specularPower;
 
-    private SimpleMaterial( Texture texture, Texture normal, float specularIntensity, float specularPower )
+    private SimpleMaterial( Texture texture, float specularIntensity, float specularPower )
     {
         this.texture = texture;
-        this.normal = normal;
         this.specularIntensity = specularIntensity;
         this.specularPower = specularPower;
     }
 
     public Texture getTexture() { return texture; }
-    public Texture getNormal() { return normal; }
     public float getSpecularIntensity() { return specularIntensity; }
     public float getSpecularPower() { return specularPower; }
 
     public static class MaterialBuilder
     {
-        private Texture texture, normal;
+        private Texture texture;
         private float specularIntensity = 1;
         private float specularPower = 0;
 
         public MaterialBuilder setTexture( Texture texture )
         {
             this.texture = texture;
-            return this;
-        }
-
-        public MaterialBuilder setNormalTexture( Texture normal )
-        {
-            this.normal = normal;
             return this;
         }
 
@@ -50,7 +43,7 @@ public class SimpleMaterial
 
         public SimpleMaterial build()
         {
-            return new SimpleMaterial( texture, normal, specularIntensity, specularPower );
+            return new SimpleMaterial( texture, specularIntensity, specularPower );
         }
     }
 }

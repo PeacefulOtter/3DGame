@@ -14,19 +14,37 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 
 public class Texture
 {
+    private static final String DEFAULT_FOLDER = "default/";
     private static final Map<String, TextureResource> loadedTextures = new HashMap<>();
 
     private final TextureResource resource;
+    private final String subFolder, fileName;
 
-    public Texture( String textureName )
+    public Texture( String fileName ) { this( "", fileName ); }
+
+    public Texture( String subFolder, String fileName )
     {
-        if ( loadedTextures.containsKey( textureName ) )
-            resource = loadedTextures.get( textureName );
+        String path = subFolder + fileName;
+        if ( loadedTextures.containsKey( path ) )
+            resource = loadedTextures.get( path );
         else
         {
-            resource = new ResourceLoader().loadTexture( textureName );
-            loadedTextures.put( textureName, resource );
+            resource = new ResourceLoader().loadTexture( subFolder, fileName );
+            loadedTextures.put( path, resource );
         }
+
+        this.subFolder = subFolder;
+        this.fileName = fileName;
+    }
+
+    public static Texture getDefaultNormal()
+    {
+        return new Texture( DEFAULT_FOLDER, "default_normal.jpg" );
+    }
+
+    public static Texture getDefaultHeight()
+    {
+        return new Texture( DEFAULT_FOLDER, "default_height.jpg" );
     }
 
     public void bind( int samplerSlot )
@@ -39,5 +57,11 @@ public class Texture
     public void bindAsRenderTarget()
     {
         //
+    }
+
+    @Override
+    public String toString()
+    {
+        return "[Texture] " + subFolder + fileName;
     }
 }

@@ -9,8 +9,10 @@ import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
 import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.resourceManagement.ShaderResource;
 import peacefulotter.engine.core.transfomations.STransform;
+import peacefulotter.engine.utils.Logger;
 
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class Shader
     private static final String TRANSFORM_PREFIX = "T_";
     private static final String RENDERING_PREFIX = "R_";
     private static final String CAMERA_PREFIX    = "C_";
+
     private final ShaderResource resource;
 
     protected Shader( ShaderResource resource )
@@ -28,10 +31,28 @@ public class Shader
         this.resource = resource;
     }
 
+    // used for multi-texturing = updates the diffuse, normalMaps and height map
+    public void forceUpdateTexture( Material material, RenderingEngine renderingEngine )
+    {
+        resource.getUniformsStruct().forEach( ( struct ) -> {
+            String uniformName = struct.name;
+            String uniformType = struct.type;
+
+            if ( uniformType.equals( "sampler2D" ) && uniformName.startsWith( RENDERING_PREFIX ) )
+            {
+                String unprefixedUniformName = uniformName.substring( 2 );
+                int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
+                material.getTexture( unprefixedUniformName ).bind( samplerSlot );
+                setUniformI( uniformName, samplerSlot );
+            }
+        } );
+    }
+
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
     {
-        Matrix4f worldMatrix = transform.getTransformationMatrix();
-        Matrix4f MVPMatrix = renderingEngine.getCamera().getViewProjection().mul( worldMatrix );
+        Matrix4f transformationMatrix = transform.getTransformationMatrix();
+        Matrix4f projectionMatrix = renderingEngine.getCamera().getProjectionMatrix();
+        Matrix4f viewMatrix = renderingEngine.getCamera().getViewMatrix();
 
         List<ShaderResource.GLSLStruct> uniformsStruct = resource.getUniformsStruct();
 
@@ -42,10 +63,12 @@ public class Shader
 
             if ( uniformName.startsWith( TRANSFORM_PREFIX) )
             {
-                if ( uniformName.equals( TRANSFORM_PREFIX + "MVP" ) )
-                    setUniformMatrix( uniformName, MVPMatrix );
-                else if ( uniformName.equals( TRANSFORM_PREFIX + "model" ) )
-                    setUniformMatrix( uniformName, worldMatrix );
+                if ( uniformName.equals( TRANSFORM_PREFIX + "transformationMatrix" ) )
+                    setUniformMatrix( uniformName, transformationMatrix );
+                else if ( uniformName.equals( TRANSFORM_PREFIX + "projectionMatrix" ) )
+                    setUniformMatrix( uniformName, projectionMatrix );
+                else if ( uniformName.equals( TRANSFORM_PREFIX + "viewMatrix" ) )
+                    setUniformMatrix( uniformName, viewMatrix );
                 else
                     throw new IllegalArgumentException( uniformName + " is not a valid Transform component" );
             }
@@ -60,7 +83,14 @@ public class Shader
                     setUniformI( uniformName, samplerSlot );
                 }
                 else if ( uniformType.equals( "vec3" ) )
-                    setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
+                {
+                    if ( uniformName.equals( RENDERING_PREFIX + "ambient" ) )
+                        setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
+                    else if ( uniformName.equals( RENDERING_PREFIX + "skyColor" ) )
+                    {
+                        setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
+                    }
+                }
                 else if ( uniformType.equals( "float" ) )
                     setUniformF( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
                 else if ( uniformType.equals( "DirectionalLight" ) )

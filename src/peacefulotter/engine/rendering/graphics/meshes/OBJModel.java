@@ -2,15 +2,7 @@ package peacefulotter.engine.rendering.graphics.meshes;
 
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.graphics.SimpleMaterial;
-import peacefulotter.engine.utils.Logger;
-import peacefulotter.engine.utils.ResourceLoader;
-import peacefulotter.engine.utils.Utils;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 
 public class OBJModel
@@ -19,77 +11,36 @@ public class OBJModel
     private final List<Vector2f> texCoords = new ArrayList<>();
     private final List<Vector3f> normals   = new ArrayList<>();
     private final List<OBJIndex> indices   = new ArrayList<>();
-    private boolean hasTexCoords, hasNormals, hasMaterial;
 
-    private InputStream resourceStream( String resourceName )
+    private boolean hasTexCoords, hasNormals;
+
+    public void addPosition( Vector3f position )
     {
-        return getClass().getResourceAsStream( resourceName );
+        positions.add( position );
+    }
+    public void addTexCoord( Vector2f texCoord )
+    {
+        texCoords.add( texCoord );
+    }
+    public void addNormal( Vector3f normal )
+    {
+        normals.add( normal );
+    }
+    public void addIndices( String line )
+    {
+        indices.add( parseOBJIndex( line ) );
+    }
+    public void addIndices( OBJIndex objIndex )
+    {
+        indices.add( objIndex );
     }
 
+    public Vector3f getPosition( int index ) { return positions.get( index ); }
+    public Vector2f getTexCoord( int index ) { return texCoords.get( index ); }
+    public Vector3f getNormal( int index ) { return normals.get( index ); }
+    public List<OBJIndex> getIndices() { return indices; }
 
-    public OBJModel( String filePath )
-    {
-        Map<String, SimpleMaterial> materialMap = new HashMap<>();
-
-        try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( filePath ) ) ) )
-        {
-            String line;
-            while ( ( line = reader.readLine() ) != null )
-            {
-                String[] split = line.split( " " );
-                split = Utils.removeEmptyStrings( split );
-                if ( split.length == 0 ) continue;
-                String prefix = split[ 0 ];
-
-                if ( prefix.equals( "mtllib" ) )
-                {
-                    materialMap = new ResourceLoader().loadMaterial( split[ 1 ] );
-                    Logger.log( getClass(), "OBJModel has material(s)" );
-                    hasMaterial = true;
-                }
-                else if ( hasMaterial && prefix.equals( "usemtl" ) )
-                {
-                    String materialFileName = split[ 1 ].split( "\\." )[ 0 ];
-                    if ( materialMap.containsKey( materialFileName ) )
-                        Logger.log( getClass(), "Found SimpleMaterial named : " + materialFileName );
-                }
-                else if ( prefix.equals( "v" ) )
-                {
-                    positions.add( new Vector3f(
-                            Float.parseFloat( split[ 1 ] ),
-                            Float.parseFloat( split[ 2 ] ),
-                            Float.parseFloat( split[ 3 ] ) ) );
-                }
-                else if ( prefix.equals( "vt" ) )
-                {
-                    texCoords.add( new Vector2f(
-                            Float.parseFloat( split[ 1 ] ),
-                            1.0f - Float.parseFloat( split[ 2 ] ) ) );
-                }
-                else if ( prefix.equals( "vn" ) )
-                {
-                    normals.add( new Vector3f(
-                            Float.parseFloat( split[ 1 ] ),
-                            Float.parseFloat( split[ 2 ] ),
-                            Float.parseFloat( split[ 3 ] ) ) );
-                }
-                else if ( split[ 0 ].equals( "f" ) )
-                {
-                    for (int i = 0; i < split.length - 3; i++)
-                    {
-                        indices.add( parseOBJIndex( split[ 1 ] ) );
-                        indices.add( parseOBJIndex( split[ 2 + i ] ) );
-                        indices.add( parseOBJIndex( split[ 3 + i ] ) );
-                    }
-                }
-            }
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
-            System.exit( 1 );
-        }
-    }
+    public int getIndicesSize() { return indices.size(); }
 
     private OBJIndex parseOBJIndex( String line )
     {
@@ -109,7 +60,9 @@ public class OBJModel
         return result;
     }
 
-    public IndexedModel toIndexedModel()
+    public IndexedModel toIndexedModel() { return toIndexedModel( false ); }
+
+    public IndexedModel toIndexedModel( boolean isSorted )
     {
         IndexedModel model = new IndexedModel();
         IndexedModel normalModel = new IndexedModel();
@@ -118,16 +71,27 @@ public class OBJModel
         Map<Integer, Integer> normalIndexMap = new HashMap<>();
         Map<Integer, Integer> indexMap = new HashMap<>();
 
+        final int[] x = { 0 };
+
         indices.forEach( ( index ) -> {
-            Vector3f pos = positions.get( index.vertexIndex );
-            Vector2f texCoord = Vector2f.getZero();
-            Vector3f normal = Vector3f.getZero();
+            Vector3f pos; Vector2f texCoord; Vector3f normal;
+            if ( isSorted )
+            {
+                pos = positions.get( x[0] );
+                texCoord = texCoords.get( x[0] );
+                normal = normals.get( x[0]++ );
+            }
+            else
+            {
+                pos = positions.get( index.vertexIndex );
+                texCoord = Vector2f.getZero();
+                normal = Vector3f.getZero();
 
-            if ( hasTexCoords )
-                texCoord = texCoords.get( index.texCoordIndex );
-            if ( hasNormals )
-                normal = normals.get( index.normalIndex );
-
+                if ( hasTexCoords )
+                    texCoord = texCoords.get( index.texCoordIndex );
+                if ( hasNormals )
+                    normal = normals.get( index.normalIndex );
+            }
 
             Integer modelVertexIndex = resultIndexMap.get( index );
 

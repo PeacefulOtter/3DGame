@@ -1,0 +1,1 @@
+- A mesh can also load materials which load textures, to do so, the OBJ file needs to include a line like so : `mtllib material.mtl` and then `usemtl texture.png/jpg`

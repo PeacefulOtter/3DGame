@@ -4,10 +4,11 @@ import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
 import peacefulotter.engine.components.lights.SpotLight;
+import peacefulotter.engine.components.renderer.MeshRenderer;
+import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.shaders.*;
 import peacefulotter.game.actor.Player;
@@ -102,8 +103,7 @@ public class TestGame extends Game
 
         PhysicsObject player = new Player.PlayerBuilder()
                 .setCamera( Camera.CameraBuilder.getDefaultCamera() )
-                .setMesh( new Mesh( "reaper.obj" ) )
-                .setMaterial( alienMaterial )
+                .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj" ) )
                 .setWeapon( new Weapon() )
                 .build( true );
 

@@ -1,9 +1,9 @@
 package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.Camera;
-import peacefulotter.engine.components.MeshRenderer;
+import peacefulotter.engine.components.renderer.MeshRenderer;
 import peacefulotter.engine.components.PhysicsObject;
-import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
@@ -204,8 +204,7 @@ public class Player extends PhysicsObject
     {
         private Weapon weapon;
         private Camera camera;
-        private Mesh mesh;
-        private Material material;
+        private MultiMeshRenderer mmr;
 
         public PlayerBuilder setWeapon( Weapon weapon )
         {
@@ -219,15 +218,9 @@ public class Player extends PhysicsObject
             return this;
         }
 
-        public PlayerBuilder setMesh( Mesh mesh )
+        public PlayerBuilder setMultiMeshRenderer( MultiMeshRenderer mmr )
         {
-            this.mesh = mesh;
-            return this;
-        }
-
-        public PlayerBuilder setMaterial( Material material )
-        {
-            this.material = material;
+            this.mmr = mmr;
             return this;
         }
 
@@ -235,12 +228,12 @@ public class Player extends PhysicsObject
         {
             if ( weapon == null )
                 throw new NullPointerException( "Player needs a weapon" );
-            if ( mesh == null || material == null )
-                throw new NullPointerException( "Player needs a mesh and a material" );
+            if ( mmr == null )
+                throw new NullPointerException( "Player needs a MultiMeshRenderer to be rendered" );
 
             Player player = new Player( weapon, isUser );
             player
-                    .addComponent( new MeshRenderer( mesh, material ).fixedTilt() )
+                    .addComponent( mmr.fixedTilt() )
                     .addChild( weapon );
             weapon.getTransform().translate( Weapon.PLAYER_ORIGIN() );
 

@@ -15,6 +15,8 @@ public abstract class MappedValues
         vectorMap.put( name, vector );
     }
 
+    public void setVector3f( String name, Vector3f vector ) { vectorMap.replace( name, vector ); }
+
     public Vector3f getVector3f( String name )
     {
         if ( vectorMap.containsKey( name ) )
@@ -26,6 +28,8 @@ public abstract class MappedValues
     {
         floatMap.put( name, value );
     }
+
+    public void setFloat( String name, float value ) { floatMap.replace( name, value ); }
 
     public float getFloat( String name )
     {

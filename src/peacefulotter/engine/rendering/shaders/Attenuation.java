@@ -12,4 +12,6 @@ public class Attenuation extends Vector3f
     public float getConstant() { return getX(); }
     public float getLinear()   { return getY(); }
     public float getExponent() { return getZ(); }
+
+    public static final Attenuation DEFAULT = new Attenuation( 0, 0.01f, 0 );
 }
