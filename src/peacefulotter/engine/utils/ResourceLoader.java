@@ -6,6 +6,7 @@ import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.rendering.GUI.GUITexture;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
@@ -50,7 +51,7 @@ public class ResourceLoader
             {
                 if ( line.startsWith( INCLUDE_DIRECTIVE ) )
                     sj.add( loadShader( line.substring( INCLUDE_DIRECTIVE_LENGTH + 2, line.length() - 2 ) ) );
-                else
+                else if ( !line.startsWith( "//" ) )
                     sj.add( line );
             }
         }
@@ -319,7 +320,6 @@ public class ResourceLoader
 
         return resource;
     }
-
 
     public Map<String, SimpleMaterial> loadMaterial( String subFolder, String fileName )
     {

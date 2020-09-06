@@ -18,8 +18,7 @@ public class Terrain
 {
     private static final float HALF_MAX_PIXEL_COLOR = 255 * 255 * 255 / 2f;
     private static final int MAX_DESIRED_HEIGHT = 70;
-    private static final int REPETITION = 40;
-    private static final int SIZE = 800;
+    private static final int SIZE = 1300;
 
     private static int TERRAIN_ID = 0;
 
@@ -58,7 +57,7 @@ public class Terrain
                 float z = (float) i / (VERTEX_COUNT - 1);
                 heights[ j ][ i ] = y;
                 model.getPositions().add( new Vector3f( x * SIZE, y, z * SIZE ) );
-                model.getTexCoords().add( new Vector2f( x, z ).mul( REPETITION ) );
+                model.getTexCoords().add( new Vector2f( x, z ) );
                 model.getNormals().add( calculateNormal( j, i, image ) );
                 model.getTangents().add( Vector3f.getZero() );
             }

@@ -66,12 +66,14 @@ public class Player extends PhysicsObject
     private final Set<VelocityAngle> notMovingArrowsQueue;
     private final FreeMovement freeMovement;
     private final FreeRotation freeRotation;
+    private final Terrain terrain;
 
     private boolean isRunning, isReloading, isJumping, isCrouching;
 
     private Player( Terrain terrain, Weapon weapon, boolean isUser )
     {
         super( Vector3f.getZero() );
+        this.terrain = terrain;
         this.weapon = weapon;
         this.isUser = isUser;
         this.notMovingArrowsQueue = new HashSet<>( 4 );
@@ -119,7 +121,7 @@ public class Player extends PhysicsObject
         if ( !isUser ) return;
 
         // player is on the ground or slightly below
-        if ( getPosition().getY() <= 0 )
+        if ( getPosition().getY() <= terrain.getTerrainHeight( getPosition().getX(), getPosition().getZ() ) )
         {
             isJumping = false;
 

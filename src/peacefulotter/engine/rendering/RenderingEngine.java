@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class RenderingEngine extends MappedValues
 {
@@ -55,7 +56,7 @@ public class RenderingEngine extends MappedValues
         glCullFace( GL_BACK );
         glEnable( GL_CULL_FACE );
         glEnable( GL_DEPTH_TEST );
-        // glEnable( GL_DEPTH_CLAMP );
+        //glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
 
         addVector3f( "ambient", new Vector3f( 0.4f, 0.4f, 0.4f ) );
@@ -76,7 +77,6 @@ public class RenderingEngine extends MappedValues
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
         object.renderAll( ambient, this );
-        terrainRenderer.renderTerrain( this );
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE );
@@ -88,6 +88,8 @@ public class RenderingEngine extends MappedValues
             activeLight = light;
             object.renderAll( light.getShader(), this );
         }
+
+        terrainRenderer.renderTerrain( this );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );

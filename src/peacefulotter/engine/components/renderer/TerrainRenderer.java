@@ -25,7 +25,7 @@ public class TerrainRenderer extends GameComponent
     {
         material = new Material(
                 new Texture( TERRAIN_SUBFOLDER, "grass.png" ), Texture.getDefaultNormal(), Texture.getDefaultHeight(),
-                1f, 4, 0.03f, -0.04f );
+                0.9f, 1.3f, 0.02f, 0f );
         material.addTexture( "aTexture", new Texture( TERRAIN_SUBFOLDER, "grass.png" ) );
         material.addTexture( "rTexture", new Texture( TERRAIN_SUBFOLDER, "mud.png" ) );
         material.addTexture( "gTexture", new Texture( TERRAIN_SUBFOLDER, "flowers.png" ) );
