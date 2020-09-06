@@ -14,7 +14,7 @@ public class BoundingSpherePhysicsObject extends PhysicsObject
 
     public BoundingSpherePhysicsObject( Vector3f position, Vector3f velocity, float radius )
     {
-        super( position, velocity, false );
+        super( position, velocity );
         this.radius = radius;
     }
 

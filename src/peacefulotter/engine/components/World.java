@@ -12,6 +12,8 @@ public class World extends GameObject
 {
     private static final String IMAGE_PATH = "/textures/terrain/height_map2.png";
 
+    private final TerrainRenderer tr;
+
     public enum UniqueWorld
     {
         INSTANCE();
@@ -25,7 +27,7 @@ public class World extends GameObject
 
     private World()
     {
-        TerrainRenderer tr = new TerrainRenderer();
+        this.tr = new TerrainRenderer();
         // generate the terrain based on a terrain height map image
         try
         {
@@ -35,5 +37,10 @@ public class World extends GameObject
         catch ( IOException e ) { e.printStackTrace(); }
 
         addComponent( tr );
+    }
+
+    public Terrain getTerrain()
+    {
+        return tr.getTerrains().get( 0 );
     }
 }

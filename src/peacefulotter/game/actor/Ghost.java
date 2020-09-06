@@ -1,6 +1,7 @@
 package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.PhysicsObject;
+import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.utils.IO.Input;
 import peacefulotter.game.inputs.FreeMovement;
 import peacefulotter.game.inputs.FreeRotation;
@@ -10,9 +11,9 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
 public class Ghost extends PhysicsObject
 {
-    private static final float MAX_VELOCITY = 180;
-    private static final float MAX_ACCELERATION = 10;
-    private static final float SLOW_FACTOR = 8;
+    private static final float MAX_VELOCITY = 100;
+    private static final float MAX_ACCELERATION = 8;
+    private static final float SLOW_FACTOR = 7;
     private static final float HEIGHT_SLOW_FACTOR = 1;
     private static final float HEIGHT_ACCELERATION = 3;
 
@@ -22,9 +23,9 @@ public class Ghost extends PhysicsObject
 
     public Ghost( boolean isUser )
     {
-        super( false );
+        super( Vector3f.getZero() );
         this.isUser = isUser;
-        freeMovement = new FreeMovement( this, MAX_VELOCITY, MAX_ACCELERATION, SLOW_FACTOR );
+        freeMovement = new FreeMovement( this, MAX_VELOCITY, MAX_ACCELERATION, SLOW_FACTOR, MAX_VELOCITY - 50 );
         freeRotation = new FreeRotation( this, Player.ROTATION_SENSITIVITY, Player.CURSOR_SENSITIVITY );
     }
 
@@ -41,18 +42,20 @@ public class Ghost extends PhysicsObject
     }
 
     @Override
-    protected void updateVelocity( float deltaTime )
+    public void update( float deltaTime )
     {
         if ( !isUser ) return;
 
-        super.updateVelocity( deltaTime );
-        freeMovement.updateVelocity( false );
-        setVelocityYAxis( getVelocityYAxis() - Math.signum( getVelocityYAxis() ) * HEIGHT_SLOW_FACTOR );
+        freeMovement.updateVelocity( deltaTime, false );
+        float yVelocity = freeMovement.getVelocityYAxis();
+        freeMovement.setVelocityYAxis( yVelocity - Math.signum( yVelocity ) * HEIGHT_SLOW_FACTOR );
+
+        super.update( deltaTime );
     }
 
     private void gainHeight( int direction )
     {
-        setVelocityYAxis( getVelocityYAxis() + direction * HEIGHT_ACCELERATION );
+        freeMovement.setVelocityYAxis( freeMovement.getVelocityYAxis() + direction * HEIGHT_ACCELERATION );
     }
 
     @Override

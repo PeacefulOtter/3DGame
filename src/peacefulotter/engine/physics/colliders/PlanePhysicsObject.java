@@ -15,7 +15,7 @@ public class PlanePhysicsObject extends PhysicsObject
 
     public PlanePhysicsObject( Vector3f position, Vector3f velocity, Vector3f normal, float distance )
     {
-        super( position, velocity, false );
+        super( position, velocity );
         this.normal = normal;
         this.distance = distance;
     }

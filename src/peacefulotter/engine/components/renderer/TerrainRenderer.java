@@ -56,4 +56,6 @@ public class TerrainRenderer extends GameComponent
     {
         engine.getRenderingEngine().addTerrainRenderer( this );
     }
+
+    public List<Terrain> getTerrains() { return terrains; }
 }

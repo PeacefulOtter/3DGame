@@ -1,12 +1,10 @@
 package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.Camera;
-import peacefulotter.engine.components.renderer.MeshRenderer;
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.graphics.Material;
-import peacefulotter.engine.rendering.graphics.Mesh;
+import peacefulotter.engine.rendering.terrain.Terrain;
 import peacefulotter.engine.utils.IO.Input;
 import peacefulotter.game.inputs.FreeMovement;
 import peacefulotter.game.inputs.FreeRotation;
@@ -58,7 +56,7 @@ public class Player extends PhysicsObject
     private static final float RUNNING_ACCELERATION = 1;
 
     public static final float MAX_WALKING_VELOCITY = 100;
-    public static final float WALKING_ACCELERATION = 1;
+    public static final float WALKING_ACCELERATION = 0.1f;
     public static final float ROTATION_SENSITIVITY = 180;
     public static final float CURSOR_SENSITIVITY = 50;
     public static final float SLOW_FACTOR = 7;
@@ -71,15 +69,15 @@ public class Player extends PhysicsObject
 
     private boolean isRunning, isReloading, isJumping, isCrouching;
 
-    private Player( Weapon weapon, boolean isUser )
+    private Player( Terrain terrain, Weapon weapon, boolean isUser )
     {
-        super( Vector3f.getZero(), JUMP_HEIGHT, true );
+        super( Vector3f.getZero() );
         this.weapon = weapon;
         this.isUser = isUser;
         this.notMovingArrowsQueue = new HashSet<>( 4 );
         if ( isUser )
         {
-            this.freeMovement = new FreeMovement( this, MAX_WALKING_VELOCITY, WALKING_ACCELERATION, SLOW_FACTOR );
+            this.freeMovement = new FreeMovement( this, terrain, MAX_WALKING_VELOCITY, WALKING_ACCELERATION, SLOW_FACTOR, JUMP_HEIGHT );
             this.freeRotation = new FreeRotation( this, ROTATION_SENSITIVITY, CURSOR_SENSITIVITY );
         }
         else { this.freeMovement = null; this.freeRotation = null; }
@@ -116,14 +114,12 @@ public class Player extends PhysicsObject
         Input.addKeyCallback( GLFW_KEY_R,  ( deltaTime ) -> reloadWeapon() );
     }
 
-    @Override
-    protected void updateVelocity( float deltaTime )
+    public void update( float deltaTime )
     {
         if ( !isUser ) return;
-        super.updateVelocity( deltaTime );
 
         // player is on the ground or slightly below
-        if ( getPosition().getY() <= 0 && getVelocityYAxis() <= 0 )
+        if ( getPosition().getY() <= 0 )
         {
             isJumping = false;
 
@@ -131,7 +127,9 @@ public class Player extends PhysicsObject
             notMovingArrowsQueue.clear();
         }
 
-        freeMovement.updateVelocity( isJumping );
+        freeMovement.updateVelocity( deltaTime, isJumping );
+
+        super.update( deltaTime );
     }
 
     @Override
@@ -139,6 +137,7 @@ public class Player extends PhysicsObject
     {
         return !isJumping;
     }
+
     @Override
     public boolean stopMoving( VelocityAngle arrow )
     {
@@ -176,7 +175,7 @@ public class Player extends PhysicsObject
         if ( isJumping ) return;
         if ( isCrouching ) { stopCrouching(); return; }
 
-        setVelocityYAxis( getVelocityYAxis() + JUMP_HEIGHT );
+        freeMovement.setVelocityYAxis( freeMovement.getVelocityYAxis() + JUMP_HEIGHT );
         isJumping = true;
     }
 
@@ -205,6 +204,7 @@ public class Player extends PhysicsObject
         private Weapon weapon;
         private Camera camera;
         private MultiMeshRenderer mmr;
+        private Terrain terrain;
 
         public PlayerBuilder setWeapon( Weapon weapon )
         {
@@ -224,14 +224,22 @@ public class Player extends PhysicsObject
             return this;
         }
 
+        public PlayerBuilder setTerrain( Terrain terrain )
+        {
+            this.terrain = terrain;
+            return this;
+        }
+
         public Player build( boolean isUser )
         {
             if ( weapon == null )
                 throw new NullPointerException( "Player needs a weapon" );
             if ( mmr == null )
                 throw new NullPointerException( "Player needs a MultiMeshRenderer to be rendered" );
+            if ( terrain == null )
+                throw new NullPointerException( "Any PhysicsObject must have a terrain." );
 
-            Player player = new Player( weapon, isUser );
+            Player player = new Player( terrain, weapon, isUser );
             player
                     .addComponent( mmr.fixedTilt() )
                     .addChild( weapon );
