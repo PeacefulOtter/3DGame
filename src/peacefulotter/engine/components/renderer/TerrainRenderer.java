@@ -10,16 +10,14 @@ import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.rendering.terrain.Terrain;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class TerrainRenderer extends GameComponent
 {
     private static final String TERRAIN_SUBFOLDER = "terrain/";
+    private static final Shader terrainShader = ShaderTypes.TERRAIN.getShader();
 
-    private final List<Terrain> terrains = new ArrayList<>();
-    private final Shader terrainShader = ShaderTypes.TERRAIN.getShader();
     private final Material material;
+    private Terrain terrain;
 
     public TerrainRenderer()
     {
@@ -33,22 +31,20 @@ public class TerrainRenderer extends GameComponent
         material.addTexture( "blendMap", new Texture( TERRAIN_SUBFOLDER, "blend_map.png" ) );
     }
 
-    public void addTerrain( Terrain terrain )
+    public void setTerrain( Terrain terrain )
     {
-        terrains.add( terrain );
+        this.terrain = terrain;
     }
 
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine )
     {
-        STransform transform = getTransform();
-        terrains.forEach( terrain -> terrain.render( shader, renderingEngine, transform, material ) );
+        terrain.render( shader, renderingEngine, getTransform(), material );
     }
 
     public void renderTerrain( RenderingEngine renderingEngine )
     {
-        STransform transform = getTransform();
-        terrains.forEach( terrain -> terrain.render( terrainShader, renderingEngine, transform, material ) );
+        terrain.render( terrainShader, renderingEngine, getTransform(), material );
     }
 
     @Override
@@ -57,5 +53,5 @@ public class TerrainRenderer extends GameComponent
         engine.getRenderingEngine().setTerrainRenderer( this );
     }
 
-    public List<Terrain> getTerrains() { return terrains; }
+    public Terrain getTerrain() { return terrain; }
 }

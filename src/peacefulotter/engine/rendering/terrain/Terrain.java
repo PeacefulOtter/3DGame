@@ -140,4 +140,6 @@ public class Terrain
     {
         return mesh;
     }
+
+    public int getSize() { return SIZE; }
 }

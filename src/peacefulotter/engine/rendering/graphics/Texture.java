@@ -51,13 +51,15 @@ public class Texture
     {
         assert ( samplerSlot >= 0 && samplerSlot <= 31 );
         glActiveTexture( GL_TEXTURE0 + samplerSlot );
-        glBindTexture( GL_TEXTURE_2D, resource.getId() );
+        glBindTexture( GL_TEXTURE_2D,   resource.getId() );
     }
 
     public void bindAsRenderTarget()
     {
         //
     }
+
+    public TextureResource getResource() { return resource; }
 
     @Override
     public String toString()

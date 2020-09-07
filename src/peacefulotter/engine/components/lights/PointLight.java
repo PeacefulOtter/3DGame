@@ -36,8 +36,5 @@ public class PointLight extends BaseLight
         calcAndUpdateRange();
     }
 
-    public Vector3f getPosition() { return getTransform().getTranslation(); }
-    public void setPosition( Vector3f position ) { getTransform().setTranslation( position ); }
-
     public float getRange() { return range; }
 }

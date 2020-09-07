@@ -15,8 +15,6 @@ public class SpotLight extends PointLight
         setShader( ShaderTypes.SPOT.getShader() );
     }
 
-    public Vector3f getDirection() { return getTransform().getTransformedRotation().getForward(); }
-
     public float getCutoff() { return cutoff; }
     public void setCutoff( float cutoff ) { this.cutoff = cutoff; }
 }

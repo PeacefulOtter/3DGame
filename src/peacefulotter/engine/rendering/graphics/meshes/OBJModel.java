@@ -36,9 +36,20 @@ public class OBJModel
     }
 
     public Vector3f getPosition( int index ) { return positions.get( index ); }
-    public Vector2f getTexCoord( int index ) { return texCoords.get( index ); }
-    public Vector3f getNormal( int index ) { return normals.get( index ); }
-    public List<OBJIndex> getIndices() { return indices; }
+    public Vector2f getTexCoord( int index )
+    {
+        if ( texCoords.size() > index )
+            return texCoords.get( index );
+        return Vector2f.getZero();
+    }
+    public Vector3f getNormal( int index )
+    {
+        if ( normals.size() > index )
+            return normals.get( index );
+        return Vector3f.getZero();
+    }
+
+        public List<OBJIndex> getIndices() { return indices; }
 
     public int getIndicesSize() { return indices.size(); }
 

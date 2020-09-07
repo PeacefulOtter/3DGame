@@ -15,9 +15,11 @@ import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
+import peacefulotter.game.actor.FlashLight;
 import peacefulotter.game.actor.Ghost;
 import peacefulotter.game.actor.Player;
 import peacefulotter.game.actor.Weapon;
+import peacefulotter.game.map.FPSWorld;
 
 // Hide Mouse
 // int hideMouse = action == 1 ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL;
@@ -48,11 +50,11 @@ public class FPSGame extends Game
 
         /* MAP */
 
-        World world = World.UniqueWorld.INSTANCE.getWorld();
+        World world = FPSWorld.INSTANCE;
 
-        Mesh tree1 = new Mesh( "tree1/", "Tree_OBJ.obj" );
-        GameObject tree = new GameObject().addComponent( new MeshRenderer( tree1, alienMaterial ) );
-        tree.getTransform().scale( 0.03f ).translate( new Vector3f( 200, 0, 400 ) );
+        // Mesh tree1 = new Mesh( "tree3/", "Tree_OBJ.obj" );
+        // GameObject tree = new GameObject().addComponent( new MeshRenderer( tree1, alienMaterial ) );
+        // tree.getTransform().scale( 0.03f ).translate( new Vector3f( 200, 0, 400 ) );
         // MultiMeshRenderer mmr = new MultiMeshRenderer( "tree1/", "Tree_OBJ.obj" );
         // GameObject tree = new GameObject().addComponent( mmr );
         // tree.getTransform().scale( 0.03f ).translate( new Vector3f( 200, 0, 400 ) );
@@ -94,6 +96,7 @@ public class FPSGame extends Game
                 .setTerrain( world.getTerrain() )
                 .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
                 .setWeapon( new Weapon() )
+                .setFlashLight( new FlashLight( new Vector3f( 0.5f, 0.4f, 0.5f ), 0.2f, new Attenuation( 0, 0, 0.0004f ), 0.7f ) )
                 .build( false );
 
         Ghost ghost = new Ghost( world.getTerrain(), true );
@@ -104,8 +107,8 @@ public class FPSGame extends Game
         /* LIGHTS */
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
-                new Vector3f( 1f, 0.9f,0.7f ),
-                0.10f );
+                new Vector3f( 0.5f, 0.6f,0.55f ),
+                0.3f );
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
@@ -114,7 +117,7 @@ public class FPSGame extends Game
         pointLight.getTransform().translate( new Vector3f( 200, 90, 400 ) );
         pointLightObject.addComponent( pointLight );
 
-        addObjects( world, tree, dirLightObject, pointLightObject  );
+        addObjects( world, dirLightObject, pointLightObject  );
         addPhysicalObjects( player, ghost );
 
         super.init();

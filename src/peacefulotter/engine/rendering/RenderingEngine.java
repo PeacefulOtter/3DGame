@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.components.renderer.TerrainRenderer;
+import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.GUI.GUIRenderer;
 import peacefulotter.engine.rendering.shaders.Shader;
@@ -21,7 +22,8 @@ import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class RenderingEngine extends MappedValues
 {
-    private static final Vector3f skyColor = new Vector3f( 0.6f, 0.6f, 1f );
+    // NIGHT private static final Vector3f skyColor = new Vector3f( 0.1f, 0.13f, 0.12f );
+    private static final Vector3f skyColor = new Vector3f( 0.4f, 0.4f, 0.5f );
 
     private final ProfileTimer profiler;
     private final Window window;
@@ -54,7 +56,7 @@ public class RenderingEngine extends MappedValues
         samplerMap.put( "guiTexture", 8 );
 
         GL.createCapabilities();
-        glClearColor( skyColor.getX(), skyColor.getY(), skyColor.getZ(), 0.8f );
+        glClearColor( skyColor.getX(), skyColor.getY(), skyColor.getZ(), 1f );
         glFrontFace( GL_CW );
         glCullFace( GL_BACK );
         glEnable( GL_CULL_FACE );
@@ -62,8 +64,10 @@ public class RenderingEngine extends MappedValues
         //glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
 
-        addVector3f( "ambient", new Vector3f( 0.4f, 0.4f, 0.4f ) );
-        addVector3f( "skyColor", new Vector3f( 0.2f, 0.2f, 0.34f ) );
+        // NIGHT addVector3f( "ambient", new Vector3f( 0.00001f, 0.00001f, 0.00001f ) );
+        addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 0.1f ) );
+        // NIGHT addVector3f( "skyColor", skyColor.mul( 0.3f ) );
+        addVector3f( "skyColor", skyColor );
         ambient = ShaderTypes.AMBIENT.getShader();
 
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)

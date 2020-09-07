@@ -1,10 +1,6 @@
 package peacefulotter.engine.rendering.GUI;
 
-import peacefulotter.engine.components.GameComponent;
-import peacefulotter.engine.core.CoreEngine;
-import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.RenderingEngine;
-import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 

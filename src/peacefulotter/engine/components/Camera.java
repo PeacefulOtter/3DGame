@@ -2,11 +2,15 @@
 
 package peacefulotter.engine.components;
 
+import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.core.transfomations.STransform;
+import peacefulotter.engine.rendering.shaders.Attenuation;
+import peacefulotter.engine.rendering.shaders.Shader;
 
 public class Camera extends GameComponent
 {
@@ -38,13 +42,6 @@ public class Camera extends GameComponent
         return cameraRotation.mul( cameraTranslation );
     }
 
-
-    @Override
-    public void update( float deltaTime )
-    {
-        // spotLight.getPointLight().setPosition( position );
-        // spotLight.setDirection( forward );
-    }
 
     public static class CameraBuilder
     {

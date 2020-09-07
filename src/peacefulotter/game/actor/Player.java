@@ -2,6 +2,7 @@ package peacefulotter.game.actor;
 
 import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.components.PhysicsObject;
+import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.terrain.Terrain;
@@ -207,6 +208,7 @@ public class Player extends PhysicsObject
         private Camera camera;
         private MultiMeshRenderer mmr;
         private Terrain terrain;
+        private SpotLight flashLight;
 
         public PlayerBuilder setWeapon( Weapon weapon )
         {
@@ -232,6 +234,12 @@ public class Player extends PhysicsObject
             return this;
         }
 
+        public PlayerBuilder setFlashLight( FlashLight flashLight )
+        {
+            this.flashLight = flashLight;
+            return this;
+        }
+
         public Player build( boolean isUser )
         {
             if ( weapon == null )
@@ -251,6 +259,10 @@ public class Player extends PhysicsObject
             {
                 player.addComponent( camera );
                 camera.getTransform().setTranslation( Camera.PLAYER_CAMERA_TRANSLATION() );
+            }
+            if ( flashLight != null )
+            {
+                player.addComponent( flashLight );
             }
 
             return player;

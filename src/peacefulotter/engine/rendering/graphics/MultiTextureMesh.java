@@ -20,7 +20,7 @@ public class MultiTextureMesh
         materials.add( material );
     }
 
-    public int getSize() { return meshes.size(); }
+    public int getSize() { return Math.min( meshes.size(), materials.size() ); }
     public List<Mesh> getMeshes() { return meshes; }
     public List<Material> getMaterials() { return materials; }
 }

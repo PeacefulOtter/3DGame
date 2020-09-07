@@ -152,7 +152,7 @@ public class Shader
     public void setUniformDirLight( String uniformName, DirectionalLight directionalLight )
     {
         setUniformBaseLight( uniformName + ".base", directionalLight );
-        setUniformVector( uniformName + ".direction", directionalLight.getDirection() );
+        setUniformVector( uniformName + ".direction", directionalLight.getTransform().getTransformedRotation().getForward() );
     }
 
     public void setUniformPointLight( String uniformName, PointLight pointLight )
@@ -161,14 +161,14 @@ public class Shader
         setUniformF( uniformName + ".atten.constant", pointLight.getAttenuation().getConstant() );
         setUniformF( uniformName + ".atten.linear", pointLight.getAttenuation().getLinear() );
         setUniformF( uniformName + ".atten.exponent", pointLight.getAttenuation().getExponent() );
-        setUniformVector( uniformName + ".position", pointLight.getPosition() );
+        setUniformVector( uniformName + ".position", pointLight.getTransform().getTransformedTranslation() );
         setUniformF( uniformName + ".range", pointLight.getRange() );
     }
 
     public void setUniformSpotLight( String uniformName, SpotLight spotLight )
     {
         setUniformPointLight( uniformName + ".pointLight", spotLight );
-        setUniformVector( uniformName + ".direction", spotLight.getDirection() );
+        setUniformVector( uniformName + ".direction", spotLight.getTransform().getTransformedRotation().getForward() );
         setUniformF( uniformName + ".cutoff", spotLight.getCutoff() );
     }
 

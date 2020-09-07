@@ -10,6 +10,4 @@ public class DirectionalLight extends BaseLight
         super( color, intensity );
         setShader( ShaderTypes.DIRECTIONAL.getShader() );
     }
-
-    public Vector3f getDirection() { return getTransform().getTransformedRotation().getForward(); }
 }

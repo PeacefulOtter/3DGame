@@ -8,39 +8,32 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 
-public class World extends GameObject
+abstract public class World extends GameObject
 {
     private static final String IMAGE_PATH = "/textures/terrain/height_map2.png";
 
     private final TerrainRenderer tr;
 
-    public enum UniqueWorld
-    {
-        INSTANCE();
-
-        private final World world;
-
-        UniqueWorld() { this.world = new World(); }
-
-        public World getWorld() { return world; }
-    }
-
-    private World()
+    public World()
     {
         this.tr = new TerrainRenderer();
         // generate the terrain based on a terrain height map image
         try
         {
             BufferedImage image = ImageIO.read( getClass().getResourceAsStream( IMAGE_PATH ) );
-            tr.addTerrain( new Terrain( 0, 0, image ) );
+            Terrain terrain = new Terrain( 0, 0, image );
+            generateDecoration( terrain );
+            tr.setTerrain( terrain );
         }
         catch ( IOException e ) { e.printStackTrace(); }
 
         addComponent( tr );
     }
 
+    abstract protected void generateDecoration( Terrain terrain );
+
     public Terrain getTerrain()
     {
-        return tr.getTerrains().get( 0 );
+        return tr.getTerrain();
     }
 }

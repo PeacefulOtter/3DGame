@@ -135,7 +135,7 @@ public class ResourceLoader
     {
         MultiTextureMesh mtm = new MultiTextureMesh();
         String path = subFolder + fileName;
-        Logger.log( getClass(), "Loading MultiMesh at : " + path );
+        Logger.log( getClass(), " = Loading MultiMesh at : " + path );
         String[] splitArray = fileName.split( "\\." );
         String extension = splitArray[ splitArray.length - 1 ];
 
@@ -149,6 +149,7 @@ public class ResourceLoader
         OBJModel currentModel = new OBJModel();
         Map<String, SimpleMaterial> materialMap = null; // associate material name to the material
         Map<Integer, SimpleMaterial> integerSimpleMaterialMap = new HashMap<>(); // associate material index to the material
+        boolean isFirstMaterial = true;
 
         try ( BufferedReader reader = new BufferedReader( new InputStreamReader( resourceStream( MODELS_PATH + subFolder + fileName ) ) ) )
         {
@@ -163,7 +164,6 @@ public class ResourceLoader
                 if ( prefix.equals( "mtllib" ) )
                 {
                     materialMap = loadMaterial( subFolder, split[ 1 ] );
-                    Logger.log( getClass(), "OBJModel has material(s) : " );
                 }
                 else if ( prefix.equals( "usemtl" ) && materialMap != null )
                 {
@@ -173,16 +173,16 @@ public class ResourceLoader
 
                     if ( materialMap.containsKey( materialFileName ) )
                     {
+                        Logger.log( getClass(), "   Adding Material to MTM : " + materialFileName + " at " + currentModel.getIndicesSize() );
                         Material mat = new Material( materialMap.get( materialFileName ) );
                         mat.setNormalMap( new Texture( subFolder, materialFileName + "_normal." + materialExtension ) );
                         mat.setDispMap( new Texture( subFolder, materialFileName + "_height." + materialExtension ) );
                         mtm.addMaterial( mat );
-                        Logger.log( getClass(), "Found SimpleMaterial named : " + materialFileName + " at " + currentModel.getIndicesSize() );
                     }
-                    if ( currentModel.getIndicesSize() != 0 )
-                    {
+                    if ( isFirstMaterial )
+                        isFirstMaterial = false;
+                    else
                         addMeshToMTM( currentModel, mtm, path + mtm.getSize() );
-                    }
                 }
                 else if ( prefix.equals( "v" ) )
                 {
@@ -223,11 +223,13 @@ public class ResourceLoader
 
         addMeshToMTM( currentModel, mtm, path + mtm.getSize() );
 
+        Logger.log( "" );
         return mtm;
     }
 
     private void addMeshToMTM( OBJModel currentModel, MultiTextureMesh mtm, String path )
     {
+        Logger.log( getClass(), "  Adding Mesh to MTM : " + path );
         OBJModel newModel = new OBJModel();
         currentModel.getIndices().forEach( indexObj -> {
             newModel.addPosition( currentModel.getPosition( indexObj.vertexIndex ) );
@@ -312,10 +314,16 @@ public class ResourceLoader
             glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
             glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.5f );
         }
+        catch ( IllegalArgumentException e )
+        {
+            if ( fileName.contains( "_normal" ) )
+                return Texture.getDefaultNormal().getResource();
+            else if ( fileName.contains( "_height" ) )
+                return Texture.getDefaultHeight().getResource();
+        }
         catch( IOException e )
         {
             e.printStackTrace();
-            System.exit( 1 );
         }
 
         return resource;
