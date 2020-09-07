@@ -54,7 +54,7 @@ public class TerrainRenderer extends GameComponent
     @Override
     public void addToEngine( CoreEngine engine )
     {
-        engine.getRenderingEngine().addTerrainRenderer( this );
+        engine.getRenderingEngine().setTerrainRenderer( this );
     }
 
     public List<Terrain> getTerrains() { return terrains; }

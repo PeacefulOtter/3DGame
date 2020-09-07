@@ -1,5 +1,6 @@
 package peacefulotter.engine.rendering.graphics;
 
+import org.w3c.dom.Text;
 import peacefulotter.engine.utils.MappedValues;
 
 import java.util.HashMap;
@@ -12,9 +13,12 @@ public class Material extends MappedValues
 
     public Material( SimpleMaterial sm )
     {
-        this(
-                sm.getTexture(), Texture.getDefaultNormal(), Texture.getDefaultHeight(),
-                sm.getSpecularIntensity(), sm.getSpecularPower(), 0.03f, -0.04f );
+        this( sm.getTexture(), sm.getSpecularIntensity(), sm.getSpecularPower(), 0.03f, -0.04f );
+    }
+
+    public Material( Texture diffuse, float specularIntensity, float specularPower, float dispMapScale, float dispMapOffset )
+    {
+        this( diffuse, Texture.getDefaultNormal(), Texture.getDefaultHeight(), specularIntensity, specularPower, dispMapScale, dispMapOffset );
     }
 
     public Material(

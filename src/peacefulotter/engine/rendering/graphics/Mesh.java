@@ -88,6 +88,8 @@ public class Mesh
         glDisableVertexAttribArray( 3 );
     }
 
+    public MeshResource getResource() { return resource; }
+
     public static class Vertices
     {
         private final Vertex[] vertices;

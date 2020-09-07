@@ -5,8 +5,10 @@ import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.physics.PhysicsEngine;
+import peacefulotter.engine.rendering.GUI.GUIRenderer;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Window;
+import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ProfileTimer;
 
 public abstract class Game implements Updatable
@@ -14,6 +16,8 @@ public abstract class Game implements Updatable
     private final ProfileTimer updateProfiler, physicsProfiler;
     private final CoreEngine engine;
     private final GameObject root;
+
+    private GUIRenderer guiRenderer;
 
     protected Game( String winName, int winWidth, int winHeight )
     {
@@ -27,7 +31,12 @@ public abstract class Game implements Updatable
 
     public void startEngine() { engine.start(); }
 
-    public void setEngine( CoreEngine engine ) { root.setEngine( engine ); }
+    public void setEngine( CoreEngine engine )
+    {
+        root.setEngine( engine );
+        if ( guiRenderer != null )
+            guiRenderer.setRenderingEngine( engine.getRenderingEngine() );
+    }
 
 
     public void init() { root.initAll(); }
@@ -62,6 +71,11 @@ public abstract class Game implements Updatable
     {
         for ( PhysicsObject object : objects )
             addPhysicalObject( object );
+    }
+
+    public void setGUIRenderer( GUIRenderer gr )
+    {
+        guiRenderer = gr;
     }
 
 

@@ -1,21 +1,53 @@
 package peacefulotter.engine.rendering.GUI;
 
 import peacefulotter.engine.components.GameComponent;
+import peacefulotter.engine.core.CoreEngine;
+import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.shaders.Shader;
+import peacefulotter.engine.rendering.shaders.ShaderTypes;
 
-public class GUIRenderer extends GameComponent
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
+
+
+public class GUIRenderer
 {
-    private final GUITexture texture;
+    private static final Shader GUIShader = ShaderTypes.GUI.getShader();
 
-    public GUIRenderer( GUITexture texture )
+    private final QuadMesh QUAD = new QuadMesh();
+    private final List<GUITexture> guiTextures = new ArrayList<>();
+
+    public void addGUITexture( GUITexture texture )
     {
-        this.texture = texture;
+        guiTextures.add( texture );
     }
 
-    @Override
-    public void render( Shader shader, RenderingEngine renderingEngine )
+    public void renderGUI( RenderingEngine renderingEngine )
     {
-        // todo: draw the quad with the texture
+        GUIShader.bind();
+
+        glBindVertexArray( QUAD.getVaoId() );
+        glEnableVertexAttribArray( 0 );
+
+        guiTextures.forEach( guiTexture -> {
+            // guiTexture.bind( 0 );
+            // GUIShader.updateUniforms( guiTexture.getTransform(), new Material( guiTexture, 1, 1, 0, 0 ), renderingEngine );
+            glDrawArrays( GL_TRIANGLE_STRIP, 0, 4 );
+        } );
+
+        glDisableVertexAttribArray( 0 );
+        glBindVertexArray( 0 );
+    }
+
+    public void setRenderingEngine( RenderingEngine renderingEngine )
+    {
+        renderingEngine.setGUIRenderer( this );
     }
 }

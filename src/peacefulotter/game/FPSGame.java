@@ -7,7 +7,10 @@ import peacefulotter.engine.components.renderer.MeshRenderer;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
+import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.GUI.GUIRenderer;
+import peacefulotter.engine.rendering.GUI.GUITexture;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.Texture;
@@ -44,6 +47,7 @@ public class FPSGame extends Game
 
 
         /* MAP */
+
         World world = World.UniqueWorld.INSTANCE.getWorld();
 
         Mesh tree1 = new Mesh( "tree1/", "Tree_OBJ.obj" );
@@ -58,6 +62,12 @@ public class FPSGame extends Game
         //GameObject houseObject = new GameObject().addComponent( new MeshRenderer( house, alienMaterial ) );
         //houseObject.getTransform().scale( 30 ).rotate( Vector3f.Y_AXIS, 180 );
 
+
+        /* GUI */
+        GUIRenderer gr = new GUIRenderer();
+        GUITexture texture = new GUITexture( "crosshair.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
+        gr.addGUITexture( texture );
+        setGUIRenderer( gr );
 
         /* DUMMY */
         /*Player dummy = new Player.PlayerBuilder()
@@ -86,7 +96,7 @@ public class FPSGame extends Game
                 .setWeapon( new Weapon() )
                 .build( false );
 
-        Ghost ghost = new Ghost( true );
+        Ghost ghost = new Ghost( world.getTerrain(), true );
         ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
         ghost.getTransform().translate( new Vector3f( 0, 10, 0 ) );
 
@@ -104,7 +114,7 @@ public class FPSGame extends Game
         pointLight.getTransform().translate( new Vector3f( 200, 90, 400 ) );
         pointLightObject.addComponent( pointLight );
 
-        addObjects( world, tree, dirLightObject, pointLightObject );
+        addObjects( world, tree, dirLightObject, pointLightObject  );
         addPhysicalObjects( player, ghost );
 
         super.init();
@@ -114,5 +124,7 @@ public class FPSGame extends Game
     {
         super.update( deltaTime );
     }
+
+
 }
 

@@ -5,6 +5,7 @@ import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.components.renderer.TerrainRenderer;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.GUI.GUIRenderer;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.utils.MappedValues;
@@ -30,6 +31,7 @@ public class RenderingEngine extends MappedValues
     private final Map<String, Integer>  samplerMap;
 
     private TerrainRenderer terrainRenderer;
+    private GUIRenderer guiRenderer;
     private BaseLight activeLight;
     private Camera camera;
 
@@ -49,6 +51,7 @@ public class RenderingEngine extends MappedValues
         samplerMap.put( "gTexture", 5 );
         samplerMap.put( "bTexture", 6 );
         samplerMap.put( "blendMap", 7 );
+        samplerMap.put( "guiTexture", 8 );
 
         GL.createCapabilities();
         glClearColor( skyColor.getX(), skyColor.getY(), skyColor.getZ(), 0.8f );
@@ -89,17 +92,22 @@ public class RenderingEngine extends MappedValues
             object.renderAll( light.getShader(), this );
         }
 
-        terrainRenderer.renderTerrain( this );
+        if ( terrainRenderer != null )
+            terrainRenderer.renderTerrain( this );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );
         glDisable( GL_BLEND );
 
+        if ( guiRenderer != null )
+            guiRenderer.renderGUI( this );
+
         profiler.stopInvocation();
     }
 
     public void addLight( BaseLight light ) { lights.add( light ); }
-    public void addTerrainRenderer( TerrainRenderer tr ) { terrainRenderer = tr; }
+    public void setTerrainRenderer( TerrainRenderer tr ) { terrainRenderer = tr; }
+    public void setGUIRenderer( GUIRenderer gr ) { guiRenderer = gr; }
 
     public BaseLight getActiveLight() { return activeLight; }
 

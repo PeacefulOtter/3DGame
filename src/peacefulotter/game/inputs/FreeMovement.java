@@ -36,7 +36,7 @@ public class FreeMovement implements Initializable
     }
 
 
-    private FreeMovement( PhysicsObject parent, Terrain terrain, float currentMaxVelocity, float currentAcceleration, float slowFactor, float maxYVelocity, boolean applyGravity )
+    public FreeMovement( PhysicsObject parent, Terrain terrain, float currentMaxVelocity, float currentAcceleration, float slowFactor, float maxYVelocity, boolean applyGravity )
     {
         this.parent = parent;
         this.terrain = terrain;

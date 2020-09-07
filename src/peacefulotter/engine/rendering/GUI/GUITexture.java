@@ -1,33 +1,25 @@
 package peacefulotter.engine.rendering.GUI;
 
-import org.w3c.dom.Text;
 import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.graphics.Texture;
 
-public class GUITexture
+public class GUITexture extends Texture
 {
-    private final Texture texture;
-    private final Vector2f position, scale;
+    private static final String GUI_FOLDER = "gui/";
+    private final STransform transform;
 
-    public GUITexture( String subFolder, String fileName, Vector2f position, Vector2f scale )
+    public GUITexture( String fileName, Vector2f position, Vector2f scale )
     {
-        this.texture = new Texture( subFolder, fileName );
-        this.position = position;
-        this.scale = scale;
+        super( GUI_FOLDER, fileName );
+        this.transform = new STransform();
+                //.translate( new Vector3f( position.getX(), position.getY(), 0 ) )
+                //.scale( new Vector3f( scale.getX(), scale.getY(), 0 ) );
     }
 
-    public Texture getTexture()
+    public STransform getTransform()
     {
-        return texture;
-    }
-
-    public Vector2f getPosition()
-    {
-        return position;
-    }
-
-    public Vector2f getScale()
-    {
-        return scale;
+        return transform;
     }
 }
