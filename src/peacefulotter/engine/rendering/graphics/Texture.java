@@ -20,16 +20,42 @@ public class Texture
     private final TextureResource resource;
     private final String subFolder, fileName;
 
-    public Texture( String fileName ) { this( "", fileName ); }
+    public enum TextureTypes
+    {
+        BASIC(),
+        CUBE_MAP();
+    }
+
+    public Texture( String fileName ) { this( fileName, TextureTypes.BASIC ); }
+
+    public Texture( String fileName, TextureTypes type )
+    {
+        this( "", fileName, type );
+    }
 
     public Texture( String subFolder, String fileName )
+    {
+        this( subFolder, fileName, TextureTypes.BASIC );
+    }
+
+    public Texture( String subFolder, String fileName, TextureTypes type )
     {
         String path = subFolder + fileName;
         if ( loadedTextures.containsKey( path ) )
             resource = loadedTextures.get( path );
         else
         {
-            resource = new ResourceLoader().loadTexture( subFolder, fileName );
+            switch ( type )
+            {
+                case BASIC:
+                    resource = new ResourceLoader().loadTexture( subFolder, fileName );
+                    break;
+                case CUBE_MAP:
+                    resource = ResourceLoader.loadCubeMap();
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
             loadedTextures.put( path, resource );
         }
 
@@ -49,9 +75,14 @@ public class Texture
 
     public void bind( int samplerSlot )
     {
+        bind( samplerSlot, GL_TEXTURE_2D );
+    }
+
+    public void bind( int samplerSlot, int target )
+    {
         assert ( samplerSlot >= 0 && samplerSlot <= 31 );
         glActiveTexture( GL_TEXTURE0 + samplerSlot );
-        glBindTexture( GL_TEXTURE_2D,   resource.getId() );
+        glBindTexture( target, resource.getId() );
     }
 
     public void bindAsRenderTarget()

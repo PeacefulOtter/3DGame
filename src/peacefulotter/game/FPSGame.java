@@ -5,6 +5,7 @@ import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
 import peacefulotter.engine.components.renderer.MeshRenderer;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
+import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector2f;
@@ -49,8 +50,8 @@ public class FPSGame extends Game
 
 
         /* MAP */
-
-        World world = FPSWorld.INSTANCE;
+        FPSWorld world = FPSWorld.INSTANCE;
+        setWorld( world );
 
         // Mesh tree1 = new Mesh( "tree3/", "Tree_OBJ.obj" );
         // GameObject tree = new GameObject().addComponent( new MeshRenderer( tree1, alienMaterial ) );
@@ -66,10 +67,10 @@ public class FPSGame extends Game
 
 
         /* GUI */
-        GUIRenderer gr = new GUIRenderer();
-        GUITexture texture = new GUITexture( "crosshair.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
-        gr.addGUITexture( texture );
-        setGUIRenderer( gr );
+        // GUIRenderer gr = new GUIRenderer();
+        // GUITexture texture = new GUITexture( "crosshair.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
+        // gr.addGUITexture( texture );
+        // addRenderer( gr );
 
         /* DUMMY */
         /*Player dummy = new Player.PlayerBuilder()

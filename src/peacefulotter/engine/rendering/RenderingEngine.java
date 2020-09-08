@@ -3,12 +3,15 @@ package peacefulotter.engine.rendering;
 import org.lwjgl.opengl.GL;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
+import peacefulotter.engine.components.renderer.Renderer;
+import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 import peacefulotter.engine.components.renderer.TerrainRenderer;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.GUI.GUIRenderer;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
+import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.MappedValues;
 import peacefulotter.engine.utils.ProfileTimer;
 
@@ -23,17 +26,18 @@ import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 public class RenderingEngine extends MappedValues
 {
     // NIGHT private static final Vector3f skyColor = new Vector3f( 0.1f, 0.13f, 0.12f );
-    private static final Vector3f skyColor = new Vector3f( 0.4f, 0.4f, 0.5f );
+    private static final Vector3f skyColor = new Vector3f( 1f, 1f, 1f );
 
     private final ProfileTimer profiler;
     private final Window window;
     private final List<BaseLight> lights;
+    private final List<Renderer> renderers;
     private final Shader ambient;
 
     private final Map<String, Integer>  samplerMap;
 
-    private TerrainRenderer terrainRenderer;
-    private GUIRenderer guiRenderer;
+    private World world;
+
     private BaseLight activeLight;
     private Camera camera;
 
@@ -42,6 +46,7 @@ public class RenderingEngine extends MappedValues
     {
         this.profiler = new ProfileTimer();
         this.lights = new ArrayList<>();
+        this.renderers = new ArrayList<>();
         this.window = new Window();
         this.samplerMap = new HashMap<>();
 
@@ -54,6 +59,7 @@ public class RenderingEngine extends MappedValues
         samplerMap.put( "bTexture", 6 );
         samplerMap.put( "blendMap", 7 );
         samplerMap.put( "guiTexture", 8 );
+        samplerMap.put( "cubeMap", 9 );
 
         GL.createCapabilities();
         glClearColor( skyColor.getX(), skyColor.getY(), skyColor.getZ(), 1f );
@@ -96,29 +102,45 @@ public class RenderingEngine extends MappedValues
             object.renderAll( light.getShader(), this );
         }
 
-        if ( terrainRenderer != null )
-            terrainRenderer.renderTerrain( this );
+        // will need to move this at the bottom of the renders
+        if ( world != null )
+            world.renderWorld( this );
+
+        renderers.forEach( renderer -> renderer.render( this ) );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );
         glDisable( GL_BLEND );
 
-        if ( guiRenderer != null )
-            guiRenderer.renderGUI( this );
-
         profiler.stopInvocation();
     }
 
-    public void addLight( BaseLight light ) { lights.add( light ); }
-    public void setTerrainRenderer( TerrainRenderer tr ) { terrainRenderer = tr; }
-    public void setGUIRenderer( GUIRenderer gr ) { guiRenderer = gr; }
+    public void addLight( BaseLight light )
+    {
+        Logger.log( getClass(), "Adding " + light.getClass().getSimpleName() );
+        lights.add( light );
+    }
+
+    public void addRenderer( Renderer renderer )
+    {
+        Logger.log( getClass(), "Adding a " + renderer.getClass().getSimpleName() );
+        renderers.add( renderer );
+    }
+
+    public void setWorld( World world )
+    {
+        this.world = world;
+    }
 
     public BaseLight getActiveLight() { return activeLight; }
-
     public long getCurrentWindow() { return window.getWindow(); }
 
     public Camera getCamera() { return camera; }
-    public void setCamera( Camera camera ) { this.camera = camera; }
+    public void setCamera( Camera camera )
+    {
+        Logger.log( getClass(), "Setting the Camera" );
+        this.camera = camera;
+    }
 
     public int getSamplerSlot( String samplerName )
     {

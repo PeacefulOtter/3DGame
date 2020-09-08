@@ -6,7 +6,7 @@ public class SimpleMaterial
     private final Texture texture;
     private final float specularIntensity, specularPower;
 
-    private SimpleMaterial( Texture texture, float specularIntensity, float specularPower )
+    public SimpleMaterial( Texture texture, float specularIntensity, float specularPower )
     {
         this.texture = texture;
         this.specularIntensity = specularIntensity;

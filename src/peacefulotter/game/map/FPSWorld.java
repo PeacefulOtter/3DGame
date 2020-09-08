@@ -4,6 +4,7 @@ import peacefulotter.engine.components.World;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.terrain.Terrain;
+import peacefulotter.engine.utils.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,6 +23,7 @@ public class FPSWorld extends World
     @Override
     protected void generateDecoration( Terrain terrain )
     {
+        Logger.log( getClass(), "Generating Terrain" );
         try
         {
             BufferedImage image = ImageIO.read( getClass().getResourceAsStream( BLEND_MAP_PATH ) );

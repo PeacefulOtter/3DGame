@@ -1,7 +1,7 @@
 package peacefulotter.engine.components.renderer;
 
 import peacefulotter.engine.components.GameComponent;
-import peacefulotter.engine.core.CoreEngine;
+import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Texture;
@@ -11,13 +11,13 @@ import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.rendering.terrain.Terrain;
 
 
-public class TerrainRenderer extends GameComponent
+public class TerrainRenderer extends GameObject
 {
     private static final String TERRAIN_SUBFOLDER = "terrain/";
     private static final Shader terrainShader = ShaderTypes.TERRAIN.getShader();
 
     private final Material material;
-    private Terrain terrain;
+    private Terrain actualTerrain; // TO REFACTOR
 
     public TerrainRenderer()
     {
@@ -31,27 +31,22 @@ public class TerrainRenderer extends GameComponent
         material.addTexture( "blendMap", new Texture( TERRAIN_SUBFOLDER, "blend_map.png" ) );
     }
 
-    public void setTerrain( Terrain terrain )
+    public GameObject addComponent( Terrain terrain )
     {
-        this.terrain = terrain;
-    }
-
-    @Override
-    public void render( Shader shader, RenderingEngine renderingEngine )
-    {
-        terrain.render( shader, renderingEngine, getTransform(), material );
+        super.addComponent( terrain );
+        terrain.setMaterial( material );
+        actualTerrain = terrain; // to refactor
+        return this;
     }
 
     public void renderTerrain( RenderingEngine renderingEngine )
     {
-        terrain.render( terrainShader, renderingEngine, getTransform(), material );
+        renderAll( terrainShader, renderingEngine );
     }
 
-    @Override
-    public void addToEngine( CoreEngine engine )
+    // TO REFACTOR
+    public Terrain getTerrain()
     {
-        engine.getRenderingEngine().setTerrainRenderer( this );
+        return actualTerrain;
     }
-
-    public Terrain getTerrain() { return terrain; }
 }

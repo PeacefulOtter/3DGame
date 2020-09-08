@@ -1,5 +1,6 @@
 package peacefulotter.engine.rendering.terrain;
 
+import peacefulotter.engine.components.GameComponent;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.RenderingEngine;
@@ -7,14 +8,14 @@ import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.shaders.Shader;
-import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.utils.ResourceLoader;
 import peacefulotter.engine.utils.Utils;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public class Terrain
+// KIND OF A MESHRENDERER... THIS IS BAD
+public class Terrain extends GameComponent
 {
     private static final float HALF_MAX_PIXEL_COLOR = 255 * 255 * 255 / 2f;
     private static final int MAX_DESIRED_HEIGHT = 70;
@@ -24,6 +25,7 @@ public class Terrain
 
     private final Vector3f worldPos;
     private Mesh mesh;
+    private Material material;
     private float[][] heights;
 
     public Terrain( int gridX, int gridZ, BufferedImage image )
@@ -32,10 +34,16 @@ public class Terrain
         generateTerrain( image );
     }
 
-    public void render( Shader shader, RenderingEngine renderingEngine, STransform transform, Material material )
+    public void setMaterial( Material material )
+    {
+        this.material = material;
+    }
+
+    @Override
+    public void render( Shader shader, RenderingEngine renderingEngine )
     {
         shader.bind();
-        shader.updateUniforms( transform, material, renderingEngine );
+        shader.updateUniforms( getTransform(), material, renderingEngine );
         mesh.draw();
     }
 
@@ -136,10 +144,7 @@ public class Terrain
 
     public Vector3f getWorldPos() { return worldPos; }
 
-    public Mesh getMesh()
-    {
-        return mesh;
-    }
+    public Mesh getMesh() { return mesh; }
 
     public int getSize() { return SIZE; }
 }

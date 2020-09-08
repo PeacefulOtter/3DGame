@@ -48,6 +48,11 @@ public class Shader
         } );
     }
 
+    public void updateSkybox( RenderingEngine renderingEngine )
+    {
+
+    }
+
     public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
     {
         Matrix4f transformationMatrix = transform.getTransformationMatrix();
@@ -80,6 +85,12 @@ public class Shader
                 {
                     int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
                     material.getTexture( unprefixedUniformName ).bind( samplerSlot );
+                    setUniformI( uniformName, samplerSlot );
+                }
+                else if ( uniformType.equals( "samplerCube" ) )
+                {
+                    int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
+                    material.getTexture( unprefixedUniformName ).bind( samplerSlot, GL_TEXTURE_CUBE_MAP );
                     setUniformI( uniformName, samplerSlot );
                 }
                 else if ( uniformType.equals( "vec3" ) )

@@ -10,7 +10,8 @@ public enum ShaderTypes
     POINT( "forward-point" ),
     SPOT( "forward-spot" ),
     TERRAIN( "terrain" ),
-    GUI( "gui" );
+    GUI( "gui" ),
+    SKYBOX( "skybox" );
 
     private final Shader shader;
 

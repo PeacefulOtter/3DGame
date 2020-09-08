@@ -63,6 +63,15 @@ public class BufferUtil
     }
 
 
+    public static FloatBuffer createSimpleFlippedBuffer( float[] positions )
+    {
+        FloatBuffer buffer = BufferUtils.createFloatBuffer( positions.length );
+        buffer.put( positions );
+        buffer.flip();
+        return buffer;
+    }
+
+
     /*
                 INT BUFFER
      */

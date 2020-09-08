@@ -3,6 +3,7 @@ package peacefulotter.engine.utils;
 import org.lwjgl.opengl.GL11;
 import org.lwjglx.Sys;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
+import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
@@ -16,12 +17,21 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.*;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL14.GL_TEXTURE_LOD_BIAS;
-import static org.lwjgl.opengl.GL30.glGenerateMipmap;
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
+import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
+import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class ResourceLoader
 {
@@ -33,7 +43,7 @@ public class ResourceLoader
     private static final String INCLUDE_DIRECTIVE = "#include";
     private static final int INCLUDE_DIRECTIVE_LENGTH = INCLUDE_DIRECTIVE.length();
 
-    private InputStream resourceStream( String resourceName )
+    private InputStream resourceStream(String resourceName)
     {
         return getClass().getResourceAsStream( resourceName );
     }
@@ -368,5 +378,50 @@ public class ResourceLoader
         }
 
         return materialMap;
+    }
+
+    public static RawModel loadToVao( float[] positions, int dimension )
+    {
+        // Create a new Vertex Array Object in memory and select it (bind)
+        // A VAO can have up to 16 attributes (VBO's) assigned to it by default
+        int vaoId = glGenVertexArrays();
+        glBindVertexArray( vaoId );
+
+        // Create a new Vertex Buffer Object in memory and select it (bind)
+        // A VBO is a collection of Vectors which in this case resemble the location of each vertex.
+        int vboId = glGenBuffers();
+        glBindBuffer( GL_ARRAY_BUFFER, vboId );
+        FloatBuffer verticesBuffer = BufferUtil.createSimpleFlippedBuffer( positions );
+        glBufferData( GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW );
+        // Put the VBO in the attributes list at index 0
+        glVertexAttribPointer(0, dimension, GL_FLOAT, false, 0, 0 );
+        // Deselect (bind to 0) the VBO
+        glBindBuffer( GL_ARRAY_BUFFER, 0 );
+
+        // Deselect (bind to 0) the VAO
+        glBindVertexArray( 0 );
+
+        return new RawModel( vaoId, positions.length / dimension );
+    }
+
+    public static TextureResource loadCubeMap()
+    {
+        String[] texturePaths = SkyBoxRenderer.TEXTURE_FILES;
+        TextureResource tr = new TextureResource();
+
+        glActiveTexture( GL_TEXTURE0 );
+        glBindTexture( GL_TEXTURE_CUBE_MAP, tr.getId() );
+        for ( int i = 0; i < texturePaths.length; i++ )
+        {
+            TextureData data = TextureData.createTextureData( texturePaths[ i ] );
+            glTexImage2D( GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA,
+                    data.getWidth(), data.getHeight(), 0, GL_RGBA,
+                    GL_UNSIGNED_BYTE, data.getBuffer() );
+        }
+
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+        glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+
+        return tr;
     }
 }
