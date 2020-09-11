@@ -23,6 +23,8 @@ public class FPSWorld extends World
     @Override
     protected void generateDecoration( Terrain terrain )
     {
+        if ( terrain != null )
+            return;
         Logger.log( getClass(), "Generating Terrain" );
         try
         {
@@ -31,8 +33,8 @@ public class FPSWorld extends World
             {
                 float posX = (float) Math.random();
                 float posZ = (float) Math.random();
-                int imageX = Math.round( posX * image.getWidth() );
-                int imageZ = Math.round( posZ * image.getHeight() );
+                int imageX = Math.round( posX * ( image.getWidth()  - 1 ) );
+                int imageZ = Math.round( posZ * ( image.getHeight() - 1 ) );
                 float worldX = posX * terrain.getSize();
                 float worldZ = posZ * terrain.getSize();
                 Vector3f pos = new Vector3f( worldX, terrain.getTerrainHeight( worldX, worldZ ), worldZ );

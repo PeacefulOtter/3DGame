@@ -1,14 +1,16 @@
 package peacefulotter.engine.components.renderer;
 
-import peacefulotter.engine.components.GameComponent;
 import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
+import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Shader;
-import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.rendering.terrain.Terrain;
+import peacefulotter.engine.utils.ResourceLoader;
+
+import java.util.Map;
 
 
 public class TerrainRenderer extends GameObject
@@ -21,8 +23,12 @@ public class TerrainRenderer extends GameObject
 
     public TerrainRenderer()
     {
+        Texture grass = new Texture( TERRAIN_SUBFOLDER, "grass.png" );
+        // Texture grassNormal = new Texture( TERRAIN_SUBFOLDER, "grass_normal.png" );
+        // Texture grassDisp = new Texture( TERRAIN_SUBFOLDER, "grass_height.png" );
+        // material = new Material( grass, grassNormal, grassDisp, 0.9f, 1.3f, 0.02f, 0f );
         material = new Material(
-                new Texture( TERRAIN_SUBFOLDER, "grass.png" ), Texture.getDefaultNormal(), Texture.getDefaultHeight(),
+                grass, Texture.getDefaultNormal(), Texture.getDefaultHeight(),
                 0.9f, 1.3f, 0.02f, 0f );
         material.addTexture( "aTexture", new Texture( TERRAIN_SUBFOLDER, "grass.png" ) );
         material.addTexture( "rTexture", new Texture( TERRAIN_SUBFOLDER, "mud.png" ) );

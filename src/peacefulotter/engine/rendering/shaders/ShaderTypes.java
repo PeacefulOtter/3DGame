@@ -11,7 +11,8 @@ public enum ShaderTypes
     SPOT( "forward-spot" ),
     TERRAIN( "terrain" ),
     GUI( "gui" ),
-    SKYBOX( "skybox" );
+    SKYBOX( "skybox" ),
+    WATER( "water" );
 
     private final Shader shader;
 

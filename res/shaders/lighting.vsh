@@ -12,10 +12,8 @@ uniform mat4 T_transformationMatrix;
 uniform mat4 T_projectionMatrix;
 uniform mat4 T_viewMatrix;
 
-// const float density = 0.04;
-// const float gradient = 1;
-// const float density = 0.0007;
-const float density = 0.0;
+// const float density = 0.0005;
+const float density = 0.01;
 const float gradient = 1.2;
 
 void main()

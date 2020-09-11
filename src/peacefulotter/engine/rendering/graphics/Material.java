@@ -10,10 +10,11 @@ import java.util.Map;
 public class Material extends MappedValues
 {
     private final Map<String, Texture> textureMap;
+    private boolean transparent;
 
     public Material( SimpleMaterial sm )
     {
-        this( sm.getTexture(), sm.getSpecularIntensity(), sm.getSpecularPower(), 0.03f, -0.04f );
+        this( sm.getTexture(), sm.getSpecularIntensity(), sm.getSpecularPower(), 0f, 0f );
     }
 
     public Material( Texture diffuse, float specularIntensity, float specularPower, float dispMapScale, float dispMapOffset )
@@ -53,6 +54,9 @@ public class Material extends MappedValues
             return textureMap.get( name );
         return new Texture( "test.png" );
     }
+
+    public boolean hasTransparency() { return transparent; }
+    public void setTransparency( boolean transparency ) { transparent = transparency; }
 
     @Override
     public String toString()

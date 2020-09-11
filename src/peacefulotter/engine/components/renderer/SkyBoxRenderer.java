@@ -1,7 +1,5 @@
 package peacefulotter.engine.components.renderer;
 
-import peacefulotter.engine.components.GameComponent;
-import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
@@ -12,18 +10,17 @@ import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.utils.ResourceLoader;
 
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class SkyBoxRenderer extends Renderer
+public class SkyBoxRenderer
 {
     public static final String[] TEXTURE_FILES  = { "right", "left", "top", "bottom", "back", "front" };
 
     private static final Shader SKYBOX_SHADER = ShaderTypes.SKYBOX.getShader();
-    private static final float SIZE = 500f;
+    private static final float SIZE = 1000f;
     private static final float[] VERTICES = {
             -SIZE,  SIZE, -SIZE,
             -SIZE, -SIZE, -SIZE,
@@ -69,27 +66,27 @@ public class SkyBoxRenderer extends Renderer
     };
 
     private final SkyBox skyBox;
+    private final STransform transform;
 
     public SkyBoxRenderer()
     {
         RawModel cube = ResourceLoader.loadToVao( VERTICES, 3 );
         Texture texture = new Texture( "skybox/", "", Texture.TextureTypes.CUBE_MAP );
         Material material = new Material( new SimpleMaterial( texture, 1, 1 ) );
-        material.addTexture( "cubeMap", texture );
         skyBox = new SkyBox( cube, material );
+        transform = new STransform();
+    }
+
+    public void render( Shader shader, RenderingEngine renderingEngine )
+    {
+        shader.bind();
+        shader.updateUniforms( transform, skyBox.material, renderingEngine, true );
+        skyBox.draw();
     }
 
     public void renderSkyBox( RenderingEngine renderingEngine )
     {
-        // glDepthMask( false );
-        // glDepthRange( 1f, 1f );
-
-        SKYBOX_SHADER.bind();
-        SKYBOX_SHADER.updateUniforms( new STransform(), skyBox.material, renderingEngine );
-        skyBox.draw();
-
-        // glDepthRange( 0f, 1f );
-        // glDepthMask( true );
+        render( SKYBOX_SHADER, renderingEngine );
     }
 
     private static class SkyBox

@@ -48,12 +48,12 @@ public class Shader
         } );
     }
 
-    public void updateSkybox( RenderingEngine renderingEngine )
+    public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
     {
-
+        updateUniforms( transform, material, renderingEngine, false );
     }
 
-    public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine )
+    public void updateUniforms( STransform transform, Material material, RenderingEngine renderingEngine, boolean isSkybox )
     {
         Matrix4f transformationMatrix = transform.getTransformationMatrix();
         Matrix4f projectionMatrix = renderingEngine.getCamera().getProjectionMatrix();
@@ -65,22 +65,33 @@ public class Shader
         {
             String uniformName = struct.name;
             String uniformType = struct.type;
+            String unprefixedUniformName = uniformName.substring( 2 );
 
             if ( uniformName.startsWith( TRANSFORM_PREFIX) )
             {
-                if ( uniformName.equals( TRANSFORM_PREFIX + "transformationMatrix" ) )
+                if ( unprefixedUniformName.equals(  "transformationMatrix" ) )
                     setUniformMatrix( uniformName, transformationMatrix );
-                else if ( uniformName.equals( TRANSFORM_PREFIX + "projectionMatrix" ) )
+                else if ( unprefixedUniformName.equals( "projectionMatrix" ) )
                     setUniformMatrix( uniformName, projectionMatrix );
-                else if ( uniformName.equals( TRANSFORM_PREFIX + "viewMatrix" ) )
-                    setUniformMatrix( uniformName, viewMatrix );
+                else if ( unprefixedUniformName.equals( "viewMatrix" ) )
+                {
+                    if ( isSkybox )
+                    {
+                        Matrix4f skyBoxViewMatrix = new Matrix4f( viewMatrix.getM() );
+                        skyBoxViewMatrix.setAt( 0, 3, 0 );
+                        skyBoxViewMatrix.setAt( 1, 3, 0 );
+                        skyBoxViewMatrix.setAt( 2, 3, 0 );
+                        setUniformMatrix( uniformName, skyBoxViewMatrix );
+                    }
+                    else
+                        setUniformMatrix( uniformName, viewMatrix );
+                }
                 else
                     throw new IllegalArgumentException( uniformName + " is not a valid Transform component" );
             }
 
             else if ( uniformName.startsWith( RENDERING_PREFIX ) )
             {
-                String unprefixedUniformName = uniformName.substring( 2 );
                 if ( uniformType.equals( "sampler2D" ) )
                 {
                     int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
@@ -94,14 +105,7 @@ public class Shader
                     setUniformI( uniformName, samplerSlot );
                 }
                 else if ( uniformType.equals( "vec3" ) )
-                {
-                    if ( uniformName.equals( RENDERING_PREFIX + "ambient" ) )
-                        setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
-                    else if ( uniformName.equals( RENDERING_PREFIX + "skyColor" ) )
-                    {
-                        setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
-                    }
-                }
+                    setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
                 else if ( uniformType.equals( "float" ) )
                     setUniformF( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
                 else if ( uniformType.equals( "DirectionalLight" ) )

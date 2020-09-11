@@ -1,6 +1,5 @@
 package peacefulotter.engine.rendering.graphics;
 
-import peacefulotter.engine.utils.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

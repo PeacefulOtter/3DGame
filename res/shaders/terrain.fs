@@ -2,21 +2,11 @@
 #include "sampling.glh";
 
 in vec2 texCoord0;
-//in vec3 worldPos0;
-//in mat3 tbnMatrix;
 in float visibility;
 
 out vec4 fragColor;
 
-//uniform sampler2D R_diffuse;
-
 uniform vec3 R_skyColor;
-//uniform vec3 C_eyePos;
-
-//uniform sampler2D R_dispMap;
-
-//uniform float dispMapScale;
-//uniform float dispMapBias;
 
 uniform sampler2D R_aTexture;
 uniform sampler2D R_rTexture;
@@ -26,9 +16,6 @@ uniform sampler2D R_blendMap;
 
 void main()
 {
-	//vec3 directionToEye = normalize(C_eyePos - worldPos0);
-	//vec2 texCoords = calcParallaxTexCoords(R_dispMap, tbnMatrix, directionToEye, texCoord0, dispMapScale, dispMapBias);
-
 	vec4 blendMapColor = texture(R_blendMap, texCoord0);
     float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.g + blendMapColor.b);
 

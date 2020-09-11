@@ -129,13 +129,14 @@ public class ShaderResource extends Disposable
 
         if ( addThis )
         {
-            Logger.log( getClass(), "Now adding " + uniformName + ".");
+            Logger.log( getClass(), "Now adding " + uniformName );
             int uniformLoc = glGetUniformLocation( program, uniformName );
 
             if ( uniformLoc == -1 )
                 throw new IllegalArgumentException( "Could not find uniform " + uniformName );
 
             uniformsMap.put( uniformName, uniformLoc );
+            Logger.log( getClass(), "Added " + uniformName + " at " + uniformLoc );
         }
     }
 

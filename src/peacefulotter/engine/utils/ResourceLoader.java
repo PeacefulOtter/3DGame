@@ -1,13 +1,10 @@
 package peacefulotter.engine.utils;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjglx.Sys;
-import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.BufferUtil;
-import peacefulotter.engine.rendering.GUI.GUITexture;
 import peacefulotter.engine.rendering.graphics.*;
 import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
 import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
@@ -173,7 +170,7 @@ public class ResourceLoader
 
                 if ( prefix.equals( "mtllib" ) )
                 {
-                    materialMap = loadMaterial( subFolder, split[ 1 ] );
+                    materialMap = loadMaterialFile( subFolder, split[ 1 ] );
                 }
                 else if ( prefix.equals( "usemtl" ) && materialMap != null )
                 {
@@ -339,7 +336,7 @@ public class ResourceLoader
         return resource;
     }
 
-    public Map<String, SimpleMaterial> loadMaterial( String subFolder, String fileName )
+    public Map<String, SimpleMaterial> loadMaterialFile(String subFolder, String fileName )
     {
         Logger.log( getClass(), "Loading material at : " + subFolder + fileName );
         Map<String, SimpleMaterial> materialMap = new HashMap<>();
@@ -421,6 +418,9 @@ public class ResourceLoader
 
         glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
         glTexParameteri( GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+
+        GL11.glTexParameteri( GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE );
+        GL11.glTexParameteri( GL_TEXTURE_CUBE_MAP, GL11.GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE );
 
         return tr;
     }

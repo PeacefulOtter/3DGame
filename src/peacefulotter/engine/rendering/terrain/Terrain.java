@@ -18,8 +18,8 @@ import java.util.List;
 public class Terrain extends GameComponent
 {
     private static final float HALF_MAX_PIXEL_COLOR = 255 * 255 * 255 / 2f;
-    private static final int MAX_DESIRED_HEIGHT = 70;
-    private static final int SIZE = 1300;
+    private static final int MAX_DESIRED_HEIGHT = 85;
+    public static final int SIZE = 1300;
 
     private static int TERRAIN_ID = 0;
 

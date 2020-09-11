@@ -3,17 +3,14 @@ package peacefulotter.game;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
-import peacefulotter.engine.components.renderer.MeshRenderer;
+import peacefulotter.engine.components.renderer.GUIRenderer;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
-import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.GUI.GUIRenderer;
-import peacefulotter.engine.rendering.GUI.GUITexture;
+import peacefulotter.engine.rendering.GUI.GUIMaterial;
 import peacefulotter.engine.rendering.graphics.Material;
-import peacefulotter.engine.rendering.graphics.Mesh;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
 import peacefulotter.game.actor.FlashLight;
@@ -65,13 +62,6 @@ public class FPSGame extends Game
         //GameObject houseObject = new GameObject().addComponent( new MeshRenderer( house, alienMaterial ) );
         //houseObject.getTransform().scale( 30 ).rotate( Vector3f.Y_AXIS, 180 );
 
-
-        /* GUI */
-        // GUIRenderer gr = new GUIRenderer();
-        // GUITexture texture = new GUITexture( "crosshair.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
-        // gr.addGUITexture( texture );
-        // addRenderer( gr );
-
         /* DUMMY */
         /*Player dummy = new Player.PlayerBuilder()
                 .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
@@ -108,8 +98,8 @@ public class FPSGame extends Game
         /* LIGHTS */
         GameObject dirLightObject = new GameObject();
         DirectionalLight dirLight = new DirectionalLight(
-                new Vector3f( 0.5f, 0.6f,0.55f ),
-                0.3f );
+                new Vector3f( 0.55f, 0.5f,0.55f ),
+                1f );
         dirLightObject.addComponent( dirLight );
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 

@@ -20,8 +20,12 @@ public class MeshRenderer extends GameComponent
     @Override
     public void render( Shader shader, RenderingEngine renderingEngine )
     {
+        if ( material.hasTransparency() )
+            RenderingEngine.disableCulling();
         shader.bind();
         shader.updateUniforms( getTransform(), material, renderingEngine );
         mesh.draw();
+        if ( material.hasTransparency() )
+            RenderingEngine.enableCulling();
     }
 }

@@ -4,13 +4,10 @@ import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.components.World;
 import peacefulotter.engine.components.renderer.Renderer;
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.physics.PhysicsEngine;
-import peacefulotter.engine.rendering.GUI.GUIRenderer;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Window;
-import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ProfileTimer;
 
 import java.util.ArrayList;

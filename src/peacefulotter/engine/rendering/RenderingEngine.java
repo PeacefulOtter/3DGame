@@ -4,11 +4,7 @@ import org.lwjgl.opengl.GL;
 import peacefulotter.engine.components.*;
 import peacefulotter.engine.components.lights.BaseLight;
 import peacefulotter.engine.components.renderer.Renderer;
-import peacefulotter.engine.components.renderer.SkyBoxRenderer;
-import peacefulotter.engine.components.renderer.TerrainRenderer;
-import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.GUI.GUIRenderer;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.utils.Logger;
@@ -21,12 +17,11 @@ import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class RenderingEngine extends MappedValues
 {
     // NIGHT private static final Vector3f skyColor = new Vector3f( 0.1f, 0.13f, 0.12f );
-    private static final Vector3f skyColor = new Vector3f( 1f, 1f, 1f );
+    private static final Vector3f skyColor = new Vector3f( 0.5444f, 0.62f, 0.69f );
 
     private final ProfileTimer profiler;
     private final Window window;
@@ -59,24 +54,33 @@ public class RenderingEngine extends MappedValues
         samplerMap.put( "bTexture", 6 );
         samplerMap.put( "blendMap", 7 );
         samplerMap.put( "guiTexture", 8 );
-        samplerMap.put( "cubeMap", 9 );
 
         GL.createCapabilities();
-        glClearColor( skyColor.getX(), skyColor.getY(), skyColor.getZ(), 1f );
+        glClearColor( 0, 0, 0, 1f );
         glFrontFace( GL_CW );
-        glCullFace( GL_BACK );
-        glEnable( GL_CULL_FACE );
+        enableCulling();
         glEnable( GL_DEPTH_TEST );
         //glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
 
         // NIGHT addVector3f( "ambient", new Vector3f( 0.00001f, 0.00001f, 0.00001f ) );
         addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 0.1f ) );
-        // NIGHT addVector3f( "skyColor", skyColor.mul( 0.3f ) );
-        addVector3f( "skyColor", skyColor );
+        addVector3f( "skyColor", skyColor.mul( 0.25f ) );
+        addVector3f( "fogColor", skyColor );
         ambient = ShaderTypes.AMBIENT.getShader();
 
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
+    }
+
+    public static void enableCulling()
+    {
+        glEnable( GL_CULL_FACE );
+        glCullFace( GL_BACK );
+    }
+
+    public static void disableCulling()
+    {
+        glDisable( GL_CULL_FACE );
     }
 
 
@@ -102,11 +106,11 @@ public class RenderingEngine extends MappedValues
             object.renderAll( light.getShader(), this );
         }
 
-        // will need to move this at the bottom of the renders
+        renderers.forEach( renderer -> renderer.render( this ) );
+
         if ( world != null )
             world.renderWorld( this );
 
-        renderers.forEach( renderer -> renderer.render( this ) );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );

@@ -3,6 +3,11 @@ package peacefulotter;
 import peacefulotter.game.FPSGame;
 import peacefulotter.game.TestGame;
 
+import java.awt.*;
+
+import static org.lwjgl.opengl.GL11.GL_VERSION;
+import static org.lwjgl.opengl.GL11.glGetString;
+
 public class Main
 {
     private static final String WINDOW_TITLE = "My Game";
@@ -11,7 +16,6 @@ public class Main
 
     public static void main( String[] args )
     {
-        // System.out.println(glGetString(GL_VERSION));
         new FPSGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
         // Runtime.getRuntime().addShutdownHook( new Disposable().createDisposeThread() );
     }
