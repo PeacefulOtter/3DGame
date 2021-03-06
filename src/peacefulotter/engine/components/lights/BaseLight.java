@@ -7,6 +7,8 @@ import peacefulotter.engine.rendering.shaders.Shader;
 
 public class BaseLight extends GameComponent
 {
+    private static BaseLight activeLight;
+
     private Vector3f color;
     private float intensity;
     private Shader shader;
@@ -31,4 +33,7 @@ public class BaseLight extends GameComponent
 
     public float getIntensity() { return intensity; }
     public void setIntensity( float intensity ) { this.intensity = intensity; }
+
+    public static void setActiveLight(BaseLight bl) { BaseLight.activeLight = bl; }
+    public static BaseLight getActiveLight() { return BaseLight.activeLight; }
 }

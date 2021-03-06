@@ -3,14 +3,10 @@ package peacefulotter.engine.components.renderer;
 import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
-import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.rendering.terrain.Terrain;
-import peacefulotter.engine.utils.ResourceLoader;
-
-import java.util.Map;
 
 
 public class TerrainRenderer extends GameObject
@@ -19,7 +15,6 @@ public class TerrainRenderer extends GameObject
     private static final Shader terrainShader = ShaderTypes.TERRAIN.getShader();
 
     private final Material material;
-    private Terrain actualTerrain; // TO REFACTOR
 
     public TerrainRenderer()
     {
@@ -41,18 +36,11 @@ public class TerrainRenderer extends GameObject
     {
         super.addComponent( terrain );
         terrain.setMaterial( material );
-        actualTerrain = terrain; // to refactor
         return this;
     }
 
     public void renderTerrain( RenderingEngine renderingEngine )
     {
         renderAll( terrainShader, renderingEngine );
-    }
-
-    // TO REFACTOR
-    public Terrain getTerrain()
-    {
-        return actualTerrain;
     }
 }

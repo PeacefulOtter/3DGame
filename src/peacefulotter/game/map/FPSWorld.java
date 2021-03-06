@@ -13,12 +13,27 @@ import java.io.IOException;
 
 public class FPSWorld extends World
 {
+    private static final String TERRAIN_PATH = "/textures/terrain/height_map2.png";
     private static final String BLEND_MAP_PATH = "/textures/terrain/blend_map.png";
     private static final int DECORATION_AMOUNT = 25;
 
     public static final FPSWorld INSTANCE = new FPSWorld();
 
-    private FPSWorld() { super(); }
+    private static Terrain FPS_TERRAIN;
+
+    private FPSWorld()
+    {
+        super();
+        // generate the terrain based on a terrain height map image
+        try
+        {
+            BufferedImage image = ImageIO.read( getClass().getResourceAsStream( TERRAIN_PATH ) );
+            Terrain terrain = new Terrain( 0, 0, image );
+            generateDecoration( terrain );
+            FPS_TERRAIN = terrain;
+        }
+        catch ( IOException e ) { e.printStackTrace(); }
+    }
 
     @Override
     protected void generateDecoration( Terrain terrain )
@@ -64,5 +79,11 @@ public class FPSWorld extends World
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Terrain getTerrain()
+    {
+        return FPS_TERRAIN;
     }
 }

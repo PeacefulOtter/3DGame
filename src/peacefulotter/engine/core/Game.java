@@ -3,15 +3,11 @@ package peacefulotter.engine.core;
 import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.components.World;
-import peacefulotter.engine.components.renderer.Renderer;
 import peacefulotter.engine.elementary.Updatable;
 import peacefulotter.engine.physics.PhysicsEngine;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.utils.ProfileTimer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class Game implements Updatable
 {
@@ -19,7 +15,6 @@ public abstract class Game implements Updatable
     private final CoreEngine engine;
     private final GameObject root;
 
-    private List<Renderer> renderers;
     private World world;
 
 
@@ -30,7 +25,6 @@ public abstract class Game implements Updatable
         this.physicsProfiler = new ProfileTimer();
         this.engine = new CoreEngine( this );
         this.root = new GameObject();
-        this.renderers = new ArrayList<>();
         startEngine();
     }
 
@@ -39,8 +33,7 @@ public abstract class Game implements Updatable
     public void setEngine( CoreEngine engine )
     {
         root.setEngine( engine );
-        renderers.forEach( renderer -> engine.getRenderingEngine().addRenderer( renderer ) );
-        renderers.clear();
+        engine.getRenderingEngine().setRoot( root );
         engine.getRenderingEngine().setWorld( world );
     }
 
@@ -62,11 +55,6 @@ public abstract class Game implements Updatable
     }
 
     public void render( RenderingEngine renderingEngine ) { renderingEngine.render( root ); }
-
-    public void addRenderer( Renderer renderer )
-    {
-        renderers.add( renderer );
-    }
 
     public void setWorld( World world )
     {

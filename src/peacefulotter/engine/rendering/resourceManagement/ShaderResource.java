@@ -4,10 +4,10 @@ import peacefulotter.engine.elementary.Disposable;
 import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ResourceLoader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.*;
@@ -15,6 +15,10 @@ import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
 public class ShaderResource extends Disposable
 {
+    private static final String SHADER_PATH = "/shaders/";
+    private static final String INCLUDE_DIRECTIVE = "#include";
+    private static final int INCLUDE_DIRECTIVE_LENGTH = INCLUDE_DIRECTIVE.length();
+
     private static final String ATTRIBUTE_TAG = "in vec";
     private static final int ATTRIBUTE_TAG_LENGTH = ATTRIBUTE_TAG.length();
     private static final String UNIFORM_TAG = "uniform";
@@ -42,8 +46,8 @@ public class ShaderResource extends Disposable
 
         Logger.log( getClass(), "========= Loading..  " + shaderName );
 
-        String vertexShaderText = new ResourceLoader().loadShader( shaderName + ".vs" );
-        String fragmentShaderText = new ResourceLoader().loadShader( shaderName + ".fs" );
+        String vertexShaderText = loadShader( shaderName + ".vs" );
+        String fragmentShaderText = loadShader( shaderName + ".fs" );
 
         addVertexShader( vertexShaderText );
         addFragmentShader( fragmentShaderText );
@@ -56,6 +60,31 @@ public class ShaderResource extends Disposable
         addAllUniforms( vertexShaderText );
         Logger.log( getClass(), " == Now Adding all uniforms for the FRAGMENT shader." );
         addAllUniforms( fragmentShaderText );
+    }
+
+    private String loadShader( String fileName )
+    {
+        Logger.log( getClass(), "Loading shader at : " + fileName );
+        StringJoiner sj = new StringJoiner( "\n" );
+
+        try ( BufferedReader reader = new BufferedReader(
+                new InputStreamReader( new ResourceLoader().resourceStream( SHADER_PATH + fileName ) ) ) )
+        {
+            String line;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                if ( line.startsWith( INCLUDE_DIRECTIVE ) )
+                    sj.add( loadShader( line.substring( INCLUDE_DIRECTIVE_LENGTH + 2, line.length() - 2 ) ) );
+                else if ( !line.startsWith( "//" ) )
+                    sj.add( line );
+            }
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+        return sj.toString();
     }
 
     private List<String> allAllProperty( String shaderText, String property, int length )

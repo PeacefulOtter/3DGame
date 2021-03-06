@@ -2,18 +2,18 @@
 
 package peacefulotter.engine.components;
 
-import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.core.CoreEngine;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.RenderingEngine;
-import peacefulotter.engine.rendering.Window;
 import peacefulotter.engine.core.transfomations.STransform;
-import peacefulotter.engine.rendering.shaders.Attenuation;
-import peacefulotter.engine.rendering.shaders.Shader;
+import peacefulotter.engine.rendering.Window;
 
 public class Camera extends GameComponent
 {
+    private static final float FOV = 70f;
+    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 5000f;
+
     public static Vector3f PLAYER_CAMERA_TRANSLATION() { return new Vector3f(0, 6.5f, 0f ); }
     private final Matrix4f projection;
 
@@ -47,7 +47,7 @@ public class Camera extends GameComponent
     {
         public static Camera getDefaultCamera()
         {
-            return new Camera( 70f, Window.getRatio(), 0.01f, 5000f );
+            return new Camera( FOV, Window.getRatio(), Z_NEAR, Z_FAR );
         }
     }
 }

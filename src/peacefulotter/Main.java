@@ -1,12 +1,6 @@
 package peacefulotter;
 
 import peacefulotter.game.FPSGame;
-import peacefulotter.game.TestGame;
-
-import java.awt.*;
-
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glGetString;
 
 public class Main
 {
@@ -19,5 +13,10 @@ public class Main
         new FPSGame( WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT );
         // Runtime.getRuntime().addShutdownHook( new Disposable().createDisposeThread() );
     }
+
+    // renderer should be in a gameobject
+    // todo: guis
+    // TODO: javafx custom + 3D
+    // todo: optimize transform class
 
 }

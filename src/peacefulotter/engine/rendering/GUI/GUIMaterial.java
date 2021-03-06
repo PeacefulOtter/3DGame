@@ -1,12 +1,10 @@
 package peacefulotter.engine.rendering.GUI;
 
 import peacefulotter.engine.core.maths.Vector2f;
-import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.core.transfomations.STransform;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
-import peacefulotter.engine.utils.ResourceLoader;
 
 public class GUIMaterial extends Material
 {
@@ -16,9 +14,8 @@ public class GUIMaterial extends Material
     public GUIMaterial( String fileName, Vector2f position, Vector2f scale )
     {
         super( new SimpleMaterial( new Texture( GUI_FOLDER, fileName ), 1, 1 ) );
-        this.transform = new STransform()
-                .translate( new Vector3f( position.getX(), position.getY(), 0 ) )
-                .scale( new Vector3f( scale.getX(), scale.getY(), 0 ) );
+        this.transform = new STransform();
+                // .translate( new Vector3f( position.getX(), position.getY(), 0 ) )
     }
 
     public STransform getTransform()

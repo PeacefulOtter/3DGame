@@ -1,12 +1,21 @@
 package peacefulotter.engine.rendering;
 
 import org.lwjgl.opengl.GL;
-import peacefulotter.engine.components.*;
+import peacefulotter.engine.components.Camera;
+import peacefulotter.engine.components.GameObject;
+import peacefulotter.engine.components.World;
 import peacefulotter.engine.components.lights.BaseLight;
-import peacefulotter.engine.components.renderer.Renderer;
+import peacefulotter.engine.components.renderer.GUIRenderer;
+import peacefulotter.engine.components.renderer.SkyBoxRenderer;
+import peacefulotter.engine.components.renderer.TerrainRenderer;
+import peacefulotter.engine.components.renderer.WaterRenderer;
+import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.GUI.GUIMaterial;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
+import peacefulotter.engine.rendering.terrain.Terrain;
+import peacefulotter.engine.rendering.terrain.WaterTile;
 import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.MappedValues;
 import peacefulotter.engine.utils.ProfileTimer;
@@ -24,16 +33,16 @@ public class RenderingEngine extends MappedValues
     private static final Vector3f skyColor = new Vector3f( 0.5444f, 0.62f, 0.69f );
 
     private final ProfileTimer profiler;
-    private final Window window;
+    private final Map<String, Integer>  samplerMap;
     private final List<BaseLight> lights;
-    private final List<Renderer> renderers;
+    private final Window window;
     private final Shader ambient;
 
-    private final Map<String, Integer>  samplerMap;
+    private final TerrainRenderer tr;
+    private final WaterRenderer wr;
+    private final GUIRenderer gr;
+    private final SkyBoxRenderer sbr;
 
-    private World world;
-
-    private BaseLight activeLight;
     private Camera camera;
 
 
@@ -41,7 +50,6 @@ public class RenderingEngine extends MappedValues
     {
         this.profiler = new ProfileTimer();
         this.lights = new ArrayList<>();
-        this.renderers = new ArrayList<>();
         this.window = new Window();
         this.samplerMap = new HashMap<>();
 
@@ -69,6 +77,18 @@ public class RenderingEngine extends MappedValues
         addVector3f( "fogColor", skyColor );
         ambient = ShaderTypes.AMBIENT.getShader();
 
+        /* TERRAIN */
+        this.tr = new TerrainRenderer();
+        /* WATER */
+        this.wr = new WaterRenderer();
+        wr.addWaterTile( new WaterTile( Terrain.SIZE, Terrain.SIZE ) );
+        /* SKYBOX */
+        this.sbr = new SkyBoxRenderer();
+        /* GUI */
+        this.gr = new GUIRenderer();
+        GUIMaterial material = new GUIMaterial( "crosshair_hit.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 5f, 5f ) );
+        gr.addGUIMaterial( material );
+
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
     }
 
@@ -94,6 +114,8 @@ public class RenderingEngine extends MappedValues
         glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
         object.renderAll( ambient, this );
+        sbr.render( ambient, this );
+        gr.render( ambient, this );
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_ONE, GL_ONE );
@@ -102,15 +124,16 @@ public class RenderingEngine extends MappedValues
 
         for ( BaseLight light : lights )
         {
-            activeLight = light;
+            BaseLight.setActiveLight( light );
             object.renderAll( light.getShader(), this );
         }
 
-        renderers.forEach( renderer -> renderer.render( this ) );
+        // Render them with their personal shader
+        tr.renderTerrain( this );
+        wr.renderWater( this );
 
-        if ( world != null )
-            world.renderWorld( this );
-
+        sbr.renderSkyBox( this );
+        gr.renderGUI( this );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );
@@ -125,18 +148,17 @@ public class RenderingEngine extends MappedValues
         lights.add( light );
     }
 
-    public void addRenderer( Renderer renderer )
-    {
-        Logger.log( getClass(), "Adding a " + renderer.getClass().getSimpleName() );
-        renderers.add( renderer );
-    }
-
     public void setWorld( World world )
     {
-        this.world = world;
+        this.tr.addComponent( world.getTerrain() );
+    }
+    public void setRoot( GameObject object )
+    {
+        object
+                .addComponent( tr )
+                .addComponent( wr );
     }
 
-    public BaseLight getActiveLight() { return activeLight; }
     public long getCurrentWindow() { return window.getWindow(); }
 
     public Camera getCamera() { return camera; }

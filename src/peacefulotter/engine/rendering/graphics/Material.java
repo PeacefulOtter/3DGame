@@ -1,6 +1,5 @@
 package peacefulotter.engine.rendering.graphics;
 
-import org.w3c.dom.Text;
 import peacefulotter.engine.utils.MappedValues;
 
 import java.util.HashMap;

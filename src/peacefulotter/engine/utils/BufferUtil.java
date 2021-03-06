@@ -1,4 +1,4 @@
-package peacefulotter.engine.rendering;
+package peacefulotter.engine.utils;
 
 import org.lwjgl.BufferUtils;
 import peacefulotter.engine.rendering.graphics.Vertex;

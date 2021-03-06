@@ -7,12 +7,10 @@ import peacefulotter.engine.components.lights.SpotLight;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.utils.BufferUtil;
 import peacefulotter.engine.rendering.RenderingEngine;
-import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.resourceManagement.ShaderResource;
 import peacefulotter.engine.core.transfomations.STransform;
-import peacefulotter.engine.utils.Logger;
 
 import java.util.List;
 
@@ -69,53 +67,66 @@ public class Shader
 
             if ( uniformName.startsWith( TRANSFORM_PREFIX) )
             {
-                if ( unprefixedUniformName.equals(  "transformationMatrix" ) )
-                    setUniformMatrix( uniformName, transformationMatrix );
-                else if ( unprefixedUniformName.equals( "projectionMatrix" ) )
-                    setUniformMatrix( uniformName, projectionMatrix );
-                else if ( unprefixedUniformName.equals( "viewMatrix" ) )
+                switch ( unprefixedUniformName )
                 {
-                    if ( isSkybox )
-                    {
-                        Matrix4f skyBoxViewMatrix = new Matrix4f( viewMatrix.getM() );
-                        skyBoxViewMatrix.setAt( 0, 3, 0 );
-                        skyBoxViewMatrix.setAt( 1, 3, 0 );
-                        skyBoxViewMatrix.setAt( 2, 3, 0 );
-                        setUniformMatrix( uniformName, skyBoxViewMatrix );
-                    }
-                    else
-                        setUniformMatrix( uniformName, viewMatrix );
+                    case "transformationMatrix":
+                        setUniformMatrix( uniformName, transformationMatrix );
+                        break;
+                    case "projectionMatrix":
+                        setUniformMatrix( uniformName, projectionMatrix );
+                        break;
+                    case "viewMatrix":
+                        if ( isSkybox )
+                        {
+                            Matrix4f skyBoxViewMatrix = new Matrix4f( viewMatrix.getM() );
+                            skyBoxViewMatrix.setAt( 0, 3, 0 );
+                            skyBoxViewMatrix.setAt( 1, 3, 0 );
+                            skyBoxViewMatrix.setAt( 2, 3, 0 );
+                            setUniformMatrix( uniformName, skyBoxViewMatrix );
+                        } else
+                            setUniformMatrix( uniformName, viewMatrix );
+                        break;
+                    default:
+                        throw new IllegalArgumentException( uniformName + " is not a valid Transform component" );
                 }
-                else
-                    throw new IllegalArgumentException( uniformName + " is not a valid Transform component" );
             }
 
             else if ( uniformName.startsWith( RENDERING_PREFIX ) )
             {
-                if ( uniformType.equals( "sampler2D" ) )
+                switch ( uniformType )
                 {
-                    int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
-                    material.getTexture( unprefixedUniformName ).bind( samplerSlot );
-                    setUniformI( uniformName, samplerSlot );
+                    case "sampler2D":
+                    {
+                        int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
+                        material.getTexture( unprefixedUniformName ).bind( samplerSlot );
+                        setUniformI( uniformName, samplerSlot );
+                        break;
+                    }
+                    case "samplerCube":
+                    {
+                        int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
+                        material.getTexture( unprefixedUniformName ).bind( samplerSlot, GL_TEXTURE_CUBE_MAP );
+                        setUniformI( uniformName, samplerSlot );
+                        break;
+                    }
+                    case "vec3":
+                        setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
+                        break;
+                    case "float":
+                        setUniformF( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
+                        break;
+                    case "DirectionalLight":
+                        setUniformDirLight( uniformName, (DirectionalLight) BaseLight.getActiveLight() );
+                        break;
+                    case "PointLight":
+                        setUniformPointLight( uniformName, (PointLight) BaseLight.getActiveLight() );
+                        break;
+                    case "SpotLight":
+                        setUniformSpotLight( uniformName, (SpotLight) BaseLight.getActiveLight() );
+                        break;
+                    default:
+                        throw new IllegalArgumentException( uniformType + " is not a supported type" );
                 }
-                else if ( uniformType.equals( "samplerCube" ) )
-                {
-                    int samplerSlot = renderingEngine.getSamplerSlot( unprefixedUniformName );
-                    material.getTexture( unprefixedUniformName ).bind( samplerSlot, GL_TEXTURE_CUBE_MAP );
-                    setUniformI( uniformName, samplerSlot );
-                }
-                else if ( uniformType.equals( "vec3" ) )
-                    setUniformVector( uniformName, renderingEngine.getVector3f( unprefixedUniformName ) );
-                else if ( uniformType.equals( "float" ) )
-                    setUniformF( uniformName, renderingEngine.getFloat( unprefixedUniformName ) );
-                else if ( uniformType.equals( "DirectionalLight" ) )
-                    setUniformDirLight( uniformName, (DirectionalLight) renderingEngine.getActiveLight() );
-                else if ( uniformType.equals( "PointLight" ) )
-                    setUniformPointLight( uniformName, (PointLight) renderingEngine.getActiveLight() );
-                else if ( uniformType.equals( "SpotLight" ) )
-                    setUniformSpotLight( uniformName, (SpotLight) renderingEngine.getActiveLight() );
-                else
-                    throw new IllegalArgumentException( uniformType + " is not a supported type" );
             }
             else if ( uniformName.startsWith( CAMERA_PREFIX ) )
             {

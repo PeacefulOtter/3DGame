@@ -1,7 +1,6 @@
 package peacefulotter.engine.components.renderer;
 
-import peacefulotter.engine.core.transfomations.STransform;
-import peacefulotter.engine.rendering.GUI.GUIMaterial;
+import peacefulotter.engine.components.GameComponent;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
 import peacefulotter.engine.rendering.graphics.RawModel;
@@ -15,12 +14,13 @@ import peacefulotter.engine.utils.ResourceLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
+import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
-public class WaterRenderer
+public class WaterRenderer extends GameComponent
 {
     private static final float[] POSITIONS = new float[] { -1, -1, -1, 1, 1, -1, 1, -1, -1, 1, 1, 1 };
     private static final Shader WATER_SHADER = ShaderTypes.WATER.getShader();
@@ -41,6 +41,7 @@ public class WaterRenderer
         waterTiles.add( tile );
     }
 
+    @Override
     public void render( Shader shader, RenderingEngine renderingEngine )
     {
         shader.bind();

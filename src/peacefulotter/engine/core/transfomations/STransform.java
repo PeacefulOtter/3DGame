@@ -12,9 +12,10 @@ public class STransform implements Updatable
     private final SRotation rotation;
     private final SScale scale;
 
-    private Matrix4f transformationMatrix = new Matrix4f().initIdentity();
-    private Vector3f transformedTranslation = Vector3f.getZero();
-    private Quaternion transformedRotation = new Quaternion( 0, 0, 0, 1 );
+    // OPTIMIZATIONS TO DO ON TRANSFORM WITH THESE VARIABLES
+    // private Matrix4f transformationMatrix = new Matrix4f().initIdentity();
+    // private Vector3f transformedTranslation = Vector3f.getZero();
+    // private Quaternion transformedRotation = new Quaternion( 0, 0, 0, 1 );
 
     private STransform parent;
     private boolean translationChanged, rotationChanged, scaleChanged;
@@ -24,9 +25,9 @@ public class STransform implements Updatable
         this.translation = new STranslation();
         this.rotation = new SRotation();
         this.scale = new SScale();
-        calculateTransformationMatrix();
-        calculateTransformedTranslation();
-        calculateTransformedRotation();
+        // calculateTransformationMatrix();
+        // calculateTransformedTranslation();
+        // calculateTransformedRotation();
     }
 
     /** Copy Constructor **/
@@ -36,10 +37,10 @@ public class STransform implements Updatable
         this.rotation = new SRotation( origin.rotation );
         this.scale = new SScale( origin.scale );
         if ( origin.parent != null )
-            this.parent = new STransform( origin.parent );
+            this.parent = origin.parent;
     }
 
-    private void calculateTransformationMatrix()
+    /*private void calculateTransformationMatrix()
     {
         Matrix4f base = translation.getTranslationMatrix().mul(
                             rotation.getRotationMatrix().mul(
@@ -48,28 +49,25 @@ public class STransform implements Updatable
             transformationMatrix = parent.getTransformationMatrix().mul( base );
         else
             transformationMatrix = base;
-    }
+    }*/
 
     public Matrix4f getTransformationMatrix()
     {
-        //return new Matrix4f( transformationMatrix.getM() );
-        if ( parent != null )
-            return parent.getTransformationMatrix().mul(
-                    translation.getTranslationMatrix().mul(
-                        rotation.getRotationMatrix().mul(
-                            scale.getScaleMatrix() ) ) );
-        return translation.getTranslationMatrix().mul(
+        Matrix4f innerTransform = translation.getTranslationMatrix().mul(
                 rotation.getRotationMatrix().mul(
                         scale.getScaleMatrix() ) );
+        if ( parent != null )
+            return parent.getTransformationMatrix().mul( innerTransform );
+        return innerTransform;
     }
 
-    private void calculateTransformedTranslation()
+    /* private void calculateTransformedTranslation()
     {
         if ( parent != null )
             transformedTranslation = parent.getTransformationMatrix().transform( getTranslation() );
         else
             transformedTranslation = getTranslation();
-    }
+    } */
 
     public Vector3f getTransformedTranslation()
     {
@@ -79,13 +77,13 @@ public class STransform implements Updatable
         return getTranslation();
     }
 
-    private void calculateTransformedRotation()
+    /* private void calculateTransformedRotation()
     {
         if ( parent != null )
             transformedRotation = parent.getTransformedRotation().mul( getRotation() );
         else
             transformedRotation = getRotation();
-    }
+    } */
 
     public Quaternion getTransformedRotation()
     {
@@ -102,40 +100,34 @@ public class STransform implements Updatable
 
     public Vector3f getScale() { return scale.getScaleVector(); }
 
-    public STransform setTranslation( Vector3f newTranslation )
+    public STransform setTranslation( Vector3f vec )
     {
-        if ( !getTranslation().equals( newTranslation ) )
-        {
-            translation.setTranslation( newTranslation );
-            translationChanged = true;
-        }
-        return this;
+        return new STransform( this ).translate( vec );
     }
 
-    public STransform setRotation( Quaternion newRotation )
+    public STransform setRotation( Vector3f axis, float angleDeg )
     {
-        if ( !getRotation().equals( newRotation ) )
-        {
-            rotation.setRotation( newRotation );
-            rotationChanged = true;
-        }
-        return this;
+        return new STransform( this ).rotate( axis, angleDeg );
     }
 
-    public STransform setScale( Vector3f newScale )
+    public STransform setRotation( Quaternion q )
     {
-        if ( !getScale().equals( newScale ) )
-        {
-            scale.setScale( newScale );
-            scaleChanged = true;
-        }
-        return this;
+        return new STransform( this ).rotate( q );
     }
 
-    public STransform translate( Vector3f vector )
+    public STransform setScale( float val )
     {
+        return new STransform( this ).scale( val );
+    }
 
-        translation.translate( vector );
+    public STransform setScale( Vector3f vec )
+    {
+        return new STransform( this ).scale( vec );
+    }
+
+    public STransform translate( Vector3f vec )
+    {
+        translation.translate( vec );
         translationChanged = true;
         return this;
     }
@@ -164,12 +156,8 @@ public class STransform implements Updatable
 
     public STransform scale( Vector3f newScale )
     {
-        if ( !newScale.equals( Vector3f.getZero() ) )
-        {
-            setScale( getScale().add( newScale ) );
-            scale.setScale( newScale );
-            scaleChanged = true;
-        }
+        scale.setScale( newScale );
+        scaleChanged = true;
         return this;
     }
 
@@ -179,12 +167,12 @@ public class STransform implements Updatable
     {
         //System.out.println(this);
         //System.out.println( translationChanged + " " + rotationChanged + " " + scaleChanged );
-        if ( translationChanged || rotationChanged || scaleChanged )
+        /* if ( translationChanged || rotationChanged || scaleChanged )
             calculateTransformationMatrix();
         if ( translationChanged )
             calculateTransformedTranslation();
         if ( rotationChanged )
-            calculateTransformedRotation();
+            calculateTransformedRotation(); */
         // translationChanged = false;
         // rotationChanged = false;
         // scaleChanged = false;
@@ -198,9 +186,9 @@ public class STransform implements Updatable
     public void setParent( STransform transform )
     {
         parent = transform;
-        calculateTransformationMatrix();
-        calculateTransformedTranslation();
-        calculateTransformedRotation();
+        // calculateTransformationMatrix();
+        // calculateTransformedTranslation();
+        // calculateTransformedRotation();
     }
 
 
@@ -217,6 +205,6 @@ public class STransform implements Updatable
     @Override
     public String toString()
     {
-        return  "[T] " + getTranslation() + " | [R] " + getRotation() + " | [S] " + getScale();
+        return  "[T] " + getTransformedTranslation() + " | [R] " + getTransformedRotation() + " | [S] " + getScale();
     }
 }

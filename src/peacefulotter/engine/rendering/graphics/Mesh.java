@@ -1,9 +1,18 @@
 package peacefulotter.engine.rendering.graphics;
 
-import peacefulotter.engine.rendering.BufferUtil;
+import peacefulotter.engine.core.maths.Vector2f;
+import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.graphics.meshes.IndexedModel;
+import peacefulotter.engine.rendering.graphics.meshes.OBJModel;
+import peacefulotter.engine.utils.BufferUtil;
 import peacefulotter.engine.rendering.resourceManagement.MeshResource;
+import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ResourceLoader;
+import peacefulotter.engine.utils.Utils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +21,8 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class Mesh
 {
+    public static final String MODELS_PATH = "/models/";
+
     private static final Map<String, MeshResource> loadedModels = new HashMap<>();
 
     private MeshResource resource;
@@ -24,7 +35,7 @@ public class Mesh
         MeshResource res = checkLoadedModels( path );
         if ( res == null )
         {
-            Vertices v = new ResourceLoader().loadMesh( subfolder, fileName );
+            Vertices v = loadMesh( subfolder, fileName );
             addVertices( v.vertices, v.indices );
             loadedModels.put( path, resource );
         }
@@ -47,6 +58,79 @@ public class Mesh
         }
         else
             resource = res;
+    }
+
+    /**
+     * Creates an OBJModel from and OBJ file and load its vertices
+     * @param subFolder
+     * @param fileName
+     * @return
+     */
+    private Mesh.Vertices loadMesh( String subFolder, String fileName )
+    {
+        Logger.log( getClass(), "Loading mesh at : " + subFolder + fileName );
+        String[] splitArray = fileName.split( "\\." );
+        String extension = splitArray[ splitArray.length - 1 ];
+
+        if ( !extension.equals( "obj" ) )
+        {
+            System.err.println( "File format not supported" );
+            new Exception().printStackTrace();
+            System.exit( 1 );
+        }
+
+        OBJModel model = new OBJModel();
+
+        try ( BufferedReader reader = new BufferedReader( new InputStreamReader( new ResourceLoader().resourceStream( MODELS_PATH + subFolder + fileName ) ) ) )
+        {
+            String line;
+            while ( ( line = reader.readLine() ) != null )
+            {
+                String[] split = line.split( " " );
+                split = Utils.removeEmptyStrings( split );
+                if ( split.length == 0 ) continue;
+                String prefix = split[ 0 ];
+
+                if ( prefix.equals( "v" ) )
+                {
+                    model.addPosition( new Vector3f(
+                            Float.parseFloat( split[ 1 ] ),
+                            Float.parseFloat( split[ 2 ] ),
+                            Float.parseFloat( split[ 3 ] ) ) );
+                }
+                else if ( prefix.equals( "vt" ) )
+                {
+                    model.addTexCoord( new Vector2f(
+                            Float.parseFloat( split[ 1 ] ),
+                            1.0f - Float.parseFloat( split[ 2 ] ) ) );
+                }
+                else if ( prefix.equals( "vn" ) )
+                {
+                    model.addNormal( new Vector3f(
+                            Float.parseFloat( split[ 1 ] ),
+                            Float.parseFloat( split[ 2 ] ),
+                            Float.parseFloat( split[ 3 ] ) ) );
+                }
+                else if ( split[ 0 ].equals( "f" ) )
+                {
+                    for ( int i = 0; i < split.length - 3; i++ )
+                    {
+                        model.addIndices( split[ 1 ] );
+                        model.addIndices( split[ 2 + i ] );
+                        model.addIndices( split[ 3 + i ] );
+                    }
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+            System.exit( 1 );
+        }
+
+        IndexedModel indexedModel = model.toIndexedModel();
+
+        return ResourceLoader.loadVertices( indexedModel );
     }
 
     public MeshResource checkLoadedModels( String id )
