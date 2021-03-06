@@ -1,17 +1,14 @@
 package peacefulotter.game;
 
-import peacefulotter.engine.components.*;
+import peacefulotter.engine.components.Camera;
+import peacefulotter.engine.components.GameObject;
+import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
-import peacefulotter.engine.components.renderer.GUIRenderer;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
-import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.GUI.GUIMaterial;
-import peacefulotter.engine.rendering.graphics.Material;
-import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
 import peacefulotter.game.actor.FlashLight;
 import peacefulotter.game.actor.Ghost;
@@ -33,7 +30,7 @@ public class FPSGame extends Game
     public void init()
     {
         /* MATERIALS */
-        Material bricks2 = new Material(
+       /* Material bricks2 = new Material(
                 new Texture( "bricks2.jpg" ),
                 new Texture( "bricks2_normal.jpg" ),
                 new Texture( "bricks2_height.png" ),
@@ -43,7 +40,7 @@ public class FPSGame extends Game
                 new Texture( "metal.jpg" ),
                 new Texture( "metal_normal.jpg" ),
                 new Texture( "metal_height.png" ),
-                2, 12, 0.04f, -1f );
+                2, 12, 0.04f, -1f ); */
 
 
         /* MAP */

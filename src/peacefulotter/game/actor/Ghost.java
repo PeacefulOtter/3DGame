@@ -56,7 +56,9 @@ public class Ghost extends PhysicsObject
 
     private void gainHeight( int direction )
     {
-        freeMovement.setVelocityYAxis( freeMovement.getVelocityYAxis() + direction * HEIGHT_ACCELERATION );
+        float newVelocity = freeMovement.getVelocityYAxis() + direction * HEIGHT_ACCELERATION;
+        if (newVelocity < MAX_VELOCITY )
+            freeMovement.setVelocityYAxis( newVelocity );
     }
 
     @Override

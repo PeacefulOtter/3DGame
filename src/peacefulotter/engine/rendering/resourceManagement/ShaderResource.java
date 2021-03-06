@@ -1,6 +1,5 @@
 package peacefulotter.engine.rendering.resourceManagement;
 
-import peacefulotter.engine.elementary.Disposable;
 import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ResourceLoader;
 
@@ -13,7 +12,7 @@ import static org.lwjgl.opengl.GL20.glGetUniformLocation;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.GL_GEOMETRY_SHADER;
 
-public class ShaderResource extends Disposable
+public class ShaderResource
 {
     private static final String SHADER_PATH = "/shaders/";
     private static final String INCLUDE_DIRECTIVE = "#include";
@@ -60,6 +59,9 @@ public class ShaderResource extends Disposable
         addAllUniforms( vertexShaderText );
         Logger.log( getClass(), " == Now Adding all uniforms for the FRAGMENT shader." );
         addAllUniforms( fragmentShaderText );
+
+        // Used to free memory and thus avoid memory leak
+        Resources.addBuffer( program );
     }
 
     private String loadShader( String fileName )
@@ -262,13 +264,6 @@ public class ShaderResource extends Disposable
 
         glAttachShader( program, shader );
     }
-
-    public void dispose()
-    {
-        System.out.println("SHADER resource dispose");
-        // glDeleteBuffers( program );
-    }
-
 
     public int getProgram()  { return program;  }
     public Map<String, Integer> getUniformsMap() { return uniformsMap; }

@@ -1,28 +1,22 @@
 package peacefulotter.engine.rendering.resourceManagement;
 
-import peacefulotter.engine.elementary.Disposable;
-import peacefulotter.engine.utils.Logger;
+import static org.lwjgl.opengl.GL15.glGenBuffers;
 
-import static org.lwjgl.opengl.GL15.*;
-
-public class MeshResource extends Disposable
+public class MeshResource
 {
     private final int vbo; // VertexBufferObject - array of vertices on the graphics card
     private final int ibo; // IndexBufferObject - array of indices on the graphics card
-    private int size = 0;
+    private final int size;
 
     public MeshResource( int size )
     {
         vbo = glGenBuffers();
         ibo = glGenBuffers();
         this.size = size;
-    }
 
-    public void dispose()
-    {
-        Logger.log( getClass(), "Dispose called");
-        // glDeleteBuffers( vbo );
-        // glDeleteBuffers( ibo );
+        // Used to free memory and thus avoid memory leak
+        Resources.addBuffer( vbo );
+        Resources.addBuffer( ibo );
     }
 
     public int getVbo()  { return vbo;  }

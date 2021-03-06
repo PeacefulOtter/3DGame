@@ -1,24 +1,16 @@
 package peacefulotter.engine.rendering.resourceManagement;
 
-import peacefulotter.engine.elementary.Disposable;
-import peacefulotter.engine.utils.Logger;
-import peacefulotter.engine.utils.ResourceLoader;
-
 import static org.lwjgl.opengl.GL11.glGenTextures;
 
-public class TextureResource extends Disposable
+public class TextureResource
 {
     private final int id;
 
     public TextureResource()
     {
         this.id = glGenTextures();
-    }
-
-    public void dispose()
-    {
-        Logger.log( getClass(), "Dispose called");
-        // glDeleteBuffers( id );
+        // Used to free memory and thus avoid memory leak
+        Resources.addBuffer( this.id );
     }
 
     public int getId()  { return id; }

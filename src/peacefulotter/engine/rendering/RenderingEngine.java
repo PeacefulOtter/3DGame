@@ -71,8 +71,8 @@ public class RenderingEngine extends MappedValues
         //glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
 
-        // NIGHT addVector3f( "ambient", new Vector3f( 0.00001f, 0.00001f, 0.00001f ) );
-        addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 0.1f ) );
+        addVector3f( "ambient", new Vector3f( 0.00001f, 0.00001f, 0.00001f ) );
+        // addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 1f ) );
         addVector3f( "skyColor", skyColor.mul( 0.25f ) );
         addVector3f( "fogColor", skyColor );
         ambient = ShaderTypes.AMBIENT.getShader();
@@ -86,7 +86,7 @@ public class RenderingEngine extends MappedValues
         this.sbr = new SkyBoxRenderer();
         /* GUI */
         this.gr = new GUIRenderer();
-        GUIMaterial material = new GUIMaterial( "crosshair_hit.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 5f, 5f ) );
+        GUIMaterial material = new GUIMaterial( "rainbow.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
         gr.addGUIMaterial( material );
 
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
@@ -131,7 +131,6 @@ public class RenderingEngine extends MappedValues
         // Render them with their personal shader
         tr.renderTerrain( this );
         wr.renderWater( this );
-
         sbr.renderSkyBox( this );
         gr.renderGUI( this );
 
@@ -154,9 +153,7 @@ public class RenderingEngine extends MappedValues
     }
     public void setRoot( GameObject object )
     {
-        object
-                .addComponent( tr )
-                .addComponent( wr );
+        object.addComponent( tr ).addComponent( wr );
     }
 
     public long getCurrentWindow() { return window.getWindow(); }
@@ -166,6 +163,7 @@ public class RenderingEngine extends MappedValues
     {
         Logger.log( getClass(), "Setting the Camera" );
         this.camera = camera;
+        gr.setCamera( camera );
     }
 
     public int getSamplerSlot( String samplerName )

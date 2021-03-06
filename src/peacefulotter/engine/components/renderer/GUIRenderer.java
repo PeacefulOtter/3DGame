@@ -1,5 +1,6 @@
 package peacefulotter.engine.components.renderer;
 
+import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.GUI.GUIMaterial;
 import peacefulotter.engine.rendering.RenderingEngine;
@@ -11,8 +12,7 @@ import peacefulotter.engine.utils.ResourceLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -44,30 +44,38 @@ public class GUIRenderer extends Renderer
         glBindVertexArray( QUAD.getVaoId() );
         glEnableVertexAttribArray( 0 );
 
-        guiMaterials.forEach( guiMaterial -> {
-            if ( guiMaterial.hasTransparency() )
-                RenderingEngine.disableCulling();
+        glEnable( GL_BLEND );
+        glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
+        // glDisable( GL_DEPTH_TEST ); TO AVOID SUPERPOSITION
 
-            guiMaterial.getTransform().setParent( renderingEngine.getCamera().getTransform() );
-            guiMaterial.getTransform().setTranslation( new Vector3f( 0, 0, 1 ) );
-            System.out.println(guiMaterial.getTransform());
-            System.out.println(renderingEngine.getCamera().getTransform());
-            //  renderingEngine.getCamera().getTransform().setTranslation( new Vector3f( 0, 0, 1 ) );
+        guiMaterials.forEach( guiMaterial -> {
+            RenderingEngine.disableCulling();
+
             shader.updateUniforms( guiMaterial.getTransform(), guiMaterial, renderingEngine );
             glDrawArrays( GL_TRIANGLE_STRIP, 0, QUAD.getVertexCount() );
 
-            if ( guiMaterial.hasTransparency() )
-                RenderingEngine.enableCulling();
+            RenderingEngine.enableCulling();
         } );
+
+        // glEnable( GL_DEPTH_TEST ); TO AVOID SUPERPOSITION
+        glDisable( GL_BLEND );
 
         glDisableVertexAttribArray( 0 );
         glBindVertexArray( 0 );
-
-
     }
 
     public void renderGUI( RenderingEngine renderingEngine )
     {
         render( GUIShader, renderingEngine );
+    }
+
+    public void setCamera( Camera camera )
+    {
+        System.out.println(guiMaterials);
+        guiMaterials.forEach( guiMaterial ->
+        {
+            guiMaterial.getTransform().setParent( camera.getTransform() );
+            guiMaterial.getTransform().translate( new Vector3f( 0, 0, 5 ) );
+        } );
     }
 }

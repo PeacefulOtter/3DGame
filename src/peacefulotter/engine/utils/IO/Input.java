@@ -3,6 +3,7 @@ package peacefulotter.engine.utils.IO;
 import peacefulotter.engine.core.maths.Matrix4f;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.Window;
+import peacefulotter.engine.rendering.resourceManagement.Resources;
 import peacefulotter.engine.utils.ProfileTimer;
 
 import java.util.ArrayList;
@@ -48,6 +49,15 @@ public abstract class Input
         profiler.startInvocation();
 
         glfwPollEvents();
+
+        // prevent ALT+F4 and use a custom system.exit() to avoid memory leaks
+        int alt = glfwGetKey( window, GLFW_KEY_LEFT_ALT );
+        int f4 = glfwGetKey( window, GLFW_KEY_F4 );
+        if (alt == 1 && f4 == 1)
+        {
+            Resources.freeBuffers();
+            System.exit( 1 );
+        }
 
         callKeyCallbacks( deltaTime );
         callMouseButtonsCallbacks( deltaTime );
