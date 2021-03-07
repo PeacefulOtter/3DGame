@@ -102,10 +102,11 @@ public class TestGame extends Game
 
 
         PhysicsObject player = new Player.PlayerBuilder()
+                .setPlayerUser()
                 .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj" ) )
                 .setWeapon( new Weapon() )
-                .build( true );
+                .build();
 
         addObjects( plane1, plane2, characterObject, dirLightObject, pointLightObject, spotLightObject );
         addPhysicalObject( player );

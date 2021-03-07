@@ -19,16 +19,25 @@ public class TerrainRenderer extends GameObject
     public TerrainRenderer()
     {
         Texture grass = new Texture( TERRAIN_SUBFOLDER, "grass.png" );
-        // Texture grassNormal = new Texture( TERRAIN_SUBFOLDER, "grass_normal.png" );
-        // Texture grassDisp = new Texture( TERRAIN_SUBFOLDER, "grass_height.png" );
-        // material = new Material( grass, grassNormal, grassDisp, 0.9f, 1.3f, 0.02f, 0f );
-        material = new Material(
-                grass, Texture.getDefaultNormal(), Texture.getDefaultHeight(),
-                0.9f, 1.3f, 0.02f, 0f );
+        Texture normalGrass = new Texture( TERRAIN_SUBFOLDER, "grass_normal.png" );
+        Texture heightGrass = new Texture( TERRAIN_SUBFOLDER, "grass_height.png" );
+
+        material = new Material( grass, normalGrass, heightGrass, 1f, 4, 0.03f, -0.04f );
         material.addTexture( "aTexture", new Texture( TERRAIN_SUBFOLDER, "grass.png" ) );
         material.addTexture( "rTexture", new Texture( TERRAIN_SUBFOLDER, "mud.png" ) );
         material.addTexture( "gTexture", new Texture( TERRAIN_SUBFOLDER, "flowers.png" ) );
         material.addTexture( "bTexture", new Texture( TERRAIN_SUBFOLDER, "path.png" ) );
+
+        material.addTexture( "aNormalMap", new Texture( TERRAIN_SUBFOLDER, "grass_normal.png" ) );
+        material.addTexture( "rNormalMap", new Texture( TERRAIN_SUBFOLDER, "mud_normal.png" ) );
+        material.addTexture( "gNormalMap", new Texture( TERRAIN_SUBFOLDER, "flowers_normal.png" ) );
+        material.addTexture( "bNormalMap", new Texture( TERRAIN_SUBFOLDER, "path_normal.png" ) );
+
+        material.addTexture( "aDispMap", new Texture( TERRAIN_SUBFOLDER, "grass_height.png" ) );
+        material.addTexture( "rDispMap", new Texture( TERRAIN_SUBFOLDER, "mud_height.png" ) );
+        material.addTexture( "gDispMap", new Texture( TERRAIN_SUBFOLDER, "flowers_height.png" ) );
+        material.addTexture( "bDispMap", new Texture( TERRAIN_SUBFOLDER, "path_height.png" ) );
+
         material.addTexture( "blendMap", new Texture( TERRAIN_SUBFOLDER, "blend_map.png" ) );
     }
 

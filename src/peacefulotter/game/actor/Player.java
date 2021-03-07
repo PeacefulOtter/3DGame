@@ -52,15 +52,18 @@ import static peacefulotter.engine.utils.IO.Input.*;
 
 public class Player extends PhysicsObject
 {
-    private static final float JUMP_HEIGHT = 200;
-    private static final float MAX_RUNNING_VELOCITY = 200;
-    private static final float RUNNING_ACCELERATION = 1;
+    public static final float MAX_WALKING_VELOCITY = 30;
+    private static final float MAX_AIMING_VELOCITY = 20;
+    private static final float MAX_RUNNING_VELOCITY = 50;
 
-    public static final float MAX_WALKING_VELOCITY = 100;
     public static final float WALKING_ACCELERATION = 0.1f;
+    private static final float RUNNING_ACCELERATION = 0.3f;
+
+    private static final float JUMP_HEIGHT = 50;
+
     public static final float ROTATION_SENSITIVITY = 180;
     public static final float CURSOR_SENSITIVITY = 50;
-    public static final float SLOW_FACTOR = 7;
+    public static final float SLOW_FACTOR = 1;
 
     private final Weapon weapon;
     private final boolean isUser;
@@ -69,11 +72,11 @@ public class Player extends PhysicsObject
     private final FreeRotation freeRotation;
     private final Terrain terrain;
 
-    private boolean isRunning, isReloading, isJumping, isCrouching;
+    private boolean isRunning, isAiming, isReloading, isJumping, isCrouching;
 
-    private Player( Terrain terrain, Weapon weapon, boolean isUser )
+    private Player( Vector3f position, Terrain terrain, Weapon weapon, boolean isUser )
     {
-        super( Vector3f.getZero() );
+        super( position );
         this.terrain = terrain;
         this.weapon = weapon;
         this.isUser = isUser;
@@ -108,9 +111,9 @@ public class Player extends PhysicsObject
                 ( deltaTime ) -> weapon.fire( getForward() ),
                 Weapon.IS_AUTOMATIC );
 
-        Input.addMouseButtonCallback( MOUSE_SECONDARY, ( deltaTime ) ->
-            System.out.println("aiminggg")
-        );
+        Input.addMouseButtonPressReleaseCallback( MOUSE_SECONDARY,
+                ( deltaTime ) -> aim(),
+                ( deltaTime ) -> stopAiming() );
 
 
         Input.addKeyCallback( GLFW_KEY_LEFT_ALT,  ( deltaTime ) -> Input.setMouseDisable( false ) );
@@ -144,20 +147,14 @@ public class Player extends PhysicsObject
     @Override
     public boolean stopMoving( VelocityAngle arrow )
     {
-        // since this method is only triggered once when a key is released, if the player jumps
-        // its movement continues until he lands. This is the reason why we need to keep track
-        // of the movements while in air, and apply the stop only once he lands.
         if ( isJumping )
-        {
             notMovingArrowsQueue.add( arrow );
-            return false;
-        }
-        return true;
+        return !isJumping;
     }
 
     private void run()
     {
-        if ( isJumping ) return;
+        if ( isJumping || isAiming || isCrouching ) return;
 
         freeMovement.setCurrentMaxVelocity( MAX_RUNNING_VELOCITY );
         freeMovement.setCurrentAcceleration( RUNNING_ACCELERATION );
@@ -169,8 +166,22 @@ public class Player extends PhysicsObject
         if ( isJumping ) return;
 
         freeMovement.setCurrentMaxVelocity( MAX_WALKING_VELOCITY );
-        freeMovement.setCurrentAcceleration(WALKING_ACCELERATION);
+        freeMovement.setCurrentAcceleration( WALKING_ACCELERATION );
         isRunning = false;
+    }
+
+    private void aim()
+    {
+        isAiming = true;
+        weapon.getTransform().translate( new Vector3f( -0.6f, 0, 0.3f ) );
+        freeMovement.setCurrentMaxVelocity( MAX_AIMING_VELOCITY );
+    }
+
+    private void stopAiming()
+    {
+        isAiming = false;
+        weapon.getTransform().translate( new Vector3f( 0.6f, 0, -0.3f ) );
+        freeMovement.setCurrentMaxVelocity( MAX_WALKING_VELOCITY );
     }
 
     private void jump()
@@ -204,11 +215,25 @@ public class Player extends PhysicsObject
 
     public static class PlayerBuilder
     {
+        private boolean isUser = false;
+        private Vector3f position = Vector3f.getZero();
         private Weapon weapon;
         private Camera camera;
         private MultiMeshRenderer mmr;
         private Terrain terrain;
         private SpotLight flashLight;
+
+        public PlayerBuilder setPlayerUser()
+        {
+            this.isUser = true;
+            return this;
+        }
+
+        public PlayerBuilder setPosition( Vector3f position )
+        {
+            this.position = position;
+            return this;
+        }
 
         public PlayerBuilder setWeapon( Weapon weapon )
         {
@@ -240,7 +265,7 @@ public class Player extends PhysicsObject
             return this;
         }
 
-        public Player build( boolean isUser )
+        public Player build()
         {
             if ( weapon == null )
                 throw new NullPointerException( "Player needs a weapon" );
@@ -249,7 +274,7 @@ public class Player extends PhysicsObject
             if ( terrain == null )
                 throw new NullPointerException( "Any PhysicsObject must have a terrain." );
 
-            Player player = new Player( terrain, weapon, isUser );
+            Player player = new Player( position, terrain, weapon, isUser );
             player
                     .addComponent( mmr.fixedTilt() )
                     .addChild( weapon );
@@ -258,7 +283,7 @@ public class Player extends PhysicsObject
             if ( camera != null )
             {
                 player.addComponent( camera );
-                camera.getTransform().setTranslation( Camera.PLAYER_CAMERA_TRANSLATION() );
+                camera.fixedTilt().getTransform().translate( Camera.PLAYER_CAMERA_TRANSLATION() );
             }
             if ( flashLight != null )
             {

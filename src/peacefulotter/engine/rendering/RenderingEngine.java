@@ -26,11 +26,13 @@ import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL32.GL_DEPTH_CLAMP;
 
 public class RenderingEngine extends MappedValues
 {
-    // NIGHT private static final Vector3f skyColor = new Vector3f( 0.1f, 0.13f, 0.12f );
-    private static final Vector3f skyColor = new Vector3f( 0.5444f, 0.62f, 0.69f );
+    private static final Vector3f SKY_COLOR = new Vector3f( 0.02f, 0.08f, 0.15f );
+    // private static final Vector3f SKY_COLOR = new Vector3f( 0.5444f, 0.62f, 0.69f );
+    private static final Vector3f AMBIENT_COLOR = new Vector3f( 0.003f, 0.015f, 0.030f );
 
     private final ProfileTimer profiler;
     private final Map<String, Integer>  samplerMap;
@@ -60,21 +62,28 @@ public class RenderingEngine extends MappedValues
         samplerMap.put( "rTexture", 4 );
         samplerMap.put( "gTexture", 5 );
         samplerMap.put( "bTexture", 6 );
-        samplerMap.put( "blendMap", 7 );
-        samplerMap.put( "guiTexture", 8 );
+        samplerMap.put( "aNormalMap", 7 );
+        samplerMap.put( "rNormalMap", 8 );
+        samplerMap.put( "gNormalMap", 9 );
+        samplerMap.put( "bNormalMap", 10 );
+        samplerMap.put( "aDispMap", 11 );
+        samplerMap.put( "rDispMap", 12 );
+        samplerMap.put( "gDispMap", 13 );
+        samplerMap.put( "bDispMap", 14 );
+        samplerMap.put( "blendMap", 15 );
+        samplerMap.put( "guiTexture", 16 );
 
         GL.createCapabilities();
         glClearColor( 0, 0, 0, 1f );
         glFrontFace( GL_CW );
         enableCulling();
         glEnable( GL_DEPTH_TEST );
-        //glEnable( GL_DEPTH_CLAMP );
+        glEnable( GL_DEPTH_CLAMP );
         glEnable( GL_TEXTURE_2D );
 
-        addVector3f( "ambient", new Vector3f( 0.00001f, 0.00001f, 0.00001f ) );
-        // addVector3f( "ambient", new Vector3f( 0.1f, 0.1f, 1f ) );
-        addVector3f( "skyColor", skyColor.mul( 0.25f ) );
-        addVector3f( "fogColor", skyColor );
+        addVector3f( "ambient", AMBIENT_COLOR );
+        addVector3f( "skyColor", SKY_COLOR.mul( 0.25f ) );
+        addVector3f( "fogColor", SKY_COLOR );
         ambient = ShaderTypes.AMBIENT.getShader();
 
         /* TERRAIN */
@@ -86,8 +95,9 @@ public class RenderingEngine extends MappedValues
         this.sbr = new SkyBoxRenderer();
         /* GUI */
         this.gr = new GUIRenderer();
-        GUIMaterial material = new GUIMaterial( "rainbow.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
-        gr.addGUIMaterial( material );
+        GUIMaterial material1 = new GUIMaterial( "rainbow.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
+        GUIMaterial material2 = new GUIMaterial( "crosshair.png", new Vector2f( -0.5f, -0.5f ), new Vector2f( 0.5f, 0.5f ) );
+        gr.addGUIMaterials( material1, material2 );
 
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
     }
@@ -132,7 +142,7 @@ public class RenderingEngine extends MappedValues
         tr.renderTerrain( this );
         wr.renderWater( this );
         sbr.renderSkyBox( this );
-        gr.renderGUI( this );
+        // gr.renderGUI( this );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );

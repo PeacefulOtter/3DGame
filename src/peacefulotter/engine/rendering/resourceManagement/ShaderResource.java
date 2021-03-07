@@ -227,6 +227,7 @@ public class ShaderResource
 
     private void addFragmentShader( String text )
     {
+        System.out.println(text);
         addProgramShader( text, GL_FRAGMENT_SHADER );
     }
 

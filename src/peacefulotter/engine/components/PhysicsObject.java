@@ -9,8 +9,6 @@ import peacefulotter.engine.physics.InteractionHandler;
 import peacefulotter.engine.physics.IntersectData;
 import peacefulotter.engine.physics.colliders.BoundingSphere;
 import peacefulotter.engine.physics.colliders.Collider;
-import peacefulotter.engine.rendering.terrain.Terrain;
-import peacefulotter.engine.utils.Logger;
 import peacefulotter.game.actor.VelocityAngle;
 
 
@@ -39,7 +37,7 @@ public class PhysicsObject extends GameObject implements Simulatable, Interactab
 
     public PhysicsObject( Vector3f position, Vector3f velocity )
     {
-        getTransform().setTranslation( position );
+        getTransform().translate( position );
         this.velocity = velocity;
         this.handler = new ObjectInteractionHandler();
         this.collider = new BoundingSphere( position, 6 );

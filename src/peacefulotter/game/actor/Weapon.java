@@ -26,7 +26,7 @@ public class Weapon extends GameObject
     // proper to a certain weapon
     // Automatic or not, the weapon has a certain fire rate
     private static final Mesh WEAPON_MESH = new Mesh( "m4a1.obj" );
-    private static final float FIRE_RATE = 0.7f;
+    private static final float FIRE_RATE = 2f;
     private static final float BULLET_DAMAGE = 20f;
     private static final int MAGAZINE_NUMBER = 3;
     private static final int MAGAZINE_SIZE = 10;

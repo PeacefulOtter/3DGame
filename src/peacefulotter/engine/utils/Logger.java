@@ -1,10 +1,12 @@
 package peacefulotter.engine.utils;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.StringJoiner;
 
 public class Logger
 {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern( "HH:mm:ss.SSS" );
     private static final boolean LOG_ACTIVE = true;
 
     public static void log( String msg )
@@ -40,7 +42,6 @@ public class Logger
 
     private static String getTime()
     {
-        String time = LocalTime.now().toString();
-        return time.substring( 0, time.length() - 6 );
+        return LocalDateTime.now().format( FORMATTER );
     }
 }

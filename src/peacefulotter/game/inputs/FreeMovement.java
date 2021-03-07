@@ -16,7 +16,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 
 public class FreeMovement implements Initializable
 {
-    private static final float GRAVITY = 200f;
+    private static final float GRAVITY = 70f;
     private final PhysicsObject parent;
     private final Set<VelocityAngle> movingArrows;
     private final Terrain terrain;

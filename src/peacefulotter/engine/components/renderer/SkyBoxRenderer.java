@@ -17,6 +17,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 public class SkyBoxRenderer
 {
+    public static final String SKYBOX_FOLDER = "skybox/night/";
     public static final String[] TEXTURE_FILES  = { "right", "left", "top", "bottom", "back", "front" };
 
     private static final Shader SKYBOX_SHADER = ShaderTypes.SKYBOX.getShader();
@@ -71,7 +72,7 @@ public class SkyBoxRenderer
     public SkyBoxRenderer()
     {
         RawModel cube = ResourceLoader.loadToVao( VERTICES, 3 );
-        Texture texture = new Texture( "skybox/", "", Texture.TextureTypes.CUBE_MAP );
+        Texture texture = new Texture( SKYBOX_FOLDER, "", Texture.TextureTypes.CUBE_MAP );
         Material material = new Material( new SimpleMaterial( texture, 1, 1 ) );
         skyBox = new SkyBox( cube, material );
         transform = new STransform();

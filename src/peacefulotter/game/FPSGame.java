@@ -5,10 +5,14 @@ import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.components.PhysicsObject;
 import peacefulotter.engine.components.lights.DirectionalLight;
 import peacefulotter.engine.components.lights.PointLight;
+import peacefulotter.engine.components.renderer.MeshRenderer;
 import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.Game;
 import peacefulotter.engine.core.maths.Quaternion;
 import peacefulotter.engine.core.maths.Vector3f;
+import peacefulotter.engine.rendering.graphics.Material;
+import peacefulotter.engine.rendering.graphics.Mesh;
+import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Attenuation;
 import peacefulotter.game.actor.FlashLight;
 import peacefulotter.game.actor.Ghost;
@@ -30,7 +34,7 @@ public class FPSGame extends Game
     public void init()
     {
         /* MATERIALS */
-       /* Material bricks2 = new Material(
+       Material bricks2 = new Material(
                 new Texture( "bricks2.jpg" ),
                 new Texture( "bricks2_normal.jpg" ),
                 new Texture( "bricks2_height.png" ),
@@ -40,7 +44,7 @@ public class FPSGame extends Game
                 new Texture( "metal.jpg" ),
                 new Texture( "metal_normal.jpg" ),
                 new Texture( "metal_height.png" ),
-                2, 12, 0.04f, -1f ); */
+                2, 12, 0.04f, -1f );
 
 
         /* MAP */
@@ -60,34 +64,38 @@ public class FPSGame extends Game
         //houseObject.getTransform().scale( 30 ).rotate( Vector3f.Y_AXIS, 180 );
 
         /* DUMMY */
-        /*Player dummy = new Player.PlayerBuilder()
-                .setWeapon( new Weapon( Weapon.PLAYER_ORIGIN() ) )
-                .setMesh( new Mesh( "reaper.obj" ) )
-                .setMaterial( alienMaterial )
-                .build( false );
+        Player dummy = new Player.PlayerBuilder()
+                .setPosition( new Vector3f( 10, 10, 10 ) )
+                .setWeapon( new Weapon() )
+                .setFlashLight( new FlashLight( new Vector3f( 0.8f, 0.4f, 0.8f ), 0.15f, new Attenuation( 0, 1, 0f ), 0.6f ) )
+                .setTerrain( world.getTerrain() )
+                .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
+                .build();
 
         GameObject sphereObj = new GameObject();
         sphereObj.addComponent( new MeshRenderer( new Mesh( "sphere.obj" ), bricks2 ) );
-        sphereObj.getTransform().setTranslation( new Vector3f( 0, 6, 0 ) );
-        sphereObj.getTransform().setScale( new Vector3f( 0.04f, 0.04f, 0.04f ) );
+        sphereObj.getTransform().translate( new Vector3f( 0, 6, 0 ) );
+        sphereObj.getTransform().scale( new Vector3f( 0.4f, 0.4f, 0.4f ) );
 
         dummy.addChild( sphereObj );
         dummy.getTransform()
                 .translate( new Vector3f( 0, 0, 5 ) )
-                .rotate( new Vector3f(0, 1, 0 ), 180);*/
+                .rotate( new Vector3f(0, 1, 0 ), 180);
 
 
 
         /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
-                //.setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                .setPlayerUser()
+                .setPosition( new Vector3f( 50, 50, 50 ) )
+                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setTerrain( world.getTerrain() )
                 .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
                 .setWeapon( new Weapon() )
                 .setFlashLight( new FlashLight( new Vector3f( 0.5f, 0.4f, 0.5f ), 0.2f, new Attenuation( 0, 0, 0.0004f ), 0.7f ) )
-                .build( false );
+                .build();
 
-        Ghost ghost = new Ghost( world.getTerrain(), true );
+        Ghost ghost = new Ghost( world.getTerrain(), false );
         ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
         ghost.getTransform().translate( new Vector3f( 0, 10, 0 ) );
 
@@ -106,7 +114,7 @@ public class FPSGame extends Game
         pointLightObject.addComponent( pointLight );
 
         addObjects( world, dirLightObject, pointLightObject  );
-        addPhysicalObjects( player, ghost );
+        addPhysicalObjects( player, dummy, ghost );
 
         super.init();
     }

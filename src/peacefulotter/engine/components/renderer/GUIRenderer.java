@@ -31,10 +31,13 @@ public class GUIRenderer extends Renderer
         QUAD = ResourceLoader.loadToVao( POSITIONS, 2 );
     }
 
-    public void addGUIMaterial( GUIMaterial material )
+    public void addGUIMaterials( GUIMaterial ...materials )
     {
-        material.setTransparency( true );
-        guiMaterials.add( material );
+        for (GUIMaterial mat: materials)
+        {
+            mat.setTransparency( true );
+            guiMaterials.add( mat );
+        }
     }
 
     public void render( Shader shader, RenderingEngine renderingEngine )

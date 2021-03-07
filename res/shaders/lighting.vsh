@@ -13,7 +13,7 @@ uniform mat4 T_projectionMatrix;
 uniform mat4 T_viewMatrix;
 
 // const float density = 0.0005;
-const float density = 0.01;
+const float density = 0.005;
 const float gradient = 1.2;
 
 void main()
@@ -28,9 +28,8 @@ void main()
     vec3 n = normalize((T_transformationMatrix * vec4(normal, 0.0)).xyz);
     vec3 t = normalize((T_transformationMatrix * vec4(tangent, 0.0)).xyz);
     t = normalize(t - dot(t, n) * n);
-    
-    vec3 biTangent = cross(t, n);
-    tbnMatrix = mat3(t, biTangent, n);
+    vec3 b = cross(t, n);
+    tbnMatrix = mat3(t, b, n);
 
     float distance = length( positionRelativeToCam.xyz );
     visibility = exp(-pow((distance*density), gradient));

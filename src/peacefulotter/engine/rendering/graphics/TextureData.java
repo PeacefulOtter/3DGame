@@ -2,6 +2,7 @@ package peacefulotter.engine.rendering.graphics;
 
 
 import de.matthiasmann.twl.utils.PNGDecoder;
+import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class TextureData
     {
         int width = 0; int height = 0;
         ByteBuffer buffer = null;
-        try ( FileInputStream in = new FileInputStream("./res/textures/skybox/" + path + ".png" ) )
+        try ( FileInputStream in = new FileInputStream("./res/textures/" + SkyBoxRenderer.SKYBOX_FOLDER + path + ".png" ) )
         {
             PNGDecoder decoder = new PNGDecoder( in );
             width = decoder.getWidth();

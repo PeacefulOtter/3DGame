@@ -114,6 +114,11 @@ public abstract class Input
         mouseButtons.add( new Key( keyCode, executable, canRepeat ) );
     }
 
+    public static void addMouseButtonPressReleaseCallback( int keyCode, IOExecutable pressCallback, IOExecutable releaseCallback )
+    {
+        mouseButtons.add( new Key( keyCode, pressCallback, releaseCallback, false ) );
+    }
+
     private static void callMouseButtonsCallbacks( float deltaTime )
     {
         for ( Key k : mouseButtons )
