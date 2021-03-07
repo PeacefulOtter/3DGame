@@ -5,13 +5,11 @@ import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.components.World;
 import peacefulotter.engine.components.lights.BaseLight;
-import peacefulotter.engine.components.renderer.GUIRenderer;
 import peacefulotter.engine.components.renderer.SkyBoxRenderer;
 import peacefulotter.engine.components.renderer.TerrainRenderer;
 import peacefulotter.engine.components.renderer.WaterRenderer;
-import peacefulotter.engine.core.maths.Vector2f;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.GUI.GUIMaterial;
+import peacefulotter.engine.rendering.GUI.GUI;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
 import peacefulotter.engine.rendering.terrain.Terrain;
@@ -19,6 +17,7 @@ import peacefulotter.engine.rendering.terrain.WaterTile;
 import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.MappedValues;
 import peacefulotter.engine.utils.ProfileTimer;
+import peacefulotter.game.hud.Hud;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,8 +41,8 @@ public class RenderingEngine extends MappedValues
 
     private final TerrainRenderer tr;
     private final WaterRenderer wr;
-    private final GUIRenderer gr;
     private final SkyBoxRenderer sbr;
+    private final GUI gr;
 
     private Camera camera;
 
@@ -94,10 +93,7 @@ public class RenderingEngine extends MappedValues
         /* SKYBOX */
         this.sbr = new SkyBoxRenderer();
         /* GUI */
-        this.gr = new GUIRenderer();
-        GUIMaterial material1 = new GUIMaterial( "rainbow.png", Vector2f.getZero(), new Vector2f( 16f / 9f, 1 ) );
-        GUIMaterial material2 = new GUIMaterial( "crosshair.png", Vector2f.getZero(), new Vector2f( 0.03f, 0.03f ) );
-        gr.addGUIMaterials( material1, material2 );
+        this.gr = new Hud();
 
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
     }
@@ -142,6 +138,7 @@ public class RenderingEngine extends MappedValues
         tr.renderTerrain( this );
         wr.renderWater( this );
         sbr.renderSkyBox( this );
+        glClear( GL_DEPTH_BUFFER_BIT );
         gr.renderGUI( this );
 
         glDepthFunc( GL_LESS );

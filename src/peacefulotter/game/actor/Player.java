@@ -7,6 +7,7 @@ import peacefulotter.engine.components.renderer.MultiMeshRenderer;
 import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.rendering.terrain.Terrain;
 import peacefulotter.engine.utils.IO.Input;
+import peacefulotter.game.hud.Hud;
 import peacefulotter.game.inputs.FreeMovement;
 import peacefulotter.game.inputs.FreeRotation;
 
@@ -65,6 +66,8 @@ public class Player extends PhysicsObject
     public static final float CURSOR_SENSITIVITY = 50;
     public static final float SLOW_FACTOR = 1;
 
+    private static final float MAX_HEALTH = 100;
+
     private final Weapon weapon;
     private final boolean isUser;
     private final Set<VelocityAngle> notMovingArrowsQueue;
@@ -73,6 +76,7 @@ public class Player extends PhysicsObject
     private final Terrain terrain;
 
     private boolean isRunning, isAiming, isReloading, isJumping, isCrouching;
+    private float health = MAX_HEALTH;
 
     private Player( Vector3f position, Terrain terrain, Weapon weapon, boolean isUser )
     {
@@ -85,6 +89,7 @@ public class Player extends PhysicsObject
         {
             this.freeMovement = new FreeMovement( this, terrain, MAX_WALKING_VELOCITY, WALKING_ACCELERATION, SLOW_FACTOR, JUMP_HEIGHT );
             this.freeRotation = new FreeRotation( this, ROTATION_SENSITIVITY, CURSOR_SENSITIVITY );
+            Hud.setPlayer( this );
         }
         else { this.freeMovement = null; this.freeRotation = null; }
     }
@@ -135,7 +140,11 @@ public class Player extends PhysicsObject
 
         freeMovement.updateVelocity( deltaTime, isJumping );
 
+        if (health > 0.1)
+            health -= 0.001;
+
         super.update( deltaTime );
+        Hud.update( weapon, health );
     }
 
     @Override

@@ -46,6 +46,9 @@ public class Weapon extends GameObject
         bulletsLeft = MAGAZINE_SIZE;
     }
 
+    public int getMagazinesLeft() { return magazinesLeft; }
+    public int getBulletsLeft() { return bulletsLeft; }
+
     @Override
     public void update( float deltaTime )
     {

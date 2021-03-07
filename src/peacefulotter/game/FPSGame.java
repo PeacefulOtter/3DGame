@@ -96,7 +96,7 @@ public class FPSGame extends Game
                 .build();
 
         Ghost ghost = new Ghost( world.getTerrain(), false );
-        ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
+        // ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
         ghost.getTransform().translate( new Vector3f( 0, 10, 0 ) );
 
 

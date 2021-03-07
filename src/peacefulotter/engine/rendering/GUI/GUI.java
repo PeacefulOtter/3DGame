@@ -1,8 +1,7 @@
-package peacefulotter.engine.components.renderer;
+package peacefulotter.engine.rendering.GUI;
 
 import peacefulotter.engine.components.Camera;
 import peacefulotter.engine.core.maths.Vector3f;
-import peacefulotter.engine.rendering.GUI.GUIMaterial;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.RawModel;
 import peacefulotter.engine.rendering.shaders.Shader;
@@ -18,7 +17,7 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 
 
-public class GUIRenderer extends Renderer
+public class GUI
 {
     private static final float[] POSITIONS = new float[] { -1, 1, -1, -1, 1, 1, 1, -1 };
     private static final Shader GUIShader = ShaderTypes.GUI.getShader();
@@ -26,7 +25,7 @@ public class GUIRenderer extends Renderer
     private final RawModel QUAD;
     private final List<GUIMaterial> guiMaterials = new ArrayList<>();
 
-    public GUIRenderer()
+    public GUI()
     {
         QUAD = ResourceLoader.loadToVao( POSITIONS, 2 );
     }
