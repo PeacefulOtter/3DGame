@@ -20,6 +20,18 @@ public class GUIMaterial extends Material
                 .scale( new Vector3f( scale.getX(), scale.getY(), 1f ) );
     }
 
+    public GUIMaterial( String fileName, Vector3f position )
+    {
+        super( new SimpleMaterial( new Texture( GUI_FOLDER, fileName ), 1, 1 ) );
+        this.transform = new STransform()
+                .translate( new Vector3f( position.getX(), position.getY(), 0f ) );
+    }
+
+    public GUIMaterial( String fileName )
+    {
+        this( fileName, Vector3f.getZero() );
+    }
+
     public STransform getTransform()
     {
         return transform;

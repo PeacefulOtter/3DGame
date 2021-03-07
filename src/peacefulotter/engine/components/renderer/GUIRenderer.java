@@ -42,6 +42,7 @@ public class GUIRenderer extends Renderer
 
     public void render( Shader shader, RenderingEngine renderingEngine )
     {
+        RenderingEngine.disableCulling();
         shader.bind();
 
         glBindVertexArray( QUAD.getVaoId() );
@@ -49,22 +50,20 @@ public class GUIRenderer extends Renderer
 
         glEnable( GL_BLEND );
         glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-        // glDisable( GL_DEPTH_TEST ); TO AVOID SUPERPOSITION
+        glDisable( GL_DEPTH_TEST );
 
         guiMaterials.forEach( guiMaterial -> {
-            RenderingEngine.disableCulling();
-
             shader.updateUniforms( guiMaterial.getTransform(), guiMaterial, renderingEngine );
             glDrawArrays( GL_TRIANGLE_STRIP, 0, QUAD.getVertexCount() );
-
-            RenderingEngine.enableCulling();
         } );
 
-        // glEnable( GL_DEPTH_TEST ); TO AVOID SUPERPOSITION
+        glEnable( GL_DEPTH_TEST );
         glDisable( GL_BLEND );
 
         glDisableVertexAttribArray( 0 );
         glBindVertexArray( 0 );
+
+        RenderingEngine.enableCulling();
     }
 
     public void renderGUI( RenderingEngine renderingEngine )
@@ -78,7 +77,7 @@ public class GUIRenderer extends Renderer
         guiMaterials.forEach( guiMaterial ->
         {
             guiMaterial.getTransform().setParent( camera.getTransform() );
-            guiMaterial.getTransform().translate( new Vector3f( 0, 0, 5 ) );
+            guiMaterial.getTransform().translate( new Vector3f( 0, 0, 1.23f ) );
         } );
     }
 }

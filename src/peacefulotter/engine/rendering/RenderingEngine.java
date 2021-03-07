@@ -95,8 +95,8 @@ public class RenderingEngine extends MappedValues
         this.sbr = new SkyBoxRenderer();
         /* GUI */
         this.gr = new GUIRenderer();
-        GUIMaterial material1 = new GUIMaterial( "rainbow.png", new Vector2f( 0.5f, 0.5f ), new Vector2f( 0.25f, 0.25f ) );
-        GUIMaterial material2 = new GUIMaterial( "crosshair.png", new Vector2f( -0.5f, -0.5f ), new Vector2f( 0.5f, 0.5f ) );
+        GUIMaterial material1 = new GUIMaterial( "rainbow.png", Vector2f.getZero(), new Vector2f( 16f / 9f, 1 ) );
+        GUIMaterial material2 = new GUIMaterial( "crosshair.png", Vector2f.getZero(), new Vector2f( 0.03f, 0.03f ) );
         gr.addGUIMaterials( material1, material2 );
 
         // Window.bindAsRenderTarget(); Use for Render to Texture (not finished)
@@ -142,7 +142,7 @@ public class RenderingEngine extends MappedValues
         tr.renderTerrain( this );
         wr.renderWater( this );
         sbr.renderSkyBox( this );
-        // gr.renderGUI( this );
+        gr.renderGUI( this );
 
         glDepthFunc( GL_LESS );
         glDepthMask( true );
