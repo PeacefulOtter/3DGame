@@ -1,8 +1,11 @@
 TODO FILE 
 
-- [!!!!] I think i have some serious memory issues (might be the vao/vbo)
+- [X] renderer should be in a gameobject
+- /!\ GUI goal: 3D javafx custom
+- [STransform] optimize performance of the transform class
+- [X] fix memory leaks
 - [RenderingEngine] Use Render to texture
-- /!\ There are serious issues about the STransform class, the getters don't return an immutable Transform which may/will lead to huge troubles
+- [X] There are serious issues about the STransform class, the getters don't return an immutable Transform which may/will lead to huge troubles
 - [X] fix velocity getForward()
 - [X] Weapon should be fixed with the player
 - [X] Avoid player rotation with the camera around the getRight() axis
@@ -10,22 +13,27 @@ TODO FILE
 - /!\ Implement collision detection for all sorts of object
 - [X] Player walking more realistic (frictions, move)
 - [X] Make the player rotation based on mouse input
-- /!\ Add a basic map
+- /!\ Fix Light on terrain (does nothing atm)
+- /!\ Fix light color
+- [ ] Create a real map, load objects like crates, lamps(!)
+- [ ] Implement a minimap
 - [X] Implement player running
 - Implement player crouching
 - [X] Add gravity to all physical objects
 - [X] Fix camera not following the player
-- Add a skybox
-- [X] Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
-- Maybe create a Mesh and Material bank
+- [X] Add a skybox
+- [!!] (Broke after recent updates -> need to work on the fixedTilt)Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
+- [X]Maybe create a Mesh and Material bank
 - Add precision to the weapons depending on player velocity
+- [X] Add GUIRenderer
 - /!\ Add HUD (health, ammo, crosshair) = display images and fonts
 - [X] Add a general directional lighting to the scene
 - [ ] Add bullet system
 - /!~\ Refactor / Optimize lighting
-- /!\ Refactor obj loader
-- /!~\ Refactor material (does not need to include normal and height maps)
+- /!~\ Refactor obj loader
+- [X] Refactor material (does not need to include normal and height maps)
 - Create player animations and reload animations
+- Create a Sound system (SoundEngine?)
 - Add some more gameplay (double jump, etc..)
 - Multiplayer
     - [X] Basic TCP Server
