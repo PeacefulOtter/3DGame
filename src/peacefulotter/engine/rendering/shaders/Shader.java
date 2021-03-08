@@ -202,4 +202,10 @@ public class Shader
     {
         glUseProgram( resource.getProgram() );
     }
+
+    @Override
+    public String toString()
+    {
+        return resource.toString();
+    }
 }

@@ -6,6 +6,12 @@ import peacefulotter.engine.core.maths.Vector3f;
 import peacefulotter.engine.elementary.Updatable;
 
 
+/*
+
+    REFACTOR STRANFORM -> PARENT TO CHILDREN
+ */
+
+
 public class STransform implements Updatable
 {
     private final STranslation translation;

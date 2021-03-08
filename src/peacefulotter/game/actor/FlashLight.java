@@ -6,7 +6,7 @@ import peacefulotter.engine.rendering.shaders.Attenuation;
 
 public class FlashLight extends SpotLight
 {
-    private static final Vector3f FLASHLIGHT_TRANSLATION = new Vector3f( 0, 5f, 0 );
+    private static final Vector3f FLASHLIGHT_TRANSLATION = new Vector3f( 0, 6f, 0 );
 
     public FlashLight( Vector3f color, float intensity, Attenuation attenuation, float cutoff )
     {

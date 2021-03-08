@@ -67,7 +67,7 @@ public class FPSGame extends Game
         Player dummy = new Player.PlayerBuilder()
                 .setPosition( new Vector3f( 10, 10, 10 ) )
                 .setWeapon( new Weapon() )
-                .setFlashLight( new FlashLight( new Vector3f( 0.8f, 0.4f, 0.8f ), 0.15f, new Attenuation( 0, 1, 0f ), 0.6f ) )
+                // .setFlashLight( new FlashLight( new Vector3f( 0.8f, 0.4f, 0.8f ), 0.15f, new Attenuation( 0, 1, 0f ), 0.6f ) )
                 .setTerrain( world.getTerrain() )
                 .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
                 .build();
@@ -87,12 +87,12 @@ public class FPSGame extends Game
         /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
                 .setPlayerUser()
-                .setPosition( new Vector3f( 50, 50, 50 ) )
+                .setPosition( new Vector3f( 50, 10, 50 ) )
                 .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setTerrain( world.getTerrain() )
                 .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
                 .setWeapon( new Weapon() )
-                .setFlashLight( new FlashLight( new Vector3f( 0.5f, 0.4f, 0.5f ), 0.2f, new Attenuation( 0, 0, 0.0004f ), 0.7f ) )
+                .setFlashLight( new FlashLight( new Vector3f( 0.8f, 0.1f, 0.8f ), 0.01f, new Attenuation( 0.2f, 0.01f, 0f ), 0.5f ) )
                 .build();
 
         Ghost ghost = new Ghost( world.getTerrain(), false );
@@ -109,8 +109,8 @@ public class FPSGame extends Game
         dirLightObject.getTransform().setRotation( new Quaternion( new Vector3f( 1, -1, 0 ), -45 ) );
 
         GameObject pointLightObject = new GameObject();
-        PointLight pointLight = new PointLight( new Vector3f( 0.3f, 1f, 0.5f ), 0.05f, Attenuation.DEFAULT );
-        pointLight.getTransform().translate( new Vector3f( 200, 90, 400 ) );
+        PointLight pointLight = new PointLight( new Vector3f( 0.6f, 0.1f, 0.2f ), 0.01f, new Attenuation( 0.5f, 0.1f, 0f ) );
+        pointLight.getTransform().translate( new Vector3f( 20, 10, 10 ) );
         pointLightObject.addComponent( pointLight );
 
         addObjects( world, dirLightObject, pointLightObject  );

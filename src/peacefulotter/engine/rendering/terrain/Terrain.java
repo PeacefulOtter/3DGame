@@ -14,7 +14,6 @@ import peacefulotter.engine.utils.Utils;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-// KIND OF A MESHRENDERER... THIS IS BAD
 public class Terrain extends GameComponent
 {
     private static final float HALF_MAX_PIXEL_COLOR = 255 * 255 * 255 / 2f;

@@ -1,7 +1,9 @@
 TODO FILE 
 
+- /!!!!!!\ STransform parent to children
 - [X] renderer should be in a gameobject
 - /!\ GUI goal: 3D javafx custom
+- Load models and textures on multiple thread
 - [STransform] optimize performance of the transform class
 - [X] fix memory leaks
 - [RenderingEngine] Use Render to texture
@@ -23,7 +25,7 @@ TODO FILE
 - [X] Fix camera not following the player
 - [X] Add a skybox
 - [!!] (Broke after recent updates -> need to work on the fixedTilt)Avoid players rotating indefinitely around getRight() axis, must be stopped at +-PI
-- [X]Maybe create a Mesh and Material bank
+- [X] Maybe create a Mesh and Material bank
 - Add precision to the weapons depending on player velocity
 - [X] Add GUIRenderer
 - /!\ Add HUD (health, ammo, crosshair) = display images and fonts

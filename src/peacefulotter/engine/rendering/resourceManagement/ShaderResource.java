@@ -26,6 +26,7 @@ public class ShaderResource
     private static final int STRUCT_TAG_LENGTH = STRUCT_TAG.length();
 
     private final int program;
+    private final String shaderName;
 
     private final Map<String, Integer> uniformsMap;
     private final List<GLSLStruct> uniformsStruct;
@@ -33,10 +34,12 @@ public class ShaderResource
     public ShaderResource( String shaderName )
     {
         this.program = glCreateProgram();
+        this.shaderName = shaderName;
 
         if ( program == 0 )
         {
             System.err.println( "Could not find memory location for shader in constructor" );
+            Resources.freeBuffers();
             System.exit( 1 );
         }
 
@@ -227,7 +230,6 @@ public class ShaderResource
 
     private void addFragmentShader( String text )
     {
-        System.out.println(text);
         addProgramShader( text, GL_FRAGMENT_SHADER );
     }
 
@@ -283,5 +285,11 @@ public class ShaderResource
 
         @Override
         public String toString() { return type + " " + name; }
+    }
+
+    @Override
+    public String toString()
+    {
+        return shaderName;
     }
 }

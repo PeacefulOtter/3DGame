@@ -30,7 +30,7 @@ public class Weapon extends GameObject
     private static final float BULLET_DAMAGE = 20f;
     private static final int MAGAZINE_NUMBER = 3;
     private static final int MAGAZINE_SIZE = 10;
-    private static final float RELOAD_TIME = 5f;
+    private static final float RELOAD_TIME = 3f;
     public static final boolean IS_AUTOMATIC = false;
 
     private int magazinesLeft, bulletsLeft;

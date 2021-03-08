@@ -1,0 +1,12 @@
+
+
+parent {
+    placement: auto;
+    width: 95%;
+    height: 95%;
+}
+
+ammo {
+    placement: left down;
+    width: blob;
+}

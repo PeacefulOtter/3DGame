@@ -160,7 +160,7 @@ public class RenderingEngine extends MappedValues
     }
     public void setRoot( GameObject object )
     {
-        object.addComponent( tr ).addComponent( wr );
+        object.addChild( tr ).addComponent( wr );
     }
 
     public long getCurrentWindow() { return window.getWindow(); }

@@ -3,6 +3,7 @@ package peacefulotter.engine.components.renderer;
 import peacefulotter.engine.components.GameObject;
 import peacefulotter.engine.rendering.RenderingEngine;
 import peacefulotter.engine.rendering.graphics.Material;
+import peacefulotter.engine.rendering.graphics.SimpleMaterial;
 import peacefulotter.engine.rendering.graphics.Texture;
 import peacefulotter.engine.rendering.shaders.Shader;
 import peacefulotter.engine.rendering.shaders.ShaderTypes;
@@ -22,7 +23,7 @@ public class TerrainRenderer extends GameObject
         Texture normalGrass = new Texture( TERRAIN_SUBFOLDER, "grass_normal.png" );
         Texture heightGrass = new Texture( TERRAIN_SUBFOLDER, "grass_height.png" );
 
-        material = new Material( grass, normalGrass, heightGrass, 1f, 4, 0.03f, -0.04f );
+        material = new Material( new SimpleMaterial( grass, 1, 1 ) );
         material.addTexture( "aTexture", new Texture( TERRAIN_SUBFOLDER, "grass.png" ) );
         material.addTexture( "rTexture", new Texture( TERRAIN_SUBFOLDER, "mud.png" ) );
         material.addTexture( "gTexture", new Texture( TERRAIN_SUBFOLDER, "flowers.png" ) );
