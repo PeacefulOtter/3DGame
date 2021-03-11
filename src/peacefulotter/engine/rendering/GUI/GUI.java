@@ -72,7 +72,6 @@ public class GUI
 
     public void setCamera( Camera camera )
     {
-        System.out.println(guiMaterials);
         guiMaterials.forEach( guiMaterial ->
         {
             guiMaterial.getTransform().setParent( camera.getTransform() );

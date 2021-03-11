@@ -1,18 +1,14 @@
 package peacefulotter.engine.rendering.graphics;
 
+import peacefulotter.engine.rendering.resourceManagement.TextureBuffer;
 import peacefulotter.engine.rendering.resourceManagement.TextureResource;
-import peacefulotter.engine.utils.BufferUtil;
+import peacefulotter.engine.rendering.resourceManagement.TexturesHandler;
 import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ResourceLoader;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
@@ -27,8 +23,8 @@ public class Texture
 
     private static final Map<String, TextureResource> loadedTextures = new HashMap<>();
 
-    private final TextureResource resource;
     private final String subFolder, fileName;
+    private TextureResource resource;
 
     public enum TextureTypes
     {
@@ -58,15 +54,15 @@ public class Texture
             switch ( type )
             {
                 case BASIC:
-                    resource = loadTexture( subFolder, fileName );
+                    loadTexture( path );
                     break;
                 case CUBE_MAP:
                     resource = ResourceLoader.loadCubeMap();
+                    loadedTextures.put( path, resource );
                     break;
                 default:
                     throw new IllegalArgumentException();
             }
-            loadedTextures.put( path, resource );
         }
 
         this.subFolder = subFolder;
@@ -74,81 +70,43 @@ public class Texture
     }
 
     /**
-     * Creates a TextureResource from an image file
-     * @param subFolder
-     * @param fileName
-     * @return
+     * Creates a TextureResource from an image file, operation done in another Thread using the TextureHandler
      */
-    public TextureResource loadTexture( String subFolder, String fileName )
+    private void loadTexture( String path )
     {
-        Logger.log( getClass(), "Loading texture at : " + subFolder + fileName );
-        TextureResource resource = null;
+        Logger.log( getClass(), "Loading texture at : " + path );
+        TexturesHandler.create( this, TEXTURES_PATH + path );
+    }
 
-        try
-        {
-            BufferedImage image = ImageIO.read( new ResourceLoader().resourceStream( TEXTURES_PATH + subFolder + fileName ) );
+    public void setResource( TextureBuffer tb )
+    {
+        Logger.log( getClass(), "Creating the texture of " + subFolder + fileName );
+        resource = new TextureResource();
+        loadedTextures.put( subFolder + fileName, resource );
+        glBindTexture( GL_TEXTURE_2D, resource.getId() );
 
-            int imageWidth = image.getWidth(); int imageHeight = image.getHeight();
-            int[] pixels = image.getRGB( 0, 0, imageWidth, imageHeight, null, 0, imageWidth );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
 
-            ByteBuffer buffer = BufferUtil.createByteBuffer( imageWidth * imageHeight * 4 );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 
-            for ( int y = 0; y < imageHeight; y++ )
-            {
-                for ( int x = 0; x < imageWidth; x++ )
-                {
-                    int pixel = pixels[ y * imageWidth + x ];
-                    buffer.put( (byte) ( ( pixel >> 16 ) & 0xff ) );
-                    buffer.put( (byte) ( ( pixel >> 8 )  & 0xff ) );
-                    buffer.put( (byte) ( ( pixel )       & 0xff ) );
-                    if ( image.getColorModel().hasAlpha() )
-                        buffer.put( (byte) ( ( pixel >> 24 ) & 0xff ) );
-                    else
-                        buffer.put( (byte) 0xff );
-                }
-            }
+        glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, tb.imageWidth, tb.imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, tb.buffer );
 
-            buffer.flip();
-
-            resource = new TextureResource();
-            glBindTexture( GL_TEXTURE_2D, resource.getId() );
-
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
-
-            glTexImage2D( GL_TEXTURE_2D, 0, GL_RGBA8, imageWidth, imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer );
-
-            // MipMapping
-            glGenerateMipmap( GL_TEXTURE_2D );
-            glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-            glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.5f );
-        }
-        catch ( IllegalArgumentException e )
-        {
-            if ( fileName.contains( "_normal" ) )
-                return Texture.getDefaultNormal().getResource();
-            else if ( fileName.contains( "_height" ) )
-                return Texture.getDefaultHeight().getResource();
-        }
-        catch( IOException e )
-        {
-            e.printStackTrace();
-        }
-
-        return resource;
+        // MipMapping
+        glGenerateMipmap( GL_TEXTURE_2D );
+        glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
+        glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.5f );
     }
 
     public static Texture getDefaultNormal()
     {
-        return new Texture( DEFAULT_FOLDER, "default_normal.jpg" );
+        return new Texture( DEFAULT_FOLDER, "default_normal.jpg", TextureTypes.BASIC );
     }
 
     public static Texture getDefaultHeight()
     {
-        return new Texture( DEFAULT_FOLDER, "default_height.jpg" );
+        return new Texture( DEFAULT_FOLDER, "default_height.jpg", TextureTypes.BASIC  );
     }
 
     public void bind( int samplerSlot )
@@ -168,11 +126,9 @@ public class Texture
         //
     }
 
-    public TextureResource getResource() { return resource; }
-
     @Override
     public String toString()
     {
-        return "[Texture] " + subFolder + fileName;
+        return subFolder + fileName;
     }
 }

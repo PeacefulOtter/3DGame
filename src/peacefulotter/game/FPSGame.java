@@ -86,17 +86,17 @@ public class FPSGame extends Game
 
         /* PLAYER */
         PhysicsObject player = new Player.PlayerBuilder()
-                .setPlayerUser()
-                .setPosition( new Vector3f( 50, 10, 50 ) )
-                .setCamera( Camera.CameraBuilder.getDefaultCamera() )
+                // .setPlayerUser()
+                .setPosition( new Vector3f( 50, 2, 50 ) )
+                // .setCamera( Camera.CameraBuilder.getDefaultCamera() )
                 .setTerrain( world.getTerrain() )
                 .setMultiMeshRenderer( new MultiMeshRenderer( "reaper/", "reaper.obj") )
                 .setWeapon( new Weapon() )
-                .setFlashLight( new FlashLight( new Vector3f( 0.8f, 0.1f, 0.8f ), 0.01f, new Attenuation( 0.2f, 0.01f, 0f ), 0.5f ) )
+                .setFlashLight( new FlashLight( new Vector3f( 0.8f, 0.1f, 0.8f ), 0.03f, new Attenuation( 0.2f, 0.01f, 0f ), 0.3f ) )
                 .build();
 
-        Ghost ghost = new Ghost( world.getTerrain(), false );
-        // ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
+        Ghost ghost = new Ghost( world.getTerrain(), true );
+        ghost.addComponent( Camera.CameraBuilder.getDefaultCamera() );
         ghost.getTransform().translate( new Vector3f( 0, 10, 0 ) );
 
 

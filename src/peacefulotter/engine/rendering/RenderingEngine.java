@@ -128,6 +128,8 @@ public class RenderingEngine extends MappedValues
         glDepthMask( false );
         glDepthFunc( GL_EQUAL );
 
+        wr.renderWater( this );
+
         for ( BaseLight light : lights )
         {
             BaseLight.setActiveLight( light );
@@ -136,7 +138,6 @@ public class RenderingEngine extends MappedValues
 
         // Render them with their personal shader
         tr.renderTerrain( this );
-        wr.renderWater( this );
         sbr.renderSkyBox( this );
         glClear( GL_DEPTH_BUFFER_BIT );
         gr.renderGUI( this );

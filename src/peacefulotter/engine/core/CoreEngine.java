@@ -3,18 +3,17 @@ package peacefulotter.engine.core;
 
 import org.lwjgl.opengl.GL;
 import peacefulotter.engine.physics.PhysicsEngine;
+import peacefulotter.engine.rendering.RenderingEngine;
+import peacefulotter.engine.rendering.resourceManagement.TexturesHandler;
 import peacefulotter.engine.utils.IO.Input;
 import peacefulotter.engine.utils.Logger;
 import peacefulotter.engine.utils.ProfileTimer;
 import peacefulotter.engine.utils.Time;
-import peacefulotter.engine.rendering.RenderingEngine;
 
 import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_VERSION;
-import static org.lwjgl.opengl.GL11.glGetString;
 
 public class CoreEngine
 {
@@ -48,6 +47,7 @@ public class CoreEngine
         game.setEngine( this );
         Input.initInputs( currentWindow );
         isRunning = true;
+        TexturesHandler.setTextureResources();
         run();
     }
 

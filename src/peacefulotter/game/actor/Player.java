@@ -127,7 +127,10 @@ public class Player extends PhysicsObject
 
     public void update( float deltaTime )
     {
-        if ( !isUser ) return;
+        if ( !isUser ) {
+            super.update( deltaTime );
+            return;
+        }
 
         // player is on the ground or slightly below
         if ( getPosition().getY() <= terrain.getTerrainHeight( getPosition().getX(), getPosition().getZ() ) )

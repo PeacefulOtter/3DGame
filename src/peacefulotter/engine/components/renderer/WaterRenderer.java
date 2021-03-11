@@ -32,7 +32,7 @@ public class WaterRenderer extends GameComponent
     public WaterRenderer()
     {
         waterQuad = ResourceLoader.loadToVao( POSITIONS, 2 );
-        waterMaterial = new Material( new SimpleMaterial( new Texture( "test.png" ), 1, 1 ));
+        waterMaterial = new Material( new SimpleMaterial( new Texture( "terrain/water.jpg" ), 1, 1 ));
         waterTiles = new ArrayList<>();
     }
 
@@ -56,6 +56,7 @@ public class WaterRenderer extends GameComponent
 
         glDisableVertexAttribArray( 0 );
         glBindVertexArray( 0 );
+
     }
 
     public void renderWater( RenderingEngine renderingEngine )

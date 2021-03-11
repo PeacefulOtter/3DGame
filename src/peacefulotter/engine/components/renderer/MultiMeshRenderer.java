@@ -59,7 +59,6 @@ public class MultiMeshRenderer extends GameComponent
 
         OBJModel currentModel = new OBJModel();
         Map<String, SimpleMaterial> materialMap = null; // associate material name to the material
-        Map<Integer, SimpleMaterial> integerSimpleMaterialMap = new HashMap<>(); // associate material index to the material
         boolean isFirstMaterial = true;
 
         try ( BufferedReader reader = new BufferedReader( new InputStreamReader( new ResourceLoader().resourceStream( MODELS_PATH + subFolder + fileName ) ) ) )
@@ -134,7 +133,6 @@ public class MultiMeshRenderer extends GameComponent
 
         addMeshToMTM( currentModel, mtm, path + mtm.getSize() );
 
-        Logger.log( "" );
         return mtm;
     }
 
